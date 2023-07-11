@@ -1,0 +1,49 @@
+﻿namespace T4.Plugins.Troubadour;
+
+public static partial class Inventory
+{
+    private static ItemOverlay CreateGreyOut() => new()
+    {
+        OffsetLeft = 0f,
+        OffsetTop = 0f,
+        OffsetWidth = 0f,
+        OffsetHeight = 0f,
+        Show = ShouldGreyOut,
+        Fill = (item, _) => item.MatchingFilterNames.Length == 0 ? TreasureHunterStore.GreyOutFillStyle : null,
+    };
+
+    private static bool ShouldGreyOut(IItem item, InventoryFeatures features)
+    {
+        if (!features.GreyOutEnabled)
+            return false;
+        if (features.GreyOutUpgradedItemsEnabled && item.UpgradeCount > 0)
+            return false;
+        if (features.GreyOutGemItemsEnabled && (item.ItemSno.GemType != GemType.None || item.ItemSno.SnoId == ItemSnoId.GamblingCurrency_Key))
+            return false;
+        if (features.GreyOutSigilItemsEnabled && item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
+            return false;
+        if (item.IsElixirItem() && ElixirsStore.ElixirSnoIdEnabled.Any(x => x.Value))
+            return !item.IsElixirHunted();
+
+        if (item.IsAspectItem() && AspectHunterStore.AffixSnoIdEnabled.Any(x => x.Value))
+            return !item.IsAspectHunted();
+
+        return item.MatchingFilterNames.Length == 0 && !item.IsAspectHunted();
+    }
+}
+
+public sealed partial class InventoryFeatures
+{
+    public InventoryFeatures GreyOut(bool enabled = true)
+    {
+        AddOverlay(new BooleanFeatureResource
+        {
+            NameOf = nameof(GreyOutEnabled),
+            DisplayText = Plugin.Translate("grey out not hunted"),
+            Getter = () => GreyOutEnabled,
+            Setter = v => GreyOutEnabled = v,
+        });
+        GreyOutEnabled = enabled;
+        return this;
+    }
+}
