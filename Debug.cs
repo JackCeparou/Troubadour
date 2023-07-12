@@ -10,7 +10,7 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
     private readonly ILineStyle _uiLine = Render.GetLineStyle(255, 255, 255, 0);
     private readonly HashSet<string> _controlsToSkip = new(StringComparer.OrdinalIgnoreCase) { "RTCDebugText_main", "ObjectiveTracker", "Chat", };
 
-    public bool ShowPlayerSkills { get; set; } = true;
+    public bool ShowPlayerSkills { get; set; }
     public bool ShowGenericActors { get; set; } = true;
     public bool ShowGyzmoActors { get; set; } = true;
     public bool ShowMonsterActors { get; set; } = true;
@@ -24,7 +24,7 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
     public Debug()
     {
         Order = int.MaxValue;
-        EnabledByDefault = IsDevSession;
+        EnabledByDefault = false;
     }
 
     public override string GetDescription() => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
@@ -193,10 +193,7 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
         if (!ShowActorFrame)
             return;
 
-        var optionLines = new List<string>
-        {
-            $"[{(ShowPlayerSkills ? "X" : " ")}] (0) MySkills",
-        };
+        var optionLines = new List<string> { $"[{(ShowPlayerSkills ? "X" : " ")}] (0) MySkills", };
         optionLines.AddRange(GetDebugActorsArray().Take(9).Select(x => $"[{(x.Enabled.Invoke() ? "X" : " ")}] ({x.Index}) {x.Name}"));
         DrawDebugFrame(optionLines, Game.WindowWidth * 0.125f, 0, true);
     }
@@ -236,12 +233,21 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
                 debugActors.LineStyle.DrawWorldLine(actor.Coordinate, Game.MyPlayerActor.Coordinate, sharpen: false);
             if (actor.Coordinate.IsOnScreen)
                 debugActors.CircleStyle.DrawWorldEllipse(0.5f, -1, actor.Coordinate, sharpen: false);
-
-            var name = ShowName ? actor.ActorSno.NameEnglish : actor.ActorSno.SnoId.ToString();
-            if (!string.IsNullOrEmpty(name))
+            var name = string.Empty;
+            if (actor.ActorSno.SnoId == ActorSnoId.Generic_Proxy)
             {
-                var tl = DebugFont.GetTextLayout(name);
-                tl.DrawText(actor.Coordinate.ScreenX - (tl.Width / 2), actor.Coordinate.ScreenY - (tl.Height / 2));
+                name = $"GenericProxy {actor.AcdId} {actor.AnnId}";
+                var tl1 = DebugFont.GetTextLayout(name);
+                tl1.DrawText(actor.Coordinate.ScreenX - (tl1.Width / 2f), actor.Coordinate.ScreenY - (tl1.Height / 2f));
+            }
+            else
+            {
+                name = ShowName ? actor.ActorSno.NameEnglish : actor.ActorSno.SnoId.ToString();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var tl = DebugFont.GetTextLayout(name);
+                    tl.DrawText(actor.Coordinate.ScreenX - (tl.Width / 2), actor.Coordinate.ScreenY - (tl.Height / 2));
+                }
             }
 
             if (ShowActorFrame)

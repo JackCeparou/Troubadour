@@ -5,36 +5,11 @@ public static partial class DebugService
     public static IFont DebugFont { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
     public static IFillStyle DebugFillStyle { get; } = Render.GetFillStyle(128, 0, 0, 0);
     public static ILineStyle DebugLineStyle { get; } = Render.GetLineStyle(255, 255, 255, 255);
-    public static ILineStyle DebugActorLineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dot);
-
-    public static bool IsDebugSession => SessionType == SessionType.Debug || Host.DebugEnabled;
-    public static bool IsDevSession => SessionType == SessionType.Development;
-
-    public static SessionType SessionType { get; private set; }
-
-    static DebugService()
-    {
-        SessionType = Environment.GetEnvironmentVariable("T4_TROUBADOUR_DEBUG") switch
-        {
-            "debug" => SessionType.Debug,
-            "dev" => SessionType.Development,
-            _ => SessionType.Release,
-        };
-        if (SessionType != SessionType.Release)
-            return;
-
-        // replace translation service to avoid spamming hud service with WIP translations
-        Translation = new TranslationDevService();
-    }
-
-    public static void ChangeSessionType(SessionType sessionType)
-    {
-        SessionType = sessionType;
-    }
+    public static ILineStyle DebugActorLineStyle { get; } = Render.GetLineStyle(255, 255, 255, 255, DashStyle.Dash);
 
     public static void DrawDebugText(Func<string> text, float? x = null, float? y = null)
     {
-        if (!IsDebugSession || text == null)
+        if (!Host.DebugEnabled || text == null)
             return;
 
         DrawDevText(text, x, y);
@@ -50,7 +25,7 @@ public static partial class DebugService
 
     public static void DrawDebugOutline(IScreenRectangle rect)
     {
-        if (!IsDebugSession || rect == null)
+        if (!Host.DebugEnabled || rect == null)
             return;
 
         DrawDevOutline(rect);
@@ -58,7 +33,7 @@ public static partial class DebugService
 
     public static void DrawDebugOutline(float x, float y, float width, float height)
     {
-        if (!IsDebugSession)
+        if (!Host.DebugEnabled)
             return;
 
         DrawDevOutline(x, y, width, height);
@@ -93,8 +68,14 @@ public static partial class DebugService
 
         foreach (var actor in actors)
         {
-            DebugActorLineStyle.DrawWorldEllipse(0.5f, -1, actor.Coordinate, false);
+            DebugActorLineStyle.DrawWorldEllipse(1f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
             Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
+            if (actor.ActorSno.SnoId == ActorSnoId.Generic_Proxy)
+            {
+                var tl1 = DebugFont.GetTextLayout($"GenericProxy {actor.AcdId} {actor.AnnId}");
+                tl1.DrawText(x - (tl1.Width / 2f), y - (tl1.Height / 2f));
+                continue;
+            }
             var tl = DebugFont.GetTextLayout(actor.ActorSno.SnoId.ToString());
             tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
         }

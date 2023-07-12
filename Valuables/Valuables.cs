@@ -1,5 +1,10 @@
 namespace T4.Plugins.Troubadour;
 
+public static class ValuablesStore
+{
+    // public static object
+}
+
 public sealed class Valuables : BasePlugin, IGameUserInterfacePainter, IGameWorldPainter
 {
     public Feature Elixirs { get; private set; }

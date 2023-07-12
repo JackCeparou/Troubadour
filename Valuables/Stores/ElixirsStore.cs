@@ -11,6 +11,8 @@ public static class ElixirsStore
     public static float MapCircleSize { get; set; } = 8f;
     public static float MapCircleStroke { get; set; } = 4f;
 
+    public static bool InvertSelection { get; set; }
+
     public static Feature CreateElixirFeature(this IPlugin plugin, string nameOf)
     {
         var feature = new Feature
@@ -78,7 +80,7 @@ public static class ElixirsStore
                     Setter = newValue => MapCircleStroke = newValue,
                     MinValue = 0,
                     MaxValue = 10
-                },
+                }
             }
         };
         foreach (var snoId in ElixirItemSnoIds)
@@ -137,7 +139,6 @@ public static class ElixirsStore
         }
     }
 
-    public static bool InvertSelection { get; set; }
     public static Dictionary<ItemSnoId, bool> ElixirSnoIdEnabled { get; } = new();
     public static bool IsElixirHunted(this IItem item) 
         => ElixirSnoIdEnabled.TryGetValue(item.ItemSno.SnoId, out var enabled) && InvertSelection ? !enabled : enabled;

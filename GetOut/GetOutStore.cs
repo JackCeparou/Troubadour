@@ -2,18 +2,26 @@
 
 public static class GetOutStore
 {
+    public static IEnumerable<ActorSnoId> KnownMonsterAffixesActorSnoIds { get; } = new List<ActorSnoId>
+    {
+        // spikes 1.3f
+        ActorSnoId.DRLG_Trap_Spikes_2x2,
+        ActorSnoId.DRLG_Trap_Spikes_3x3,
+        // barrels 0.5f
+        ActorSnoId.DRLG_Trap_Barrel_Cold_AOE,
+        ActorSnoId.DRLG_Trap_Barrel_Fire_AOE,
+        ActorSnoId.DRLG_Trap_Barrel_Lightning_AOE,
+        ActorSnoId.DRLG_Trap_Barrel_Poison_AOE,
+        ActorSnoId.DRLG_Trap_Barrel_Shadow_AOE,
+    };
+
     public static IEnumerable<ActorSnoId> MonsterAffixesActorSnoIds { get; } = new List<ActorSnoId>
     {
         // traps
-        ActorSnoId.DRLG_Trap_Barrel_Cold_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Cold_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Fire_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Fire_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Lightning_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Lightning_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Poison_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Poison_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Shadow_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Shadow_ClientEffect,
         ActorSnoId.DRLG_Trap_Bear_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_BearTrap,
@@ -73,8 +81,6 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_Spectral_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Spectral_Projectile,
         ActorSnoId.DRLG_Trap_Spectral_Projectile_First,
-        ActorSnoId.DRLG_Trap_Spikes_2x2,
-        ActorSnoId.DRLG_Trap_Spikes_3x3,
         ActorSnoId.DRLG_Trap_Totem_Fire,
         ActorSnoId.DRLG_Trap_Totem_Ice,
         ActorSnoId.DRLG_Trap_Totem_Lightning,
@@ -147,5 +153,7 @@ public static class GetOutStore
         // ActorSnoId.MonsterAffix_Waller_Untargetable_Wall,
         // ActorSnoId.MonsterAffix_Waller_Untargetable_Wall_Cannibal_Tyrant,
     };
+
     public static HashSet<ActorSnoId> MonsterAffixesActorSnoIdSet { get; } = new(MonsterAffixesActorSnoIds);
+    public static HashSet<ActorSnoId> KnownMonsterAffixesActorSnoIdSet { get; } = new(KnownMonsterAffixesActorSnoIds);
 }

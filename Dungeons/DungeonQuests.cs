@@ -11,7 +11,7 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
 
     public DungeonQuests()
     {
-        EnabledByDefault = IsDevSession;
+        EnabledByDefault = false;
     }
 
     //TODO: translations when ready to enable by default

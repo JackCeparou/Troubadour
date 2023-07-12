@@ -15,13 +15,13 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
 
     public Auras()
     {
-        EnabledByDefault = IsDevSession;
+        EnabledByDefault = false;
     }
 
     public void PaintMenuUserInterface()
     {
-        if (!IsDevSession)
-            return;
+        // if (!IsDevSession)
+        return;
 
         GameObserver.CheckScreenSize();
         HitpointsGlobe.Draw();

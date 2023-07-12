@@ -34,9 +34,3 @@ public static class TranslationServiceExtensions
     public static string BackgroundColor(this IPlugin plugin) => Translation.Translate(plugin, "background color");
     public static string TreasureHunterFilterNames(this IPlugin plugin) => Translation.Translate(plugin, "matched filter names");
 }
-
-public class TranslationDevService : ITranslationService
-{
-    public string Translate(IPlugin plugin, string text) => text;
-    public string TranslateFormat(IPlugin plugin, string text, params object[] values) => string.Format(text, values);
-}
