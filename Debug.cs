@@ -317,7 +317,10 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 CircleStyle = Render.GetLineStyle(255, 64, 160, 64, width: 3),
                 LineEnabled = () => ShowItemsLine,
                 LineStyle = Render.GetLineStyle(255, 64, 160, 64, width: 3),
-                Actors = () => Game.Items.Where(x => x.Location == ItemLocation.None && x.ItemSno.ItemTypeSno.SnoId != ItemTypeSnoId.Gold)
+                Actors = () => Game.Items.Where(x => x.Location == ItemLocation.None
+                                                     && x.ItemSno.ItemTypeSno.SnoId != ItemTypeSnoId.Gold
+                                                     && x.ItemSno.ItemTypeSno.SnoId != ItemTypeSnoId.HealthPotionDosePickUp
+                )
             }
         };
         var idx = 1;

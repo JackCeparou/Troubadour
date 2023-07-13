@@ -2,7 +2,7 @@
 
 public sealed partial class ItemTextLine
 {
-    public bool Expand { get; set; }
+    public bool IsName { get; init; }
     public Func<IItem, InventoryFeatures, bool> Show { get; init; } = (_, _) => true;
     public Func<IItem, InventoryFeatures, string> Text { get; init; }
     public Func<IItem, bool> HasError { get; init; } = _ => false;
@@ -15,21 +15,9 @@ public sealed partial class ItemTextLine
         if (string.IsNullOrEmpty(text))
             return;
 
-        if (item.ItemSno.ItemUseType == ItemUseType.ElixirScrollWhatever)
+        if (IsName && !features.OnPaperDoll)
         {
-            DrawElixir(item, features, text, screenRectangle);
-            return;
-        }
-
-        if (item.IsAspectItem())
-        {
-            DrawAspect(item, features, text, screenRectangle);
-            return;
-        }
-
-        if (item.ItemSno.ItemUseType == ItemUseType.DungeonKey && Expand)
-        {
-            DrawSigil(item, features, text, screenRectangle);
+            DrawName(item, features, text, screenRectangle);
             return;
         }
 
@@ -49,30 +37,12 @@ public sealed partial class ItemTextLine
         height = expandUpwards ? -tl.Height : tl.Height;
     }
 
-    private void DrawAspect(IItem item, InventoryFeatures features, string name, IScreenRectangle rect)
+    private void DrawName(IItem item, InventoryFeatures features, string name, IScreenRectangle rect)
     {
         var font = features.GetFont(HasError.Invoke(item));
         var padding = rect.Width * 0.1f;
 
-        var tl = font.GetTextLayout(name, rect.Width - (2 * padding), rect.Height);
-        tl.DrawText(rect.Left + padding, rect.Top + ((rect.Height - tl.Height) / 2));
-    }
-
-    private void DrawElixir(IItem item, InventoryFeatures features, string name, IScreenRectangle rect)
-    {
-        var font = features.GetFont(HasError.Invoke(item));
-        var padding = rect.Width * 0.1f;
-
-        var tl = font.GetTextLayout(name, rect.Width - (2 * padding), rect.Height);
-        tl.DrawText(rect.Left + padding, rect.Top + ((rect.Height - tl.Height) / 2));
-    }
-
-    private void DrawSigil(IItem item, InventoryFeatures features, string name, IScreenRectangle rect)
-    {
-        var font = features.GetFont(HasError.Invoke(item));
-        var padding = rect.Width * 0.1f;
-
-        var tl = font.GetTextLayout(name, rect.Width - (2 * padding), rect.Height);
-        tl.DrawText(rect.Left + padding, rect.Top + ((rect.Height - tl.Height) / 2));
+        var tl = font.GetTextLayout(name, rect.Width - (2 * padding), rect.Height * 0.75f);
+        tl.DrawText(rect.Left + padding, rect.Top + (rect.Height * 0.2f));
     }
 }

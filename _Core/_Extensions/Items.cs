@@ -75,69 +75,33 @@ public static class ItemExtensions
         switch (item.Quality)
         {
             case ItemQuality.Legendary:
-                var affix = item.GetAffix();
-                var name = affix?.NameLocalized ?? affix?.NameEnglish;
-                if (string.IsNullOrWhiteSpace(name))
-                    name = item.NameLocalized ?? item.NameEnglish;
-                if (!string.IsNullOrWhiteSpace(name))
-                    return GetFriendlyName(name);
-
-                return name ?? string.Empty;
-
+                return item.GetAffix()?.GetFriendlyName();
             case ItemQuality.Set:
             case ItemQuality.Unique:
-                var uniqueName = item.GetAffix()?.NameLocalized;
-                if (!string.IsNullOrWhiteSpace(uniqueName))
-                    return uniqueName;
-                return item.ItemSno.NameLocalized ?? item.ItemSno.NameEnglish ?? $"{item.Location}";
+                var name = item.ItemSno.NameLocalized ?? string.Empty;
+                if (name.StartsWith("[fp]") || name.StartsWith("[mp]"))
+                    return name.Substring(4);
+
+                return name;
 
             default:
                 return string.Empty;
         }
     }
 
-    public static string GetFriendlyName(this AffixSnoId affixSnoId)
+    public static string GetFriendlyName(this IAffixSno affix)
     {
-        var affix = GameData.GetAffixSno(affixSnoId);
+        var combinedName = affix.CombineWithLocalized(null);
         if (Host.DebugEnabled)
         {
-            return $"{affixSnoId}: {affix.GetFriendlyName()}";
+            return $"{affix.SnoId}: {combinedName}";
         }
 
-        return affix.GetFriendlyName();
+        return combinedName;
     }
 
-    public static string GetFriendlyName(this IAffixSno affixSno)
-    {
-        var name = affixSno.NameLocalized ?? affixSno.NameEnglish;
-        if (!string.IsNullOrWhiteSpace(name) || !affixSno.SnoId.TryGetUniqueItemSnoId(out var itemSnoId))
-            return GetFriendlyName(name);
-
-        var item = GameData.GetItemSno(itemSnoId);
-        return item?.NameLocalized ?? item?.NameEnglish ?? $"{itemSnoId}";
-    }
-
-    public static string GetFriendlyName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return string.Empty;
-
-        if (!name.Contains(' '))
-            return name;
-        if (FriendlyNameCache.TryGetValue(name, out var friendlyName))
-            return friendlyName;
-
-        // very naive way to get a 'clean' name, not sure how it will react in i18n scenarios
-        var nameParts = name.Split(' ').Where(x => x.Length > 3).ToArray();
-        friendlyName = nameParts.Length > 1
-            ? string.Join(' ', nameParts)
-            : nameParts.FirstOrDefault() ?? name;
-
-        FriendlyNameCache[name] = friendlyName;
-        return friendlyName;
-    }
-
-    private static Dictionary<string, string> FriendlyNameCache { get; } = new();
+    public static string GetFriendlyName(this AffixSnoId affixSnoId)
+        => GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
 
     public static void SetHint(this IItem item, IPlugin plugin)
     {
@@ -153,7 +117,7 @@ Affix2: {item.Affix2?.SnoId}
 Affix3: {item.LegendaryAffixEquipped?.SnoId}
 Affix4: {item.EnchantedAffix?.SnoId}
 AffixFallback: {item.GetAffix()?.SnoId}
-FriendlyName: {item.GetAffix()?.GetFriendlyName()}
+FriendlyName: {item.GetAffix()?.CombineWithLocalized(null)}
 Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
 ItemLevel: {item.ItemPowerTotal}
 Filters: {string.Join(", ", item.MatchingFilterNames)}

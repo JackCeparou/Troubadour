@@ -4,13 +4,13 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class GetOut : BasePlugin, IGameWorldPainter
 {
-    public Feature Config { get; set; }
+    public Feature Config { get; private set; }
 
     public static IFont TrapFont { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
     public static ILineStyle TrapLineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dash);
 
-    public bool OnMonsters { get; set; } = true;
-    public bool OnGyzmos { get; set; } = true;
+    public bool OnMonsters { get; set; }
+    public bool OnGyzmos { get; set; }
     public bool OnGenerics { get; set; }
 
     public GetOut()
@@ -25,9 +25,10 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
     {
         Config = new Feature
         {
+            // Enabled = false,
             Plugin = this,
             NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, nameof(Config)),
+            DisplayName = () => Translation.Translate(this, "debug"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
@@ -51,13 +52,13 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
         if (layer != GameWorldLayer.Ground)
             return;
 
-        DrawActors(OnMonsters, Game.Monsters.Where(x => KnownMonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawActors(OnGyzmos, Game.GizmoActors.Where(x => KnownMonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawActors(OnGenerics, Game.GenericActors.Where(x => KnownMonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawActors(true, Game.Monsters.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawActors(true, Game.GizmoActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawActors(true, Game.GenericActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
 
-        DrawDebugActors(OnMonsters, Game.Monsters.Where(x => MonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawDebugActors(OnGyzmos, Game.GizmoActors.Where(x => MonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => MonsterAffixesActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawDebugActors(OnMonsters, Game.Monsters.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawDebugActors(OnGyzmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
     }
 
     public static void DrawActors(bool enabled, IEnumerable<ICommonActor> actors)

@@ -4,6 +4,7 @@ public static partial class Inventory
 {
     private static ItemTextLine CreateElixirName() => new()
     {
+        IsName = true,
         Show = (item, features) => features.ElixirNameEnabled && item.ItemSno.ItemUseType == ItemUseType.ElixirScrollWhatever,
         Text = (item, _) => item.NameLocalized ?? item.NameEnglish ?? "42",
     };

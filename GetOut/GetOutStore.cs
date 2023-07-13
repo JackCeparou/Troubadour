@@ -2,7 +2,7 @@
 
 public static class GetOutStore
 {
-    public static IEnumerable<ActorSnoId> KnownMonsterAffixesActorSnoIds { get; } = new List<ActorSnoId>
+    public static IEnumerable<ActorSnoId> ActorSnoIds { get; } = new List<ActorSnoId>
     {
         // spikes 1.3f
         ActorSnoId.DRLG_Trap_Spikes_2x2,
@@ -13,9 +13,16 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_Barrel_Lightning_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Poison_AOE,
         ActorSnoId.DRLG_Trap_Barrel_Shadow_AOE,
+        // traps 1f
+        // ActorSnoId.DRLG_Trap_BearTrap,
+        ActorSnoId.DRLG_Trap_BearTrap_DestroyableObject,
+        ActorSnoId.DRLG_Trap_Moonseed,
+
+        // dungeon affixes
+        ActorSnoId.Dungeon_Affix_Orb
     };
 
-    public static IEnumerable<ActorSnoId> MonsterAffixesActorSnoIds { get; } = new List<ActorSnoId>
+    public static IEnumerable<ActorSnoId> DebugActorSnoIds { get; } = new List<ActorSnoId>
     {
         // traps
         ActorSnoId.DRLG_Trap_Barrel_Cold_ClientEffect,
@@ -24,9 +31,8 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_Barrel_Poison_ClientEffect,
         ActorSnoId.DRLG_Trap_Barrel_Shadow_ClientEffect,
         ActorSnoId.DRLG_Trap_Bear_01_ClientEffect_Dyn,
-        ActorSnoId.DRLG_Trap_BearTrap,
+        // ActorSnoId.DRLG_Trap_BearTrap,
         ActorSnoId.DRLG_Trap_BearTrap_BanditBoss,
-        ActorSnoId.DRLG_Trap_BearTrap_DestroyableObject,
         ActorSnoId.DRLG_Trap_Demonic,
         ActorSnoId.DRLG_Trap_Demonic_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Demonic_Projectile,
@@ -76,7 +82,6 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_Mine_Warning_Cold_ClientEffect_VFX,
         ActorSnoId.DRLG_Trap_Mine_Warning_Poison_ClientEffect_VFX,
         ActorSnoId.DRLG_Trap_Mine_Warning_Shadow_ClientEffect_VFX,
-        ActorSnoId.DRLG_Trap_Moonseed,
         ActorSnoId.DRLG_Trap_Spectral,
         ActorSnoId.DRLG_Trap_Spectral_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Spectral_Projectile,
@@ -154,6 +159,6 @@ public static class GetOutStore
         // ActorSnoId.MonsterAffix_Waller_Untargetable_Wall_Cannibal_Tyrant,
     };
 
-    public static HashSet<ActorSnoId> MonsterAffixesActorSnoIdSet { get; } = new(MonsterAffixesActorSnoIds);
-    public static HashSet<ActorSnoId> KnownMonsterAffixesActorSnoIdSet { get; } = new(KnownMonsterAffixesActorSnoIds);
+    public static HashSet<ActorSnoId> DebugActorSnoIdSet { get; } = new(DebugActorSnoIds);
+    public static HashSet<ActorSnoId> ActorSnoIdSet { get; } = new(ActorSnoIds);
 }

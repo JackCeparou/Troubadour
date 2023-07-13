@@ -4,8 +4,9 @@ public static partial class Inventory
 {
     private static ItemTextLine CreateAspectName() => new()
     {
+        IsName = true,
         Show = (item, features) => features.AspectNameEnabled && item.ItemSno.GemType == GemType.None,
-        Text = (item, _) => item.Quality < ItemQuality.Legendary ? string.Empty : item.GetFriendlyAffixName(),
+        Text = (item, _) => item.GetFriendlyAffixName(),
         HasError = item => item.IsEquippedTemp() && DuplicateEquippedPowers.Contains(item.Affix1?.SnoId ?? 0),
     };
 }
