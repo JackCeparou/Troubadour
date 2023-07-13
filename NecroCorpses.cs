@@ -34,7 +34,7 @@ public sealed class NecroCorpses : BasePlugin, IGameWorldPainter
                     Getter = () => SymbolEnabled,
                     Setter = newValue => SymbolEnabled = newValue
                 },
-                new FontFeatureResource { NameOf = nameof(Font), DisplayText = this.NormalFont, Font = Font },
+                new FontFeatureResource { NameOf = nameof(Font), DisplayText = () => Translation.Translate(this, "normal font"), Font = Font },
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(GroundCircleEnabled),
@@ -45,13 +45,16 @@ public sealed class NecroCorpses : BasePlugin, IGameWorldPainter
                 new FloatFeatureResource
                 {
                     NameOf = nameof(GroundCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     Getter = () => GroundCircleSize,
                     Setter = newValue => GroundCircleSize = newValue,
                     MinValue = 0,
                     MaxValue = 2
                 },
-                new LineStyleFeatureResource { NameOf = nameof(GroundCircleStyle), DisplayText = this.LineStyle, LineStyle = GroundCircleStyle },
+                new LineStyleFeatureResource
+                {
+                    NameOf = nameof(GroundCircleStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = GroundCircleStyle
+                },
             }
         }.Register();
     }

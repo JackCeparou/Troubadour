@@ -21,10 +21,15 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
     public bool ShowActorFrame { get; set; }
     public bool ShowUserInterfaceControls { get; set; }
 
+    public bool Developer { get; set; }
+    public static bool IsDeveloper => Instance?.Developer ?? false;
+    private static Debug Instance { get; set; }
+
     public Debug()
     {
         Order = int.MaxValue;
         EnabledByDefault = false;
+        Instance = this;
     }
 
     public override string GetDescription() => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
@@ -107,6 +112,10 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
                     DisplayText = () => Translation.Translate(this, "UI controls"),
                     Getter = () => ShowUserInterfaceControls,
                     Setter = value => ShowUserInterfaceControls = value,
+                },
+                new BooleanFeatureResource
+                {
+                    NameOf = nameof(Developer), DisplayText = () => "developer session", Getter = () => Developer, Setter = value => Developer = value,
                 },
             }
         }.Register();
@@ -283,7 +292,12 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 Enabled = () => ShowGenericActors,
                 Toggle = () => ShowGenericActors = !ShowGenericActors,
                 CircleStyle = Render.GetLineStyle(128, 255, 255, 255),
-                Actors = () => Game.GenericActors.Where(x => x.Coordinate.IsOnScreen)
+                Actors = () => Game.GenericActors.Where(x => x.Coordinate.IsOnScreen
+                                                             && x.ActorSno.SnoId != ActorSnoId.Generic_Proxy
+                                                             && x.ActorSno.SnoId != ActorSnoId.Symbol_Quest
+                                                             && x.ActorSno.SnoId != ActorSnoId.Symbol_Quest_Proxy
+                                                             && x.ActorSno.SnoId != ActorSnoId.MarkerLocation
+                )
             },
             new()
             {

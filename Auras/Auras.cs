@@ -81,7 +81,7 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(ShowInTown),
-                    DisplayText = this.Translate("show in town"),
+                    DisplayText = () => Translation.Translate(this, "show in town"),
                     Getter = () => ShowInTown,
                     Setter = newValue => ShowInTown = newValue,
                 },

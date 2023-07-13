@@ -33,7 +33,7 @@ public sealed partial class InventoryFeatures
         AddIcon(new BooleanFeatureResource
         {
             NameOf = nameof(TreasureHunterIconEnabled),
-            DisplayText = Plugin.Translate("treasure hunter icon"),
+            DisplayText = () => Translation.Translate(Plugin, "treasure hunter icon"),
             Getter = () => TreasureHunterIconEnabled,
             Setter = v => TreasureHunterIconEnabled = v,
         });
@@ -46,7 +46,7 @@ public sealed partial class InventoryFeatures
         AddOverlay(new BooleanFeatureResource
         {
             NameOf = nameof(TreasureHunterHighlightEnabled),
-            DisplayText = Plugin.Translate("treasure hunter highlight"),
+            DisplayText = () => Translation.Translate(Plugin, "treasure hunter highlight"),
             Getter = () => TreasureHunterHighlightEnabled,
             Setter = v => TreasureHunterHighlightEnabled = v,
         });
@@ -59,7 +59,7 @@ public sealed partial class InventoryFeatures
         AddOverlay(new BooleanFeatureResource
         {
             NameOf = nameof(TreasureHunterMatchedFilterCountEnabled),
-            DisplayText = Plugin.Translate("treasure hunter matched filter count"),
+            DisplayText = () => Translation.Translate(Plugin, "treasure hunter matched filter count"),
             Getter = () => TreasureHunterMatchedFilterCountEnabled,
             Setter = v => TreasureHunterMatchedFilterCountEnabled = v,
         });

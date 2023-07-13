@@ -16,7 +16,7 @@ public sealed partial class InventoryFeatures
         AddOverlay(new BooleanFeatureResource
         {
             NameOf = nameof(ElixirHunterHighlightEnabled),
-            DisplayText = Plugin.Translate("elixir hunter highlight"),
+            DisplayText = () => Translation.Translate(Plugin, "elixir hunter highlight"),
             Getter = () => ElixirHunterHighlightEnabled,
             Setter = v => ElixirHunterHighlightEnabled = v,
         });

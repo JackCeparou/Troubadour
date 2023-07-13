@@ -10,10 +10,10 @@ public static class Textures
     public static ITexture UiStash004 { get; } = Render.GetTexture(SupportedTextureId.UIStash_004);
 
     public static ITexture ShrineIcon { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_007);
-    public static ITexture TreasureHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_003);
-    public static ITexture TreasureHunterGoldenIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_001);
+    // public static ITexture TreasureHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_003);
+    // public static ITexture TreasureHunterGoldenIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_001);
     public static ITexture TreasureHunterGoldenOpenIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_002);
     
     public static ITexture GlobeForeground { get; } = Render.GetTexture(SupportedTextureId.UIControls_103);
-    public static ITexture GlobeBackground { get; } = Render.GetTexture(SupportedTextureId.UISkills_001);
+    // public static ITexture GlobeBackground { get; } = Render.GetTexture(SupportedTextureId.UISkills_001);
 }

@@ -22,9 +22,10 @@ public static partial class Inventory
             return false;
         if (features.GreyOutSigilItemsEnabled && item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
             return false;
-        if (item.IsElixirItem() && ElixirsStore.ElixirSnoIdEnabled.Any(x => x.Value))
+        if (item.IsMountCosmeticItem())
+            return false;
+        if (item.IsElixirItem())
             return !item.IsElixirHunted();
-
         if (item.IsAspectItem() && AspectHunterStore.AffixSnoIdEnabled.Any(x => x.Value))
             return !item.IsAspectHunted();
 
@@ -39,7 +40,7 @@ public sealed partial class InventoryFeatures
         AddOverlay(new BooleanFeatureResource
         {
             NameOf = nameof(GreyOutEnabled),
-            DisplayText = Plugin.Translate("grey out not hunted"),
+            DisplayText = () => Translation.Translate(Plugin, "grey out not hunted"),
             Getter = () => GreyOutEnabled,
             Setter = v => GreyOutEnabled = v,
         });

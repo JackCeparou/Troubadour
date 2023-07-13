@@ -16,7 +16,10 @@ public sealed partial class InventoryFeatures
     {
         AddTextLine(new BooleanFeatureResource
         {
-            NameOf = nameof(ElixirNameEnabled), DisplayText = Plugin.ElixirName, Getter = () => ElixirNameEnabled, Setter = v => ElixirNameEnabled = v,
+            NameOf = nameof(ElixirNameEnabled),
+            DisplayText = () => Translation.Translate(Plugin, "elixir name"),
+            Getter = () => ElixirNameEnabled,
+            Setter = v => ElixirNameEnabled = v,
         });
         ElixirNameEnabled = enabled;
         return this;

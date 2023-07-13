@@ -57,10 +57,8 @@
 //         if (Map.MapWorldSno.SnoId != WorldSnoId.Sanctuary_Eastern_Continent)
 //             return;
 //
-//         var size = Game.WindowHeight / 100f * IconSize;
-//
-//         var markers = Game.GlobalMarkers
-//             .Where(x => x.WorldSno == Map.MapWorldSno);
+//         var markers = Game.GlobalMarkers;
+//             // .Where(x => x.WorldSno == Map.MapWorldSno); // && x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
 //             // .Where(x => x.WorldSno == Map.MapWorldSno && x.ActorSno?.NameEnglish == "Altar of Lilith");
 //
 //         foreach (var marker in markers)

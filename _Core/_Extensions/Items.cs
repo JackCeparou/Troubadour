@@ -31,8 +31,8 @@ public static class ItemExtensions
 
     public static int GetMaxUpgradeCount(this IItem item) => item.ItemPower switch
     {
-        // TODO: this is wrong, but I don't know the correct values
         >= 600 => 5,
+        // TODO: this is wrong, but I don't know the correct values
         >= 400 => 4, // tested wrong values: 300
         _ => 3
     };
@@ -100,8 +100,10 @@ public static class ItemExtensions
         return combinedName;
     }
 
-    public static string GetFriendlyName(this AffixSnoId affixSnoId)
-        => GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
+    public static string GetFriendlyName(this AffixSnoId affixSnoId) =>
+        affixSnoId.TryGetUniqueItemSnoId(out var uniqueItemSnoId) && uniqueItemSnoId != ItemSnoId.Axe__Bad__Data
+            ? GameData.GetItemSno(uniqueItemSnoId)?.NameLocalized ?? string.Empty
+            : GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
 
     public static void SetHint(this IItem item, IPlugin plugin)
     {
@@ -111,7 +113,7 @@ public static class ItemExtensions
 
 
 Id: {item.ItemSno.SnoId}
-Name: {item.ItemSno.NameEnglish}
+Name: {item.ItemSno.NameLocalized}
 Affix1: {item.Affix1?.SnoId}
 Affix2: {item.Affix2?.SnoId}
 Affix3: {item.LegendaryAffixEquipped?.SnoId}
@@ -153,7 +155,7 @@ Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemText
     public static IEnumerable<string> GetHintLines(this IItem item, IPlugin plugin)
     {
         if (!item.IsEquippedTemp() && item.IsAspectHunted())
-            yield return plugin.AspectHunter();
+            yield return Translation.Translate(plugin, "aspect hunter");
 
         if (item.IsNearBreakpoint())
             yield return Translation.TranslateFormat(plugin, "near breakpoint ({0})", item.GetNextBreakpoint());

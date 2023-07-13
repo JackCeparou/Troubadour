@@ -70,8 +70,8 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
         {
             TrapLineStyle.DrawWorldEllipse(1.3f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
             Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
-            var tl = TrapFont.GetTextLayout(actor.ActorSno.NameLocalized);
-            tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
+            // var tl = TrapFont.GetTextLayout(actor.ActorSno.NameLocalized);
+            // tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
         }
     }
 }

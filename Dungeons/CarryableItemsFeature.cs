@@ -9,7 +9,7 @@ public sealed class CarryableItemsFeature : WorldFeature<IItem>
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
-    public override IEnumerable<IItem> GetObjects()
+    public override IEnumerable<IItem> GetWorldObjects()
     {
         return Game.Items.Where(x => x.Location == ItemLocation.None && CarryableItemSnoIdsSet.Contains(x.ActorSno.SnoId));
     }
@@ -18,10 +18,10 @@ public sealed class CarryableItemsFeature : WorldFeature<IItem>
     {
         var feature = new CarryableItemsFeature
         {
-            Plugin = plugin, NameOf = nameOf, DisplayName = plugin.Translate("carryable items"), Resources = new List<AbstractFeatureResource>()
+            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "carryable items"), Resources = new List<AbstractFeatureResource>()
         };
-        feature.AddDefaultGroundResources(plugin);
-        feature.AddDefaultMapResources(plugin);
+        feature.AddDefaultGroundResources();
+        feature.AddDefaultMapResources();
         return feature.Register();
     }
 

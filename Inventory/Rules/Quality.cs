@@ -29,7 +29,7 @@ public sealed partial class InventoryFeatures
         AddIcon(new BooleanFeatureResource
         {
             NameOf = nameof(QualityLegendaryIconEnabled),
-            DisplayText = Plugin.Translate("quality icon (legendary)"),
+            DisplayText = () => Translation.Translate(Plugin, "quality icon (legendary)"),
             Getter = () => QualityLegendaryIconEnabled,
             Setter = v => QualityLegendaryIconEnabled = v,
         });
@@ -42,7 +42,7 @@ public sealed partial class InventoryFeatures
         AddIcon(new BooleanFeatureResource
         {
             NameOf = nameof(QualityUniqueIconEnabled),
-            DisplayText = Plugin.Translate("quality icon (unique)"),
+            DisplayText = () => Translation.Translate(Plugin, "quality icon (unique)"),
             Getter = () => QualityUniqueIconEnabled,
             Setter = v => QualityUniqueIconEnabled = v,
         });

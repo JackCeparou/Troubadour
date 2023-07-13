@@ -24,7 +24,7 @@ public sealed partial class InventoryFeatures
         AddIcon(new BooleanFeatureResource
         {
             NameOf = nameof(AspectHunterIconEnabled),
-            DisplayText = Plugin.Translate("aspect hunter icon"),
+            DisplayText = () => Translation.Translate(Plugin, "aspect hunter icon"),
             Getter = () => AspectHunterIconEnabled,
             Setter = v => AspectHunterIconEnabled = v,
         });
@@ -37,7 +37,7 @@ public sealed partial class InventoryFeatures
         AddOverlay(new BooleanFeatureResource
         {
             NameOf = nameof(AspectHunterHighlightEnabled),
-            DisplayText = Plugin.Translate("aspect hunter highlight"),
+            DisplayText = () => Translation.Translate(Plugin, "aspect hunter highlight"),
             Getter = () => AspectHunterHighlightEnabled,
             Setter = v => AspectHunterHighlightEnabled = v,
         });

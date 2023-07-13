@@ -47,7 +47,7 @@ public sealed partial class InventoryFeatures : Feature
         {
             Plugin = plugin,
             NameOf = name,
-            DisplayName = plugin.Translate(displayName),
+            DisplayName = () => Translation.Translate(plugin, displayName),
             Resources = new(),
             NormalFont = font,
             ErrorFont = errorFont,
@@ -59,7 +59,7 @@ public sealed partial class InventoryFeatures : Feature
         Resources.Add(new FloatFeatureResource
             {
                 NameOf = nameof(MaxTextWidthRatio),
-                DisplayText = Plugin.Translate("max text width ratio"),
+                DisplayText = () => Translation.Translate(Plugin, "max text width ratio"),
                 MinValue = 1f,
                 MaxValue = 5.0f,
                 Getter = () => MaxTextWidthRatio,
@@ -76,7 +76,7 @@ public sealed partial class InventoryFeatures : Feature
         Resources.Add(new BooleanFeatureResource()
             {
                 NameOf = "Hints",
-                DisplayText = Plugin.Translate("hints"),
+                DisplayText = () => Translation.Translate(Plugin, "hints"),
                 Getter = () => HasHints,
                 Setter = newValue => HasHints = newValue,
             }
@@ -92,7 +92,7 @@ public sealed partial class InventoryFeatures : Feature
             Resources.Add(new FloatFeatureResource
                 {
                     NameOf = nameof(IconSize),
-                    DisplayText = Plugin.IconSize,
+                    DisplayText = () => Translation.Translate(Plugin, "icon size"),
                     MinValue = 0f,
                     MaxValue = 32.0f,
                     Getter = () => IconSize,
@@ -109,8 +109,8 @@ public sealed partial class InventoryFeatures : Feature
     {
         if (!HasLines)
         {
-            Resources.Add(new FontFeatureResource { NameOf = nameof(NormalFont), DisplayText = Plugin.NormalFont, Font = NormalFont, });
-            Resources.Add(new FontFeatureResource { NameOf = nameof(ErrorFont), DisplayText = Plugin.ErrorFont, Font = ErrorFont, });
+            Resources.Add(new FontFeatureResource { NameOf = nameof(NormalFont), DisplayText = () => Translation.Translate(Plugin, "normal font"), Font = NormalFont, });
+            Resources.Add(new FontFeatureResource { NameOf = nameof(ErrorFont), DisplayText = () => Translation.Translate(Plugin, "error font"), Font = ErrorFont, });
             HasLines = true;
         }
 
