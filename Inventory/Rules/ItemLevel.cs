@@ -26,14 +26,17 @@ public static partial class Inventory
             if (item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
                 return $"T{item.SigilLevel}";
 
+            var itemPower = $"{item.ItemPower}";
+            if (item.UpgradeCount > 0)
+                itemPower += $"+{item.UpgradeCount * 5}";
             if (!features.ItemQualityModifierEnabled)
-                return $"i{item.ItemPower}";
+                return $"i{itemPower}";
 
             return item.QualityModifier switch
             {
-                ItemQualityModifier.Sacred => $"s{item.ItemPower}",
-                ItemQualityModifier.Ancestral => $"a{item.ItemPower}",
-                _ => $"i{item.ItemPower}",
+                ItemQualityModifier.Sacred => $"s{itemPower}",
+                ItemQualityModifier.Ancestral => $"a{itemPower}",
+                _ => $"i{itemPower}",
             };
         },
     };
