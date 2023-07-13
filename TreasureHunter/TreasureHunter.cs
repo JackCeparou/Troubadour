@@ -62,19 +62,19 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
         {
             Plugin = this,
             NameOf = nameof(OnInventory),
-            DisplayName = this.Translate("on inventory"),
+            DisplayName = () => Translation.Translate(this, "on inventory"),
             Resources = new List<AbstractFeatureResource>
             {
                 new FillStyleFeatureResource
                 {
                     NameOf = nameof(GreyOutFillStyle),
-                    DisplayText = this.GreyOut,
+                    DisplayText = () => Translation.Translate(this, "grey out"),
                     FillStyle = GreyOutFillStyle,
                 },
                 new FontFeatureResource
                 {
                     NameOf = nameof(MatchedFilterCounterFont),
-                    DisplayText = this.MatchedFilterCount,
+                    DisplayText = () => Translation.Translate(this, "matched filter count"),
                     Font = MatchedFilterCounterFont,
                 },
             }
@@ -84,13 +84,13 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
         {
             Plugin = this,
             NameOf = nameof(OnDrop),
-            DisplayName = this.Translate("on item drop"),
+            DisplayName = () => Translation.Translate(this, "on item drop"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(DropNotificationEnabled),
-                    DisplayText = this.Translate("notify"),
+                    DisplayText = () => Translation.Translate(this, "notify"),
                     Getter = () => DropNotificationEnabled,
                     Setter = newValue => DropNotificationEnabled = newValue
                 },
@@ -101,17 +101,17 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
         {
             Plugin = this,
             NameOf = nameof(OnMap),
-            DisplayName = this.Translate("items on map"),
+            DisplayName = () => Translation.Translate(this, "items on map"),
             Resources = new List<AbstractFeatureResource>
             {
                 new LineStyleFeatureResource
                 {
-                    NameOf = nameof(MapLineStyle), DisplayText = this.LineStyle, LineStyle = MapLineStyle
+                    NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle
                 },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     Getter = () => MapCircleSize,
                     Setter = newValue => MapCircleSize = newValue,
                     MinValue = 0,
@@ -120,7 +120,7 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleStroke),
-                    DisplayText = this.Stroke,
+                    DisplayText = () => Translation.Translate(this, "stroke"),
                     Getter = () => MapCircleStroke,
                     Setter = newValue => MapCircleStroke = newValue,
                     MinValue = 0,
@@ -133,36 +133,36 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
         {
             Plugin = this,
             NameOf = nameof(OnGround),
-            DisplayName = this.Translate("items on ground"),
+            DisplayName = () => Translation.Translate(this, "items on ground"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(ShowFilterNamesOnGround),
-                    DisplayText = this.TreasureHunterFilterNames,
+                    DisplayText = () =>  Translation.Translate(this, "matched filter names"),
                     Getter = () => ShowFilterNamesOnGround,
                     Setter = newValue => ShowFilterNamesOnGround = newValue
                 },
                 new FillStyleFeatureResource
                 {
                     NameOf = nameof(FilterNamesOnGroundBackground),
-                    DisplayText = this.BackgroundColor,
+                    DisplayText = () => Translation.Translate(this, "background color"),
                     FillStyle = FilterNamesOnGroundBackground,
                 },
                 new FontFeatureResource
                 {
                     NameOf = nameof(FilterNamesOnGroundFont),
-                    DisplayText = this.NormalFont,
+                    DisplayText = () => Translation.Translate(this, "normal font"),
                     Font = FilterNamesOnGroundFont,
                 },
                 new LineStyleFeatureResource
                 {
-                    NameOf = nameof(LineStyle), DisplayText = this.LineStyle, LineStyle = LineStyle
+                    NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle
                 },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(WorldCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     Getter = () => WorldCircleSize,
                     Setter = newValue => WorldCircleSize = newValue,
                     MinValue = 0,
@@ -171,7 +171,7 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
                 new FloatFeatureResource
                 {
                     NameOf = nameof(WorldCircleStroke),
-                    DisplayText = this.Stroke,
+                    DisplayText = () => Translation.Translate(this, "stroke"),
                     Getter = () => WorldCircleStroke,
                     Setter = newValue => WorldCircleStroke = newValue,
                     MinValue = 0,

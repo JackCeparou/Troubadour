@@ -17,7 +17,10 @@ public sealed partial class InventoryFeatures
     {
         AddTextLine(new BooleanFeatureResource
         {
-            NameOf = nameof(AspectNameEnabled), DisplayText = Plugin.AspectName, Getter = () => AspectNameEnabled, Setter = v => AspectNameEnabled = v,
+            NameOf = nameof(AspectNameEnabled),
+            DisplayText = () => Translation.Translate(Plugin, "aspect name"),
+            Getter = () => AspectNameEnabled,
+            Setter = v => AspectNameEnabled = v,
         });
         AspectNameEnabled = enabled;
         return this;

@@ -66,7 +66,7 @@ public sealed partial class Vendors : BasePlugin, IGameUserInterfacePainter, IIt
         OnShopList.Resources.Add(new BooleanFeatureResource
         {
             NameOf = nameof(ShopNotificationEnabled),
-            DisplayText = this.Translate("treasure hunter notification"),
+            DisplayText = () => Translation.Translate(this, "treasure hunter notification"),
             Getter = () => ShopNotificationEnabled,
             Setter = newValue => ShopNotificationEnabled = newValue
         });

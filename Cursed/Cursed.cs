@@ -61,13 +61,13 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
         {
             Plugin = this,
             NameOf = nameof(OnMap),
-            DisplayName = this.Translate("circle on map"),
+            DisplayName = () => Translation.Translate(this, "circle on map"),
             Resources = new List<AbstractFeatureResource>
             {
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     MinValue = 0,
                     MaxValue = 100,
                     Getter = () => MapCircleSize,
@@ -75,11 +75,11 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
                 },
                 new FillStyleFeatureResource
                 {
-                    NameOf = nameof(MapFillStyle), DisplayText = this.FillStyle, FillStyle = MapFillStyle
+                    NameOf = nameof(MapFillStyle), DisplayText = () => Translation.Translate(this, "fill style"), FillStyle = MapFillStyle
                 },
                 new LineStyleFeatureResource
                 {
-                    NameOf = nameof(MapLineStyle), DisplayText = this.LineStyle, LineStyle = MapLineStyle
+                    NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle
                 },
             }
         }.Register();
@@ -88,13 +88,13 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
         {
             Plugin = this,
             NameOf = nameof(OnGround),
-            DisplayName = this.Translate("icon on ground"),
+            DisplayName = () => Translation.Translate(this, "icon on ground"),
             Resources = new List<AbstractFeatureResource>
             {
                 new FloatFeatureResource
                 {
                     NameOf = nameof(GroundIconSize),
-                    DisplayText = this.IconSize,
+                    DisplayText = () => Translation.Translate(this, "icon size"),
                     MinValue = 0,
                     MaxValue = 200,
                     Getter = () => GroundIconSize,

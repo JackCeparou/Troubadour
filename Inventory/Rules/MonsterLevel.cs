@@ -21,7 +21,7 @@ public sealed partial class InventoryFeatures
         AddTextLine(new BooleanFeatureResource
         {
             NameOf = nameof(MonsterLevelEnabled),
-            DisplayText = Plugin.Translate("monster level"),
+            DisplayText = () => Translation.Translate(Plugin, "monster level"),
             Getter = () => MonsterLevelEnabled,
             Setter = v => MonsterLevelEnabled = v,
         });

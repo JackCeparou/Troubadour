@@ -73,11 +73,11 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
             DisplayName = () => Translation.Translate(this, "items on map"),
             Resources = new List<AbstractFeatureResource>
             {
-                new LineStyleFeatureResource { NameOf = nameof(MapLineStyle), DisplayText = this.LineStyle, LineStyle = MapLineStyle },
+                new LineStyleFeatureResource { NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     Getter = () => MapCircleSize,
                     Setter = newValue => MapCircleSize = newValue,
                     MinValue = 0,
@@ -86,7 +86,7 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleStroke),
-                    DisplayText = this.Stroke,
+                    DisplayText = () => Translation.Translate(this, "stroke"),
                     Getter = () => MapCircleStroke,
                     Setter = newValue => MapCircleStroke = newValue,
                     MinValue = 0,
@@ -102,11 +102,11 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
             DisplayName = () => Translation.Translate(this, "items on ground"),
             Resources = new List<AbstractFeatureResource>
             {
-                new LineStyleFeatureResource { NameOf = nameof(LineStyle), DisplayText = this.LineStyle, LineStyle = LineStyle },
+                new LineStyleFeatureResource { NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(WorldCircleSize),
-                    DisplayText = this.Radius,
+                    DisplayText = () => Translation.Translate(this, "radius"),
                     Getter = () => WorldCircleSize,
                     Setter = newValue => WorldCircleSize = newValue,
                     MinValue = 0,
@@ -115,7 +115,7 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
                 new FloatFeatureResource
                 {
                     NameOf = nameof(WorldCircleStroke),
-                    DisplayText = this.Stroke,
+                    DisplayText = () => Translation.Translate(this, "stroke"),
                     Getter = () => WorldCircleStroke,
                     Setter = newValue => WorldCircleStroke = newValue,
                     MinValue = 0,
@@ -135,21 +135,21 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
         {
             Plugin = this,
             NameOf = nameof(OnlyMyClass),
-            DisplayName = this.Translate("only my class"),
+            DisplayName = () => Translation.Translate(this, "only my class"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(OnlyMyCurrentClass),
-                    DisplayText = this.Translate("only my class"),
+                    DisplayText = () => Translation.Translate(this, "only my class"),
                     Getter = () => OnlyMyCurrentClass,
                     Setter = newValue => OnlyMyCurrentClass = newValue
                 },
             }
         }.Register();
 
-        Generic = CreateFeature(nameof(Generic), this.Translate("generic"), AffixSnoIds.Generic);
-        GenericUnique = CreateFeature(nameof(GenericUnique), this.TranslateFormat("{0} (unique)", "generic"), AffixSnoIds.GenericUnique);
+        Generic = CreateFeature(nameof(Generic), () => Translation.Translate(this, "generic"), AffixSnoIds.Generic);
+        GenericUnique = CreateFeature(nameof(GenericUnique), () => Translation.TranslateFormat(this, "{0} (unique)", "generic"), AffixSnoIds.GenericUnique);
         Barbarian = CreateFeature(nameof(Barbarian), PlayerClassSnoId.Barbarian, AffixSnoIds.Barbarian);
         BarbarianUnique = CreateFeature(nameof(BarbarianUnique), PlayerClassSnoId.Barbarian, AffixSnoIds.BarbarianUnique, true);
         Druid = CreateFeature(nameof(Druid), PlayerClassSnoId.Druid, AffixSnoIds.Druid);
@@ -167,10 +167,10 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
         var className = playerClassSnoId.ToString().ToLowerInvariant();
         if (unique)
         {
-            return CreateFeature(name, this.TranslateFormat("{0} (unique)", className), snoIds);
+            return CreateFeature(name, () => Translation.TranslateFormat(this, "{0} (unique)", className), snoIds);
         }
 
-        return CreateFeature(name, this.Translate(className), snoIds);
+        return CreateFeature(name, () => Translation.Translate(this, className), snoIds);
     }
 
     private Feature CreateFeature(string name, Func<string> translation, List<AffixSnoId> snoIds)
@@ -178,9 +178,9 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
         var feature = new Feature { Plugin = this, NameOf = name, DisplayName = translation, Resources = new List<AbstractFeatureResource>() };
 
         var sortedSnoIds = snoIds
-            .Select(x => (snoIds: x, name: x.GetFriendlyName()))
+            .Select(x => (snoId: x, name: x.GetFriendlyName()))
             .OrderBy(x => x.name);
-        foreach (var snoId in sortedSnoIds.Select(x => x.snoIds))
+        foreach (var snoId in sortedSnoIds.Select(x => x.snoId))
         {
             AffixSnoIdEnabled[snoId] = false;
             feature.Resources.Add(new BooleanFeatureResource

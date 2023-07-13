@@ -49,7 +49,7 @@ public sealed partial class InventoryFeatures
         AddTextLine(new BooleanFeatureResource
         {
             NameOf = nameof(ItemLevelEnabled), 
-            DisplayText = Plugin.Translate("iLvl"),
+            DisplayText = () => Translation.Translate(Plugin, "iLvl"),
             Getter = () => ItemLevelEnabled, 
             Setter = v => ItemLevelEnabled = v,
         });

@@ -78,7 +78,7 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
 
         foreach (var actor in actors)
         {
-            LineStyle.DrawWorldEllipse(1.3f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
+            LineStyle.DrawWorldEllipse(0.8f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
             Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
             var tl = Font.GetTextLayout(actor.ActorSno.NameLocalized);
             tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));

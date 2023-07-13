@@ -5,20 +5,11 @@ public static partial class Inventory
     private static ItemIcon CreateNearBreakpoint() => new()
     {
         Scale = 0.8f,
-        Show = (_, features) => features.NearBreakpointIconEnabled,
-        Texture = (item, _) =>
-        {
-            if (Host.DebugEnabled)
-                return Textures.NearBreakpointIcon;
-
-            if (item.Quality is ItemQuality.None or ItemQuality.White or ItemQuality.Common or ItemQuality.Magic)
-            {
-                return null;
-            }
-
-            var isNearBreakPoint = item.IsNearBreakpoint();
-            return isNearBreakPoint ? Textures.NearBreakpointIcon : null;
-        }
+        Show = (item, features) => features.NearBreakpointIconEnabled
+                                   && item.Quality != ItemQuality.None && item.Quality >= ItemQuality.Rare
+                                   && item.ItemPower >= 600 // disable for low level items
+                                   && item.IsNearBreakpoint(),
+        Texture = (_, _) => Textures.NearBreakpointIcon,
     };
 }
 
@@ -29,7 +20,7 @@ public sealed partial class InventoryFeatures
         AddIcon(new BooleanFeatureResource
         {
             NameOf = nameof(NearBreakpointIconEnabled),
-            DisplayText = Plugin.Translate("near breakpoint icon"),
+            DisplayText = () => Translation.Translate(Plugin, "near breakpoint icon"),
             Getter = () => NearBreakpointIconEnabled,
             Setter = v => NearBreakpointIconEnabled = v,
         });

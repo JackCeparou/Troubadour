@@ -2,7 +2,17 @@
 
 public static class DungeonQuestsStore
 {
-    public static IEnumerable<ActorSnoId> ActorSnoIds { get; } = new List<ActorSnoId> { ActorSnoId.DGN_Standard_Sitting_Skeleton_Switch, };
+    public static IEnumerable<ActorSnoId> ActorSnoIds { get; } = new List<ActorSnoId>
+    {
+        ActorSnoId.DGN_Standard_Sitting_Skeleton_Switch,
+        ActorSnoId.DGN_Standard_Global_Human_Stake_01_Switch_Dyn,
+        ActorSnoId.DSH_Holdout_Switch,
+        ActorSnoId.DSH_Spawner_Switch,
+        // switch traps 1f
+        ActorSnoId.DSH_Holdout_Switch_Spikes,
+        ActorSnoId.DSH_Spawner_Switch_Spikes,
+
+    };
 
     public static IEnumerable<ActorSnoId> DebugActorSnoIds { get; } = new List<ActorSnoId>
     {
@@ -15,13 +25,8 @@ public static class DungeonQuestsStore
         ActorSnoId.Camp_Waypoint_Claim_Switch,
         ActorSnoId.CSD_OldMines_HoleSwitch,
         ActorSnoId.DGN_Scos_TwistedHollow_BossEncounterStartSwitch,
-        ActorSnoId.DGN_Standard_Global_Human_Stake_01_Switch_Dyn,
         // ActorSnoId.DONOTUSE__Template_Gizmo_QuestSwitch,
         // ActorSnoId.DONOTUSE__Template_Gizmo_QuestSwitch_InjectItem,
-        ActorSnoId.DSH_Holdout_Switch,
-        ActorSnoId.DSH_Holdout_Switch_Spikes,
-        ActorSnoId.DSH_Spawner_Switch,
-        ActorSnoId.DSH_Spawner_Switch_Spikes,
         ActorSnoId.Generic_Switch_Plunger_01_Dyn,
         ActorSnoId.Global_Human_Stake_01_Switch_Dyn,
         ActorSnoId.Hawe_SnakeCultist_SnakeEyeSwitch_Dyn,
