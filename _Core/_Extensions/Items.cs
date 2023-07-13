@@ -2,6 +2,7 @@ namespace T4.Plugins.Troubadour;
 
 public static class ItemExtensions
 {
+    private static int[] ItemBreakpoints = new[] { 150, 340, 460, 625, 725 };
     public static bool IsEquippedTemp(this IItem item) => EquippedItemLocationsSet.Contains(item.Location);
     public static IAffixSno GetAffix(this IItem item) => item.LegendaryAffixEquipped ?? item.Affix1 ?? item.Affix2; // ?? item.EnchantedAffix;
 
@@ -45,29 +46,13 @@ public static class ItemExtensions
         if (item.ItemPowerTotal >= 725)
             return false;
 
-        var maxItemPower = item.ItemPowerTotal + (upgradesLeft * 5);
-        return item.ItemPower switch
-        {
-            >= 135 and <= 149 => maxItemPower >= 150,
-            >= 320 and <= 339 => maxItemPower >= 340,
-            >= 440 and <= 459 => maxItemPower >= 460,
-            >= 600 and <= 624 => maxItemPower >= 625,
-            >= 700 and <= 724 => maxItemPower >= 725,
-            _ => false
-        };
+        var maxItemPower = item.ItemPower + (item.GetMaxUpgradeCount() * 5);
+        return ItemBreakpoints.Any(i => item.ItemPowerTotal < i && maxItemPower > i);
     }
 
     public static int GetNextBreakpoint(this IItem item)
     {
-        return item.ItemPower switch
-        {
-            >= 135 and <= 149 => 150,
-            >= 320 and <= 339 => 340,
-            >= 440 and <= 459 => 460,
-            >= 600 and <= 624 => 625,
-            >= 700 and <= 724 => 725,
-            _ => 0
-        };
+        return ItemBreakpoints.First(i => i > item.ItemPowerTotal);
     }
 
     public static string GetFriendlyAffixName(this IItem item)
