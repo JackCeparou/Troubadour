@@ -29,8 +29,11 @@ public sealed partial class PaperDoll : BasePlugin, IGameUserInterfacePainter
             .Register();
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Inventory;
+
     public override string GetDescription()
-        => "Display information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.";
+        => Translation.Translate(this, "displays information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

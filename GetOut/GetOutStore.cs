@@ -37,6 +37,9 @@ public static class GetOutStore
         ActorSnoId.dungeon_affix_driftingShade_projectile_coreMesh,
         ActorSnoId.dungeon_affix_driftingShade_projectile_parent,
         ActorSnoId.dungeon_affix_driftingShade_warning_coasters,
+        //
+        ActorSnoId.DRLG_Trap_Demonic,
+
     };
 
     public static IEnumerable<ActorSnoId> DebugActorSnoIds { get; } = new List<ActorSnoId>
@@ -50,7 +53,6 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_Bear_01_ClientEffect_Dyn,
         // ActorSnoId.DRLG_Trap_BearTrap,
         ActorSnoId.DRLG_Trap_BearTrap_BanditBoss,
-        ActorSnoId.DRLG_Trap_Demonic,
         ActorSnoId.DRLG_Trap_Demonic_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Demonic_Projectile,
         // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocks,

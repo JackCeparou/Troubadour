@@ -33,41 +33,74 @@ public static class ItemExtensions
     {
         >= 600 => 5,
         // TODO: this is wrong, but I don't know the correct values
-        >= 400 => 4, // tested wrong values: 300
-        _ => 3
+        // >= 400 => 4, // tested wrong values: 300
+        // _ => 3
+        // so, we support only iLvl >= 600 for now
+        _ => 0
     };
 
     public static bool IsNearBreakpoint(this IItem item)
     {
-        var upgradesLeft = item.GetMaxUpgradeCount() - item.UpgradeCount;
-        if (upgradesLeft <= 0)
+        // only apply to gear
+        if (item.ItemSno.ItemUseType != ItemUseType.None)
+            return false;
+        if (item.ItemPowerTotal < 600)
+            return false;
+        // only apply to ancestral, because normal and sacred gear has other rules we don't know yet
+        if (item.QualityModifier is ItemQualityModifier.None or ItemQualityModifier.Sacred)
             return false;
         if (item.ItemPowerTotal >= 725)
+            return false;
+        var upgradesLeft = item.GetMaxUpgradeCount() - item.UpgradeCount;
+        if (upgradesLeft <= 0)
             return false;
 
         var maxItemPower = item.ItemPowerTotal + (upgradesLeft * 5);
         return item.ItemPower switch
         {
-            >= 135 and <= 149 => maxItemPower >= 150,
-            >= 320 and <= 339 => maxItemPower >= 340,
-            >= 440 and <= 459 => maxItemPower >= 460,
-            >= 600 and <= 624 => maxItemPower >= 625,
-            >= 700 and <= 724 => maxItemPower >= 725,
+            // we support only iLvl >= 600 for now
+            // >= 135 and <= 149 => item.ItemPowerTotal < 150 && maxItemPower >= 150,
+            // >= 320 and <= 339 => item.ItemPowerTotal < 340 && maxItemPower >= 340,
+            // >= 440 and <= 459 => item.ItemPowerTotal < 460 && maxItemPower >= 460,
+            >= 600 and <= 624 => item.ItemPowerTotal < 625 && maxItemPower >= 625,
+            >= 700 and <= 724 => item.ItemPowerTotal < 725 && maxItemPower >= 725,
             _ => false
         };
     }
 
-    public static int GetNextBreakpoint(this IItem item)
+    public static int GetNextReachableBreakpoint(this IItem item)
     {
         return item.ItemPower switch
         {
-            >= 135 and <= 149 => 150,
-            >= 320 and <= 339 => 340,
-            >= 440 and <= 459 => 460,
+            // we support only iLvl >= 600 for now
+            // >= 135 and <= 149 => 150,
+            // >= 320 and <= 339 => 340,
+            // >= 440 and <= 459 => 460,
             >= 600 and <= 624 => 625,
             >= 700 and <= 724 => 725,
             _ => 0
         };
+    }
+
+    public static string GetFormattedItemPower(this IItem item, bool qualityModifierEnabled, bool upgradeSuffixEnabled)
+    {
+        if (item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
+            return $"T{item.SigilLevel}";
+
+        var prefix = item.QualityModifier switch
+        {
+            ItemQualityModifier.Sacred when qualityModifierEnabled => "s",
+            ItemQualityModifier.Ancestral when qualityModifierEnabled => "a",
+            _ => "i",
+        };
+        var itemPower = upgradeSuffixEnabled
+            ? item.ItemPower
+            : item.ItemPowerTotal;
+        var suffix = upgradeSuffixEnabled && item.UpgradeCount > 0
+            ? $"+{item.UpgradeCount * 5}"
+            : string.Empty;
+
+        return $"{prefix}{itemPower}{suffix}";
     }
 
     public static string GetFriendlyAffixName(this IItem item)
@@ -112,29 +145,21 @@ public static class ItemExtensions
             var text = $"""
 
 
-Id: {item.ItemSno.SnoId}
-Name: {item.ItemSno.NameLocalized}
-Affix1: {item.Affix1?.SnoId}
-Affix2: {item.Affix2?.SnoId}
-Affix3: {item.LegendaryAffixEquipped?.SnoId}
-Affix4: {item.EnchantedAffix?.SnoId}
-AffixFallback: {item.GetAffix()?.SnoId}
-FriendlyName: {item.GetAffix()?.CombineWithLocalized(null)}
+Id: {item.ItemSno.SnoId} | {item.ItemSno.NameLocalized}
+Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.LegendaryAffixEquipped?.SnoId} | {item.EnchantedAffix?.SnoId}
+AffixFallback: {item.GetAffix()?.SnoId} | {item.GetAffix()?.GetFriendlyName()}
 Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
-ItemLevel: {item.ItemPowerTotal}
+ItemLevel: {item.ItemPowerTotal} | {item.GetFormattedItemPower(true, true)}
+NearBreakpoint: {item.IsNearBreakpoint()} ({item.GetNextReachableBreakpoint()})
+UseType: {item.ItemSno.ItemUseType}
 Filters: {string.Join(", ", item.MatchingFilterNames)}
 AspectHunted: {item.IsAspectHunted()}
-NearBreakpoint: {item.IsNearBreakpoint()}
 Elixir: {item.IsElixirItem()} {item.IsElixirHunted()}
 Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemTextureMeta?.TextureId}
 
 
 """;
 
-            // Textures: {string.Join(", ", item.ItemSno.ClassTextureDefault?.Select(x => x.TextureSnoId.ToString()) ?? Array.Empty<string>())}
-            // Textures: {string.Join(", ", item.ItemSno.ClassTextureDefault?.Select(x => x.TextureId.ToString()) ?? Array.Empty<string>())}
-            // Textures: {string.Join(", ", item.ItemSno.ClassTextureFemale?.Select(x => x.TextureSnoId.ToString()) ?? Array.Empty<string>())}
-            // Textures: {string.Join(", ", item.ItemSno.ClassTextureFemale?.Select(x => x.TextureId.ToString()) ?? Array.Empty<string>())}
             Hint.SetHint(text);
             return;
         }
@@ -158,7 +183,7 @@ Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemText
             yield return Translation.Translate(plugin, "aspect hunter");
 
         if (item.IsNearBreakpoint())
-            yield return Translation.TranslateFormat(plugin, "near breakpoint ({0})", item.GetNextBreakpoint());
+            yield return Translation.TranslateFormat(plugin, "near breakpoint ({0})", item.GetNextReachableBreakpoint());
 
         foreach (var filterName in item.MatchingFilterNames)
         {

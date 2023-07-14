@@ -12,7 +12,7 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
 
     public bool ShowPlayerSkills { get; set; }
     public bool ShowGenericActors { get; set; } = true;
-    public bool ShowGyzmoActors { get; set; } = true;
+    public bool ShowGizmoActors { get; set; } = true;
     public bool ShowMonsterActors { get; set; } = true;
     public bool ShowNpcActors { get; set; }
     public bool ShowItems { get; set; } = true;
@@ -32,7 +32,11 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
         Instance = this;
     }
 
-    public override string GetDescription() => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
+    public override PluginCategory Category
+        => PluginCategory.Utility;
+
+    public override string GetDescription() 
+        => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
 
     public override void Load()
     {
@@ -59,10 +63,10 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
                 },
                 new BooleanFeatureResource
                 {
-                    NameOf = nameof(ShowGyzmoActors),
-                    DisplayText = () => Translation.Translate(this, "gyzmo actors"),
-                    Getter = () => ShowGyzmoActors,
-                    Setter = value => ShowGyzmoActors = value,
+                    NameOf = nameof(ShowGizmoActors),
+                    DisplayText = () => Translation.Translate(this, "gizmo actors"),
+                    Getter = () => ShowGizmoActors,
+                    Setter = value => ShowGizmoActors = value,
                 },
                 new BooleanFeatureResource
                 {
@@ -302,8 +306,8 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
             new()
             {
                 Name = "Gizmo",
-                Enabled = () => ShowGyzmoActors,
-                Toggle = () => ShowGyzmoActors = !ShowGyzmoActors,
+                Enabled = () => ShowGizmoActors,
+                Toggle = () => ShowGizmoActors = !ShowGizmoActors,
                 CircleStyle = Render.GetLineStyle(128, 180, 180, 255),
                 Actors = () => Game.GizmoActors.Where(x => x.Coordinate.IsOnScreen)
             },

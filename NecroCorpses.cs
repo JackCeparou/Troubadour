@@ -15,6 +15,9 @@ public sealed class NecroCorpses : BasePlugin, IGameWorldPainter
         EnabledByDefault = true;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Fight;
+
     public override string GetDescription()
         => Translation.Translate(this, "Display necromancer corpses on ground.");
 

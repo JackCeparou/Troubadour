@@ -22,12 +22,12 @@ public static class TreasureHunterStore
         if (item.Location != ItemLocation.None)
             return false;
 
-        return item.MatchingFilterNames.Length > 0;
+        return item.MatchingFilterNames is not null && item.MatchingFilterNames.Length > 0;
     };
 
     public static void NotifyMatchedFilters(this IItem item, IPlugin plugin)
     {
-        var message = string.Join(", ", item.MatchingFilterNames);
+        var message = string.Join(", ", item.MatchingFilterNames ?? Array.Empty<string>());
         Log.WriteLine(Verbosity.Info, () => Translation.TranslateFormat(plugin, "matched filters: {0}", message), 10);
     }
 }

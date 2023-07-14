@@ -10,6 +10,9 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter
         EnabledByDefault = false;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.WorldEvent;
+
     public override string GetDescription()
         => Translation.Translate(this, "Helltide companion");
 

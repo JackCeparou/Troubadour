@@ -26,6 +26,9 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
         EnabledByDefault = true;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Loot;
+
     public override string GetDescription()
         => Translation.Translate(this, "Highlight most wanted aspects.");
 
@@ -73,7 +76,10 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
             DisplayName = () => Translation.Translate(this, "items on map"),
             Resources = new List<AbstractFeatureResource>
             {
-                new LineStyleFeatureResource { NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle },
+                new LineStyleFeatureResource
+                {
+                    NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle
+                },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(MapCircleSize),
@@ -102,7 +108,10 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
             DisplayName = () => Translation.Translate(this, "items on ground"),
             Resources = new List<AbstractFeatureResource>
             {
-                new LineStyleFeatureResource { NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle },
+                new LineStyleFeatureResource
+                {
+                    NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle
+                },
                 new FloatFeatureResource
                 {
                     NameOf = nameof(WorldCircleSize),

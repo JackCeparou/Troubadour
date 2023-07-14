@@ -28,8 +28,12 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
         ResourceGlobe.Draw();
     }
 
+    public override PluginCategory Category
+        => PluginCategory.ActionBar;
+
     //TODO: translations when ready to enable by default
-    public override string GetDescription() => "Displays information around the player:\nEXPERIMENTAL / IN DEVELOPMENT";
+    public override string GetDescription() 
+        => Translation.Translate(this, "displays information around the player") + "\nEXPERIMENTAL / IN DEVELOPMENT";
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

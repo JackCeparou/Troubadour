@@ -11,8 +11,11 @@ public sealed partial class Vendors : BasePlugin, IGameUserInterfacePainter, IIt
         EnabledByDefault = true;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Inventory;
+
     public override string GetDescription()
-        => "Display information about items on vendor panels.";
+        => Translation.Translate(this, "displays information about items on vendor panels.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

@@ -12,8 +12,8 @@ public sealed partial class PlayerStash : BasePlugin, IGameUserInterfacePainter
 
     public override void Load()
     {
-        Stash = InventoryFeatures.Create(this, nameof(Stash), "items", 
-                CreateDefaultFont(bold: true), 
+        Stash = InventoryFeatures.Create(this, nameof(Stash), "items",
+                CreateDefaultFont(bold: true),
                 CreateDefaultErrorFont(bold: true))
             .AspectHunterIcon().AspectHunterHighlight(false)
             .TreasureHunterIcon().TreasureHunterHighlight(false).TreasureHunterFilterCount(false)
@@ -24,14 +24,17 @@ public sealed partial class PlayerStash : BasePlugin, IGameUserInterfacePainter
             .ItemLevel()
             .MonsterLevel()
             .ItemQualityModifier()
-            .AspectName(false).ElixirName(false)//.SigilName(false)
+            .AspectName(false).ElixirName(false) //.SigilName(false)
             .ShowHint()
             .GreyOut(false)
             .Register();
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Inventory;
+
     public override string GetDescription()
-        => "Display information on items in player stash.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.";
+        => Translation.Translate(this, "displays information on items in player stash.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

@@ -15,6 +15,9 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
         Order = int.MaxValue;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Loot;
+
     public override string GetDescription()
         => Translation.Translate(this, "Highlight most wanted items.\nClose this window and press F3 to configure rules.");
 
@@ -67,9 +70,7 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
             {
                 new FillStyleFeatureResource
                 {
-                    NameOf = nameof(GreyOutFillStyle),
-                    DisplayText = () => Translation.Translate(this, "grey out"),
-                    FillStyle = GreyOutFillStyle,
+                    NameOf = nameof(GreyOutFillStyle), DisplayText = () => Translation.Translate(this, "grey out"), FillStyle = GreyOutFillStyle,
                 },
                 new FontFeatureResource
                 {
@@ -139,7 +140,7 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
                 new BooleanFeatureResource
                 {
                     NameOf = nameof(ShowFilterNamesOnGround),
-                    DisplayText = () =>  Translation.Translate(this, "matched filter names"),
+                    DisplayText = () => Translation.Translate(this, "matched filter names"),
                     Getter = () => ShowFilterNamesOnGround,
                     Setter = newValue => ShowFilterNamesOnGround = newValue
                 },

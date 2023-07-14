@@ -21,36 +21,30 @@ public static partial class Inventory
 
             return item.IsEquippedTemp();
         },
-        Text = (item, features) =>
-        {
-            if (item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
-                return $"T{item.SigilLevel}";
-
-            if (!features.ItemQualityModifierEnabled)
-                return $"i{item.ItemPower}";
-
-            return item.QualityModifier switch
-            {
-                ItemQualityModifier.Sacred => $"s{item.ItemPower}",
-                ItemQualityModifier.Ancestral => $"a{item.ItemPower}",
-                _ => $"i{item.ItemPower}",
-            };
-        },
+        Text = (item, features) => item.GetFormattedItemPower(features.ItemQualityModifierEnabled, features.ItemLevelUpgradeSuffixEnabled),
     };
 }
 
 public sealed partial class InventoryFeatures
 {
-    public InventoryFeatures ItemLevel(bool enabled = true)
+    public InventoryFeatures ItemLevel(bool enabled = true, bool enabledSuffix = false)
     {
         AddTextLine(new BooleanFeatureResource
         {
-            NameOf = nameof(ItemLevelEnabled), 
+            NameOf = nameof(ItemLevelEnabled),
             DisplayText = () => Translation.Translate(Plugin, "iLvl"),
-            Getter = () => ItemLevelEnabled, 
+            Getter = () => ItemLevelEnabled,
             Setter = v => ItemLevelEnabled = v,
         });
+        Resources.Add(new BooleanFeatureResource 
+        {
+            NameOf = nameof(ItemLevelUpgradeSuffixEnabled),
+            DisplayText = () => $"{Translation.Translate(Plugin, "iLvl")} {Translation.Translate(Plugin, "upgrades")}",
+            Getter = () => ItemLevelUpgradeSuffixEnabled,
+            Setter = v => ItemLevelUpgradeSuffixEnabled = v,
+        });
         ItemLevelEnabled = enabled;
+        ItemLevelUpgradeSuffixEnabled = enabledSuffix;
         return this;
     }
 

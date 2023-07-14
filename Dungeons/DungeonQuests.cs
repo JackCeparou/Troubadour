@@ -11,7 +11,7 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
     public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 255, 255, 0, DashStyle.Dash);
 
     public bool OnMonsters { get; set; }
-    public bool OnGyzmos { get; set; }
+    public bool OnGizmos { get; set; }
     public bool OnGenerics { get; set; }
 
     public DungeonQuests()
@@ -19,8 +19,12 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
         EnabledByDefault = false;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Dungeon;
+
     //TODO: translations when ready to enable by default
-    public override string GetDescription() => "Displays dungeon quest objectives on map and ground:\nEXPERIMENTAL / IN DEVELOPMENT";
+    public override string GetDescription() 
+        => Translation.Translate(this, "displays dungeon quest objectives on map and ground") + "\nEXPERIMENTAL / IN DEVELOPMENT";
 
     public override void Load()
     {
@@ -38,7 +42,7 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
                 },
                 new BooleanFeatureResource
                 {
-                    NameOf = nameof(OnGyzmos), DisplayText = () => nameof(OnGyzmos), Getter = () => OnGyzmos, Setter = value => OnGyzmos = value,
+                    NameOf = nameof(OnGizmos), DisplayText = () => nameof(OnGizmos), Getter = () => OnGizmos, Setter = value => OnGizmos = value,
                 },
                 new BooleanFeatureResource
                 {
@@ -62,7 +66,7 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
                 DrawGroundActors(true, Game.GenericActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
 
                 DrawDebugActors(OnMonsters, Game.Monsters.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-                DrawDebugActors(OnGyzmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+                DrawDebugActors(OnGizmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
                 DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
                 break;
             case GameWorldLayer.Map:

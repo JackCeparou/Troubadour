@@ -59,8 +59,11 @@ public sealed partial class PlayerBackpack : BasePlugin,
         // noop
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Inventory;
+
     public override string GetDescription()
-        => "Display information on items in player inventory.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.";
+        => Translation.Translate(this, "displays information on items in player inventory.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

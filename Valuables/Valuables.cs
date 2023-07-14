@@ -14,6 +14,9 @@ public sealed class Valuables : BasePlugin, IGameUserInterfacePainter, IGameWorl
         EnabledByDefault = true;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Loot;
+
     public override string GetDescription()
         => Translation.Translate(this, "Highlight most valuable goods.");
 
@@ -26,6 +29,7 @@ public sealed class Valuables : BasePlugin, IGameUserInterfacePainter, IGameWorl
         WorldFeatures.Add(Elixirs);
         WorldFeatures.Add(SilentChests);
         WorldFeatures.Add(MountCosmetics);
+        WorldFeatures.TrimExcess(); // yeah, i know
     }
 
     public void PaintGameWorld(GameWorldLayer layer)

@@ -18,6 +18,9 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
         Order = -1; // draw before chests
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Fight;
+
     public override string GetDescription()
         => Translation.Translate(this, "Displays cursed chests and shrines on the map and ground.");
 
@@ -46,6 +49,7 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
                     {
                         Textures.ShrineIcon.Draw(mapX - offset, mapY - offset, size, size);
                     }
+
                     MapFillStyle.FillEllipse(mapX, mapY, offset, offset, false);
                     MapLineStyle.DrawEllipse(mapX, mapY, offset, offset, false);
                 }

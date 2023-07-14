@@ -10,7 +10,7 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
     public static ILineStyle TrapLineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dash);
 
     public bool OnMonsters { get; set; }
-    public bool OnGyzmos { get; set; }
+    public bool OnGizmos { get; set; }
     public bool OnGenerics { get; set; }
 
     public GetOut()
@@ -18,8 +18,12 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
         EnabledByDefault = false;
     }
 
+    public override PluginCategory Category
+        => PluginCategory.Fight;
+
     //TODO: translations when ready to enable by default
-    public override string GetDescription() => "Displays monster affixes on ground:\nEXPERIMENTAL / IN DEVELOPMENT";
+    public override string GetDescription()
+        => Translation.Translate(this, "displays dangerous affixes on ground") + "\nEXPERIMENTAL / IN DEVELOPMENT";
 
     public override void Load()
     {
@@ -37,7 +41,7 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
                 },
                 new BooleanFeatureResource
                 {
-                    NameOf = nameof(OnGyzmos), DisplayText = () => nameof(OnGyzmos), Getter = () => OnGyzmos, Setter = value => OnGyzmos = value,
+                    NameOf = nameof(OnGizmos), DisplayText = () => nameof(OnGizmos), Getter = () => OnGizmos, Setter = value => OnGizmos = value,
                 },
                 new BooleanFeatureResource
                 {
@@ -57,7 +61,7 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
         DrawActors(true, Game.GenericActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
 
         DrawDebugActors(OnMonsters, Game.Monsters.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawDebugActors(OnGyzmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        DrawDebugActors(OnGizmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
         DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
     }
 

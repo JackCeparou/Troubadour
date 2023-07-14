@@ -23,6 +23,7 @@ public sealed partial class InventoryFeatures : Feature
     public IFont ErrorFont { get; init; }
     public IFont NormalFont { get; init; }
     public bool ItemLevelEnabled { get; set; }
+    public bool ItemLevelUpgradeSuffixEnabled { get; set; }
     public bool ItemQualityModifierEnabled { get; set; }
     public bool MonsterLevelEnabled { get; set; }
     public bool AspectNameEnabled { get; set; }
