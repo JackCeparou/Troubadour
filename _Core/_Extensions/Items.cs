@@ -46,10 +46,13 @@ public static class ItemExtensions
             return false;
         if (item.ItemPowerTotal < 600)
             return false;
-        // only apply to ancestral, because normal and sacred gear has other rules we don't know yet
-        if (item.QualityModifier is ItemQualityModifier.None or ItemQualityModifier.Sacred)
-            return false;
+        // there is no breakpoint over 725 in the game atm
         if (item.ItemPowerTotal >= 725)
+            return false;
+        // only apply to ancestral, because normal and sacred gear has other rules we don't know yet
+        if (item.QualityModifier is ItemQualityModifier.None)
+            return false;
+        if (item.QualityModifier is ItemQualityModifier.Sacred && item.ItemPowerTotal < 600)
             return false;
         var upgradesLeft = item.GetMaxUpgradeCount() - item.UpgradeCount;
         if (upgradesLeft <= 0)
