@@ -11,12 +11,14 @@ public static class DungeonQuestsStore
         // switch traps 1f
         ActorSnoId.DSH_Holdout_Switch_Spikes,
         ActorSnoId.DSH_Spawner_Switch_Spikes,
+        // level floor switch
+        ActorSnoId.DGN_Frac_KorDraganBarracks_FloorLever,
 
     };
 
     public static IEnumerable<ActorSnoId> DebugActorSnoIds { get; } = new List<ActorSnoId>
     {
-        ActorSnoId.Symbol_Quest_Proxy, // probably not needed/wanted 
+        // ActorSnoId.Symbol_Quest_Proxy, // probably not needed/wanted 
         ActorSnoId.Ancients_Prop_Lilith_BloodPetal_switch_smokeTrail_emitter,
         ActorSnoId.Bounty_RitualNode_Switch,
         ActorSnoId.CAMP_Frac_Nostrava_Locked_Door_Switch,

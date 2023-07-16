@@ -1,17 +1,24 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class CarryableItemsFeature : WorldFeature<IItem>
+public sealed class CarryableItemsFeature : WorldFeature<ICommonActor>
 {
     private CarryableItemsFeature()
     {
-        CarryableItemSnoIdsSet = new HashSet<ActorSnoId>(CarryableItemSnoIds);
+        CarryableSnoIdsSet = new HashSet<ActorSnoId>(CarryableItemSnoIds);
         LineStyle = Render.GetLineStyle(200, 255, 255, 0);
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
-    public override IEnumerable<IItem> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldObjects()
     {
-        return Game.Items.Where(x => x.Location == ItemLocation.None && CarryableItemSnoIdsSet.Contains(x.ActorSno.SnoId));
+        foreach (var gizmo in Game.GizmoActors.Where(x => CarryableSnoIdsSet.Contains(x.ActorSno.SnoId)))
+        {
+            yield return gizmo;
+        }
+        foreach (var item in Game.Items.Where(x => x.Location == ItemLocation.None && CarryableSnoIdsSet.Contains(x.ActorSno.SnoId)))
+        {
+            yield return item;
+        }
     }
 
     public static CarryableItemsFeature Create(IPlugin plugin, string nameOf)
@@ -40,7 +47,11 @@ public sealed class CarryableItemsFeature : WorldFeature<IItem>
         ActorSnoId.Carryable_SightlessEye,
         ActorSnoId.Carryable_StoneCarving,
         ActorSnoId.Carryable_Winch,
+        // keys
+        ActorSnoId.Global_Flippy_Items_RustedIronKeys_01_Item,
+        ActorSnoId.Global_Flippy_Items_RustedIronKeys_02_Item,
+        ActorSnoId.Global_Flippy_Items_RustedIronKeys_03_Item,
     };
 
-    public HashSet<ActorSnoId> CarryableItemSnoIdsSet { get; }
+    public HashSet<ActorSnoId> CarryableSnoIdsSet { get; }
 }

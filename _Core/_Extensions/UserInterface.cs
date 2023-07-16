@@ -10,8 +10,6 @@ public static class UserInterfaceExtensions
 
     const string AspectsPath = "inventory_dialog_mainPage.InventoryContainer.inventory_button_materials";
 
-    // const string HeroNamePath = "inventory_dialog_mainPage.InventoryContainer.Hero_Name";
-    const string HeroNamePath = "inventory_dialog_mainPage.InventoryContainer.HeroInfo";
     const string ShopListPath = "shop_dialog_mainPage.ShopContainer_Default.Shop_list";
 
     public static void RegisterInventoryControls(this IUserInterfaceService userInterface)
@@ -21,7 +19,6 @@ public static class UserInterfaceExtensions
         userInterface.RegisterControl(ConsumablesPath);
         userInterface.RegisterControl(QuestItemsPath);
         userInterface.RegisterControl(AspectsPath);
-        userInterface.RegisterControl(HeroNamePath);
         userInterface.RegisterControl(ShopListPath);
     }
 
@@ -42,9 +39,6 @@ public static class UserInterfaceExtensions
 
     public static IUIControl GetShopListControl(this IUserInterfaceService userInterface)
         => userInterface.GetRegisteredControlByPath(ShopListPath);
-
-    public static IUIControl GetInventoryHeroNameControl(this IUserInterfaceService userInterface)
-        => userInterface.GetRegisteredControlByPath(HeroNamePath);
 
     // temporary solution while we get the controls from hud
     private static float _shopListWidth;

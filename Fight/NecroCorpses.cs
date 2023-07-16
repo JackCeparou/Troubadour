@@ -84,7 +84,7 @@ public sealed class NecroCorpses : BasePlugin, IGameWorldPainter
                 {
                     DrawDebugText(() => $"""
                         Untargetable {corpse.Untargetable}
-                        IsStealthed {corpse.IsStealthed}
+                        IsStealth {corpse.IsStealthed}
                         IsNPC {corpse.IsNPC}
                         IsDisabled {corpse.IsDisabled}
                         AttachedToACD {corpse.AttachedToACD}

@@ -3,6 +3,9 @@ namespace T4.Plugins.Troubadour;
 public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
 {
     public Feature Config { get; private set; }
+    public Feature Developer { get; private set; }
+
+    public static bool IsDeveloper { get; private set; }
 
     private DebugActors[] _debugActors;
     private readonly List<string> _debugLines = new();
@@ -21,21 +24,16 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
     public bool ShowActorFrame { get; set; }
     public bool ShowUserInterfaceControls { get; set; }
 
-    public bool Developer { get; set; }
-    public static bool IsDeveloper => Instance?.Developer ?? false;
-    private static Debug Instance { get; set; }
-
     public Debug()
     {
         Order = int.MaxValue;
-        EnabledByDefault = false;
-        Instance = this;
+        EnabledByDefault = true;
     }
 
     public override PluginCategory Category
         => PluginCategory.Utility;
 
-    public override string GetDescription() 
+    public override string GetDescription()
         => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
 
     public override void Load()
@@ -44,7 +42,7 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
         {
             Plugin = this,
             NameOf = nameof(Config),
-            DisplayName = () => nameof(Config),
+            DisplayName = () => Translation.Translate(this, "config"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
@@ -117,9 +115,21 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
                     Getter = () => ShowUserInterfaceControls,
                     Setter = value => ShowUserInterfaceControls = value,
                 },
+            }
+        }.Register();
+        Developer = new Feature
+        {
+            Plugin = this,
+            NameOf = nameof(Developer),
+            DisplayName = () => Translation.Translate(this, "developer"),
+            Resources = new List<AbstractFeatureResource>
+            {
                 new BooleanFeatureResource
                 {
-                    NameOf = nameof(Developer), DisplayText = () => "developer session", Getter = () => Developer, Setter = value => Developer = value,
+                    NameOf = nameof(IsDeveloper),
+                    DisplayText = () => "troubadour developer session",
+                    Getter = () => IsDeveloper,
+                    Setter = value => IsDeveloper = value,
                 },
             }
         }.Register();
@@ -127,6 +137,12 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
 
     public void HandleKeyRelease(DirectKey key)
     {
+        if (key == DirectKey.F12)
+        {
+            IsDeveloper = !IsDeveloper;
+            return;
+        }
+
         if (!Host.DebugEnabled)
             return;
         var index = key switch
@@ -363,19 +379,3 @@ public sealed class DebugActors
     public Func<bool> LineEnabled { get; init; }
     public ILineStyle LineStyle { get; init; }
 }
-
-/*
-public sealed class BooleanResource : BooleanFeatureResource
-{
-    public bool Value { get; set; }
-
-    public BooleanResource(string name, bool value = false)
-    {
-        NameOf = name;
-        Value = value;
-    }
-
-    public static bool operator true(BooleanResource x) => x.Value;
-    public static bool operator false(BooleanResource x) => !x.Value;
-}
-//*/

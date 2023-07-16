@@ -25,7 +25,7 @@ public static partial class DebugService
 
     public static void DrawDebugOutline(IScreenRectangle rect)
     {
-        if (!Host.DebugEnabled || rect == null)
+        if (rect == null || (!Host.DebugEnabled && !Debug.IsDeveloper))
             return;
 
         DrawDevOutline(rect);
@@ -33,7 +33,7 @@ public static partial class DebugService
 
     public static void DrawDebugOutline(float x, float y, float width, float height)
     {
-        if (!Host.DebugEnabled)
+        if (!Host.DebugEnabled && !Debug.IsDeveloper)
             return;
 
         DrawDevOutline(x, y, width, height);
@@ -51,6 +51,9 @@ public static partial class DebugService
 
     public static void DrawDebugFrame(IEnumerable<string> lines, float x, float y, bool leftOf = false)
     {
+        if (!Host.DebugEnabled && !Debug.IsDeveloper)
+            return;
+
         var tl = DebugFont.GetTextLayout(string.Join(Environment.NewLine, lines));
         if (leftOf)
         {
@@ -61,21 +64,25 @@ public static partial class DebugService
         tl.DrawText(x, y);
     }
 
-    public static void DrawDebugActors(bool enabled, IEnumerable<ICommonActor> actors)
+    public static void DrawDevActors(Func<ICommonActor, bool> predicate, bool onMonsters, bool onGizmos, bool onGenerics)
     {
-        if (!enabled)
+        if (!Host.DebugEnabled && !Debug.IsDeveloper)
             return;
 
+        if (onMonsters)
+            DrawDevActors(Game.Monsters.Where(predicate));
+        if (onGizmos)
+            DrawDevActors(Game.GizmoActors.Where(predicate));
+        if (onGenerics)
+            DrawDevActors(Game.GenericActors.Where(predicate));
+    }
+
+    private static void DrawDevActors(IEnumerable<ICommonActor> actors)
+    {
         foreach (var actor in actors)
         {
             DebugActorLineStyle.DrawWorldEllipse(1f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
             Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
-            if (actor.ActorSno.SnoId == ActorSnoId.Generic_Proxy)
-            {
-                var tl1 = DebugFont.GetTextLayout($"GenericProxy {actor.AcdId} {actor.AnnId}");
-                tl1.DrawText(x - (tl1.Width / 2f), y - (tl1.Height / 2f));
-                continue;
-            }
             var tl = DebugFont.GetTextLayout(actor.ActorSno.SnoId.ToString());
             tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
         }

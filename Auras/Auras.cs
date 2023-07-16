@@ -1,6 +1,4 @@
-﻿//*
-
-namespace T4.Plugins.Troubadour;
+﻿namespace T4.Plugins.Troubadour;
 
 public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePainter
 {
@@ -20,8 +18,8 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
 
     public void PaintMenuUserInterface()
     {
-        // if (!IsDevSession)
-        return;
+        if (!Host.DebugEnabled && !Debug.IsDeveloper)
+            return;
 
         GameObserver.CheckScreenSize();
         HitpointsGlobe.Draw();
@@ -31,9 +29,8 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
     public override PluginCategory Category
         => PluginCategory.ActionBar;
 
-    //TODO: translations when ready to enable by default
-    public override string GetDescription() 
-        => Translation.Translate(this, "displays information around the player") + "\nEXPERIMENTAL / IN DEVELOPMENT";
+    public override string GetDescription()
+        => Translation.TranslateExperimentalPlugin(this, "displays information around the player");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {
@@ -51,7 +48,7 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
     {
         HitpointsGlobe = new HitpointsAuraGlobe
         {
-            Scale = 0.8f,
+            Scale = 1f,
             Placement = new RelativeComponentPlacement
             {
                 RelativeTo = ScreenAnchors.PlayerFeet,
@@ -64,7 +61,7 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
         };
         ResourceGlobe = new ResourceAuraGlobe
         {
-            Scale = 0.8f,
+            Scale = 1f,
             Placement = new RelativeComponentPlacement
             {
                 RelativeTo = ScreenAnchors.PlayerFeet,
@@ -93,4 +90,3 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
         }.Register();
     }
 }
-//*/

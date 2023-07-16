@@ -5,9 +5,10 @@ namespace T4.Plugins.Troubadour;
 public sealed class GetOut : BasePlugin, IGameWorldPainter
 {
     public Feature Config { get; private set; }
+    public Feature Developer { get; private set; }
 
     public static IFont TrapFont { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
-    public static ILineStyle TrapLineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dash);
+    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dash);
 
     public bool OnMonsters { get; set; }
     public bool OnGizmos { get; set; }
@@ -21,18 +22,29 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
     public override PluginCategory Category
         => PluginCategory.Fight;
 
-    //TODO: translations when ready to enable by default
     public override string GetDescription()
-        => Translation.Translate(this, "displays dangerous affixes on ground") + "\nEXPERIMENTAL / IN DEVELOPMENT";
+        => Translation.TranslateExperimentalPlugin(this, "displays dangerous affixes on ground");
 
     public override void Load()
     {
         Config = new Feature
         {
-            // Enabled = false,
             Plugin = this,
             NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, "debug"),
+            DisplayName = () => Translation.Translate(this, "config"),
+            Resources = new List<AbstractFeatureResource>
+            {
+                // new FontFeatureResource { NameOf = nameof(TrapFont), DisplayText = () => nameof(TrapFont), Font = TrapFont, },
+                new LineStyleFeatureResource { NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle, },
+            }
+        }.Register();
+
+        Developer = new Feature
+        {
+            // Enabled = false,
+            Plugin = this,
+            NameOf = nameof(Developer),
+            DisplayName = () => Translation.Translate(this, "developer"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
@@ -60,9 +72,10 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
         DrawActors(true, Game.GizmoActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
         DrawActors(true, Game.GenericActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
 
-        DrawDebugActors(OnMonsters, Game.Monsters.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawDebugActors(OnGizmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-        DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+        if (!Developer.Enabled)
+            return;
+
+        DrawDevActors(x => DevActorSnoIdSet.Contains(x.ActorSno.SnoId), OnMonsters, OnGizmos, OnGenerics);
     }
 
     public static void DrawActors(bool enabled, IEnumerable<ICommonActor> actors)
@@ -72,8 +85,9 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
 
         foreach (var actor in actors)
         {
-            TrapLineStyle.DrawWorldEllipse(1.3f, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
-            Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
+            var radius = actor.GetWorldRadius();
+            LineStyle.DrawWorldEllipse(radius, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
+            // Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
             // var tl = TrapFont.GetTextLayout(actor.ActorSno.NameLocalized);
             // tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
         }

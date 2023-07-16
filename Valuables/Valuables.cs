@@ -1,6 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class Valuables : BasePlugin, IGameUserInterfacePainter, IGameWorldPainter
+public sealed class Valuables : BasePlugin, IGameWorldPainter
 {
     public IWorldFeature Elixirs { get; private set; }
     public IWorldFeature SilentChests { get; private set; }
@@ -40,24 +40,13 @@ public sealed class Valuables : BasePlugin, IGameUserInterfacePainter, IGameWorl
         switch (layer)
         {
             case GameWorldLayer.Ground:
-                foreach (var feature in WorldFeatures.Where(x => x.Enabled && x.OnGroundEnabled))
-                {
-                    feature.PaintGround();
-                }
+                WorldFeatures.PaintGround();
 
                 break;
             case GameWorldLayer.Map:
-                foreach (var feature in WorldFeatures.Where(x => x.Enabled && x.OnMapEnabled))
-                {
-                    feature.PaintMap();
-                }
+                WorldFeatures.PaintMap();
 
                 break;
         }
-    }
-
-    public void PaintGameUserInterface(GameUserInterfaceLayer layer)
-    {
-        // needed ???
     }
 }

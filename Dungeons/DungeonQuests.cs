@@ -4,7 +4,7 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
 {
-    public Feature Config { get; private set; }
+    public Feature Developer { get; private set; }
     public CarryableItemsFeature CarryableItems { get; private set; }
 
     public static IFont Font { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
@@ -16,24 +16,24 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
 
     public DungeonQuests()
     {
-        EnabledByDefault = false;
+        EnabledByDefault = true;
     }
 
     public override PluginCategory Category
         => PluginCategory.Dungeon;
 
-    //TODO: translations when ready to enable by default
-    public override string GetDescription() 
-        => Translation.Translate(this, "displays dungeon quest objectives on map and ground") + "\nEXPERIMENTAL / IN DEVELOPMENT";
+    public override string GetDescription()
+        => Translation.TranslateExperimentalPlugin(this, "displays dungeon quest objectives on map and ground");
 
     public override void Load()
     {
-        Config = new Feature
+        CarryableItems = CarryableItemsFeature.Create(this, nameof(CarryableItems));
+
+        Developer = new Feature
         {
-            // Enabled = false,
             Plugin = this,
-            NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, "debug"),
+            NameOf = nameof(Developer),
+            DisplayName = () => Translation.Translate(this, "developer"),
             Resources = new List<AbstractFeatureResource>
             {
                 new BooleanFeatureResource
@@ -50,12 +50,13 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
                 },
             }
         }.Register();
-
-        CarryableItems = CarryableItemsFeature.Create(this, nameof(CarryableItems));
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
     {
+        if (Game.MyPlayer.LevelAreaSno.IsTown)
+            return;
+
         switch (layer)
         {
             case GameWorldLayer.Ground:
@@ -65,9 +66,9 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
                 DrawGroundActors(true, Game.GizmoActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
                 DrawGroundActors(true, Game.GenericActors.Where(x => ActorSnoIdSet.Contains(x.ActorSno.SnoId)));
 
-                DrawDebugActors(OnMonsters, Game.Monsters.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-                DrawDebugActors(OnGizmos, Game.GizmoActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
-                DrawDebugActors(OnGenerics, Game.GenericActors.Where(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId)));
+                if (!Developer.Enabled)
+                    return;
+                DrawDevActors(x => DebugActorSnoIdSet.Contains(x.ActorSno.SnoId), OnMonsters, OnGizmos, OnGenerics);
                 break;
             case GameWorldLayer.Map:
                 CarryableItems.PaintMap();

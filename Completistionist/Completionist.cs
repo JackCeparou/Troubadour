@@ -50,16 +50,19 @@
 //     {
 //         if (layer != GameWorldLayer.Map)
 //             return;
-//         if (Map.MapZoomLevel > MaxMapZoomLevel)
-//             return;
+//         // if (Map.MapZoomLevel > MaxMapZoomLevel)
+//         //     return;
 //         if (!IconOnMap.Enabled)
 //             return;
 //         if (Map.MapWorldSno.SnoId != WorldSnoId.Sanctuary_Eastern_Continent)
 //             return;
 //
-//         var markers = Game.GlobalMarkers;
-//             // .Where(x => x.WorldSno == Map.MapWorldSno); // && x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
-//             // .Where(x => x.WorldSno == Map.MapWorldSno && x.ActorSno?.NameEnglish == "Altar of Lilith");
+//         var markers = Game.GlobalMarkers
+//                 .Where(x => x.WorldSno == Map.MapWorldSno)
+//                 .Where(x => x.GizmoType == GizmoType.Hidden_Cache)
+//             ;
+//         // .Where(x => x.WorldSno == Map.MapWorldSno); // && x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
+//         // .Where(x => x.WorldSno == Map.MapWorldSno && x.ActorSno?.NameEnglish == "Altar of Lilith");
 //
 //         foreach (var marker in markers)
 //         {
@@ -67,9 +70,9 @@
 //             if (!isOnMap)
 //                 continue;
 //             var text = $"""
-// {marker.ActorSno.SnoId}
-// {string.Join(", ", marker.SubZoneSnoList.Select(x => x.SnoId))}
+// {marker.ActorSno?.SnoId} {marker.GizmoType}
 // """;
+// //            {string.Join(", ", marker.SubZoneSnoList?.Select(x => x?.SnoId.ToString() ?? string.Empty) ?? Array.Empty<string>())}
 //             var tl = Font.GetTextLayout(text);
 //             var x = mapX - (tl.Width / 2);
 //             var y = mapY - (tl.Height / 2);

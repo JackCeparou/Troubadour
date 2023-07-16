@@ -39,29 +39,14 @@ public static class GetOutStore
         ActorSnoId.dungeon_affix_driftingShade_warning_coasters,
         //
         ActorSnoId.DRLG_Trap_Demonic,
-
     };
 
-    public static IEnumerable<ActorSnoId> DebugActorSnoIds { get; } = new List<ActorSnoId>
+    public static IEnumerable<ActorSnoId> DevActorSnoIds { get; } = new List<ActorSnoId>
     {
         // traps
-        ActorSnoId.DRLG_Trap_Barrel_Cold_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Fire_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Lightning_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Poison_ClientEffect,
-        ActorSnoId.DRLG_Trap_Barrel_Shadow_ClientEffect,
-        ActorSnoId.DRLG_Trap_Bear_01_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_BearTrap,
         ActorSnoId.DRLG_Trap_BearTrap_BanditBoss,
-        ActorSnoId.DRLG_Trap_Demonic_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Demonic_Projectile,
-        // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocks,
-        // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocksBrickDark,
-        // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocksBrickDarkAndWood,
-        // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocksBrickLight,
-        // ActorSnoId.DRLG_Trap_FallingRocks_FallingRocksSand,
         ActorSnoId.DRLG_Trap_Frozen,
-        ActorSnoId.DRLG_Trap_Frozen_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Frozen_Projectile,
         ActorSnoId.DRLG_Trap_Frozen_Projectile_Initial,
         ActorSnoId.DRLG_Trap_Generic_ElementalTotem_01_Cold_Stage01_Dyn,
@@ -78,31 +63,9 @@ public static class GetOutStore
         ActorSnoId.DRLG_Trap_geyser_hell_deploy_bubble_mesh,
         ActorSnoId.DRLG_Trap_Geyser_Hell_Deploy_glowSphere,
         ActorSnoId.DRLG_Trap_Gloomspore,
-        ActorSnoId.DRLG_Trap_Gloomspore_Base_ClientEffect_Dyn,
-        ActorSnoId.DRLG_Trap_Gloomspore_Chunk_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Log,
-        ActorSnoId.DRLG_Trap_Log_01_ClientEffect,
         ActorSnoId.DRLG_Trap_Log_DestroyableObject,
-        // ActorSnoId.DRLG_Trap_Mine_Cold,
-        // ActorSnoId.DRLG_Trap_Mine_Cold_SP,
-        // ActorSnoId.DRLG_Trap_Mine_Death_Cold_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_Mine_Death_Fire_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_Mine_Death_Lightning_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_Mine_Death_Poison_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_Mine_Death_Shadow_ClientEffect_Dyn,
-        // ActorSnoId.DRLG_Trap_Mine_Fire,
-        // ActorSnoId.DRLG_Trap_Mine_Fire_SP,
-        // ActorSnoId.DRLG_Trap_Mine_Lightning,
-        // ActorSnoId.DRLG_Trap_Mine_Lightning_SP,
-        // ActorSnoId.DRLG_Trap_Mine_Poison,
-        // ActorSnoId.DRLG_Trap_Mine_Poison_SP,
-        // ActorSnoId.DRLG_Trap_Mine_Shadow,
-        // ActorSnoId.DRLG_Trap_Mine_Shadow_SP,
-        // ActorSnoId.DRLG_Trap_Mine_Warning_Cold_ClientEffect_VFX,
-        // ActorSnoId.DRLG_Trap_Mine_Warning_Poison_ClientEffect_VFX,
-        // ActorSnoId.DRLG_Trap_Mine_Warning_Shadow_ClientEffect_VFX,
         ActorSnoId.DRLG_Trap_Spectral,
-        ActorSnoId.DRLG_Trap_Spectral_01_ClientEffect_Dyn,
         ActorSnoId.DRLG_Trap_Spectral_Projectile,
         ActorSnoId.DRLG_Trap_Spectral_Projectile_First,
         ActorSnoId.DRLG_Trap_Totem_Fire,
@@ -178,6 +141,35 @@ public static class GetOutStore
         // ActorSnoId.MonsterAffix_Waller_Untargetable_Wall_Cannibal_Tyrant,
     };
 
-    public static HashSet<ActorSnoId> DebugActorSnoIdSet { get; } = new(DebugActorSnoIds);
+    public static HashSet<ActorSnoId> DevActorSnoIdSet { get; } = new(DevActorSnoIds);
     public static HashSet<ActorSnoId> ActorSnoIdSet { get; } = new(ActorSnoIds);
 }
+
+/*
+        // ActorSnoId.DRLG_Trap_Mine_Cold_SP,
+        // ActorSnoId.DRLG_Trap_Mine_Fire_SP,
+        // ActorSnoId.DRLG_Trap_Mine_Lightning_SP,
+        // ActorSnoId.DRLG_Trap_Mine_Poison_SP,
+        // ActorSnoId.DRLG_Trap_Mine_Shadow_SP,
+
+        // ActorSnoId.DRLG_Trap_Barrel_Cold_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Barrel_Fire_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Barrel_Lightning_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Barrel_Poison_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Barrel_Shadow_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Bear_01_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Demonic_01_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Frozen_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Gloomspore_Base_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Gloomspore_Chunk_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Log_01_ClientEffect,
+        // ActorSnoId.DRLG_Trap_Spectral_01_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Mine_Warning_Cold_ClientEffect_VFX,
+        // ActorSnoId.DRLG_Trap_Mine_Warning_Poison_ClientEffect_VFX,
+        // ActorSnoId.DRLG_Trap_Mine_Warning_Shadow_ClientEffect_VFX,
+        // ActorSnoId.DRLG_Trap_Mine_Death_Cold_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Mine_Death_Fire_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Mine_Death_Lightning_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Mine_Death_Poison_ClientEffect_Dyn,
+        // ActorSnoId.DRLG_Trap_Mine_Death_Shadow_ClientEffect_Dyn,
+ */

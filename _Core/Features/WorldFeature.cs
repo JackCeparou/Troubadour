@@ -10,6 +10,31 @@ public interface IWorldFeature
     void PaintMap();
 }
 
+public static class WorldFeatureExtensions
+{
+    public static void PaintGround(this IEnumerable<IWorldFeature> features)
+    {
+        foreach (var feature in features)
+        {
+            if (!feature.Enabled || !feature.OnGroundEnabled)
+                continue;
+
+            feature.PaintGround();
+        }
+    }
+
+    public static void PaintMap(this IEnumerable<IWorldFeature> features)
+    {
+        foreach (var feature in features)
+        {
+            if (!feature.Enabled || !feature.OnMapEnabled)
+                continue;
+
+            feature.PaintMap();
+        }
+    }
+}
+
 public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommonActor
 {
     public virtual bool OnGroundEnabled { get; set; } = true;
@@ -45,11 +70,12 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
                 var y = item.Coordinate.ScreenY - (size / 2);
                 WorldIconTexture.Draw(x, y, size, size);
             }
+
             PaintGroundExtra(item);
         }
     }
 
-    public void PaintMap()
+    public virtual void PaintMap()
     {
         if (!Enabled || !OnMapEnabled)
             return;
@@ -67,6 +93,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
                 var y = item.Coordinate.ScreenY - (size / 2);
                 MapIconTexture.Draw(x, y, size, size);
             }
+
             PaintMapExtra(item, mapX, mapY);
         }
     }
