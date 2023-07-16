@@ -30,13 +30,14 @@ public static class HelltidesStore
     private static readonly HelltideChest KJ_G3_3B = new(598, -123, "KJ_3B_G3");
 
     // hawezar
-    private static readonly HelltideChest[] HZ_G1_1A_2B = { new(-718, 240, "HZ_1A_G1"), new(-212, 740, "HZ_2B_G1"), };
+    private static readonly HelltideChest[] HZ_G1_1A_2B = { new(-718, 235, "HZ_1A_G1"), new(-212, 740, "HZ_2B_G1"), };
     private static readonly HelltideChest[] HZ_G2_1B_2A = { new(-1105, 375, "HZ_1B_G2"), new(-553, 655, "HZ_2A_G2"), };
 
     public static IEnumerable<HelltideChest> GetActiveMysteriousChests(SubzoneSnoId snoId, int hour)
     {
         switch (snoId)
         {
+            case SubzoneSnoId.Frac_Tundra_N:
             case SubzoneSnoId.Frac_Tundra_S:
                 // 0AM - 1A, 2B
                 // 1AM - 2B, 1A
@@ -48,6 +49,8 @@ public static class HelltidesStore
                     _ => FP_G1_1A_2B,
                 };
 
+            case SubzoneSnoId.Scos_Coast:
+            case SubzoneSnoId.Scos_Deep_Forest:
             case SubzoneSnoId.Scos_ZoneEvent:
                 // 0AM - 1A, 2D
                 // 1AM - 1D, 2A
@@ -62,6 +65,8 @@ public static class HelltidesStore
                     _ => SG_G1_1A_2D,
                 };
 
+            case SubzoneSnoId.Step_South:
+            case SubzoneSnoId.Step_Central:
             case SubzoneSnoId.Step_TempleOfRot:
             case SubzoneSnoId.Step_ZoneEvent:
                 // 0AM - 1A, 2B
@@ -73,9 +78,14 @@ public static class HelltidesStore
                     _ => DS_G1_1A_2B,
                 };
 
+            case SubzoneSnoId.Kehj_Oasis:
+            case SubzoneSnoId.Kehj_LowDesert:
+            case SubzoneSnoId.Kehj_HighDesert:
             case SubzoneSnoId.Kehj_ZoneEvent:
                 return GetActiveMysteriousChests(hour);
 
+            case SubzoneSnoId.Hawe_Verge:
+            case SubzoneSnoId.Hawe_Wetland:
             case SubzoneSnoId.Hawe_ZoneEvent:
                 // 0AM - 1A, 2B
                 // 1AM - 1B, 2AM

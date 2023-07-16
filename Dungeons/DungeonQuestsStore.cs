@@ -13,6 +13,8 @@ public static class DungeonQuestsStore
         ActorSnoId.DSH_Spawner_Switch_Spikes,
         // level floor switch
         ActorSnoId.DGN_Frac_KorDraganBarracks_FloorLever,
+        // defaced shrine
+        ActorSnoId.Receptacle_DefacedShrine,
 
     };
 

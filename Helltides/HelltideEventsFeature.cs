@@ -35,7 +35,7 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
         foreach (var quest in GetZoneEvents(helltide.SubzoneSno.SnoId))
         {
             if (!Map.WorldToMapCoordinate(quest.WorldCoordinate, out var mapX, out var mapY))
-                return;
+                continue;
 
             MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
             MapIconTexture?.Draw(mapX - (MapIconSize / 2), mapY - (MapIconSize / 2), MapIconSize, MapIconSize);
@@ -46,27 +46,37 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
     {
         switch (snoId)
         {
+            case SubzoneSnoId.Frac_Tundra_N:
             case SubzoneSnoId.Frac_Tundra_S:
                 return GameData.AllQuestSno
                     .Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId))
                     .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Frac_Tundra_N or SubzoneSnoId.Frac_Tundra_S);
 
+            case SubzoneSnoId.Scos_Coast:
+            case SubzoneSnoId.Scos_Deep_Forest:
             case SubzoneSnoId.Scos_ZoneEvent:
                 return GameData.AllQuestSno
                     .Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId))
                     .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Scos_Coast or SubzoneSnoId.Scos_Deep_Forest);
 
+            case SubzoneSnoId.Step_South:
+            case SubzoneSnoId.Step_Central:
             case SubzoneSnoId.Step_TempleOfRot:
             case SubzoneSnoId.Step_ZoneEvent:
                 return GameData.AllQuestSno
                     .Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId))
                     .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Step_South or SubzoneSnoId.Step_Central);
 
+            case SubzoneSnoId.Kehj_Oasis:
+            case SubzoneSnoId.Kehj_LowDesert:
+            case SubzoneSnoId.Kehj_HighDesert:
             case SubzoneSnoId.Kehj_ZoneEvent:
                 return GameData.AllQuestSno
                     .Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId))
                     .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert);
 
+            case SubzoneSnoId.Hawe_Verge:
+            case SubzoneSnoId.Hawe_Wetland:
             case SubzoneSnoId.Hawe_ZoneEvent:
                 return GameData.AllQuestSno
                     .Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId))

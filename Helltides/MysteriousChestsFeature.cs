@@ -46,7 +46,7 @@ public sealed class MysteriousChestsFeature : WorldFeature<ICommonActor>
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(helltide.SubzoneSno.SnoId, now.Hour))
         {
             if (!Map.WorldToMapCoordinate(chest.X, chest.Y, out var mapX, out var mapY))
-                return;
+                continue;
 
             MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
             MapIconTexture?.Draw(mapX - (MapIconSize / 2), mapY - (MapIconSize / 2), MapIconSize, MapIconSize);
