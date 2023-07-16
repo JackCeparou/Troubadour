@@ -23,7 +23,7 @@ public static class HelltidesStore
     private static readonly HelltideChest[] DS_G2_1B_2A = { new(-914, -500, "DS_1B_G2"), new(-285, -625, "DS_2A_G2"), };
 
     // kehjistan
-    private static readonly HelltideChest[] KJ_G1_1A_1B_1C = { new(160, -875, "KJ_1A_G1"), new(58, -670, "KJ_1B_G1"), new(55, -626.5f, "KJ_1C_G1"), };
+    private static readonly HelltideChest[] KJ_G1_1A_1B_1C = { new(136, -882, "KJ_1A_G1"), new(58, -670, "KJ_1B_G1"), new(55, -626.5f, "KJ_1C_G1"), };
     private static readonly HelltideChest KJ_G2_2A = new(202.5f, -784.5f, "KJ_2A_G2");
     private static readonly HelltideChest KJ_G2_3A = new(785, -378, "KJ_3A_G2");
     private static readonly HelltideChest KJ_G3_2B = new(376, -618, "KJ_2B_G3");

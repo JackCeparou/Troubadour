@@ -1,8 +1,8 @@
+/*
 namespace T4.Plugins.Troubadour;
 
-public sealed class Helltides : BasePlugin, IGameWorldPainter, IGameUserInterfacePainter
+public sealed class HelltidesDebug : BasePlugin, IGameWorldPainter
 {
-    public IWorldFeature CinderCaches { get; private set; }
     public Feature Developer { get; private set; }
 
     public int Hour { get; set; }
@@ -14,21 +14,17 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter, IGameUserInterfac
 
     private TimeZoneInfo _pstTimeZoneInfo;
 
-    public Helltides()
+    public HelltidesDebug()
     {
         Order = -1;
         EnabledByDefault = false;
     }
 
-    public override PluginCategory Category
-        => PluginCategory.WorldEvent;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "Helltide companion");
+    public override PluginCategory Category => PluginCategory.Utility;
+    public override string GetDescription() => "Helltide companion debugger";
 
     public override void Load()
     {
-        CinderCaches = HelltideCindersFeature.Create(this, nameof(CinderCaches));
         Developer = new Feature
         {
             Plugin = this,
@@ -65,39 +61,11 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter, IGameUserInterfac
                 }
             }
         }.Register();
-
         Try(() => _pstTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-    }
-
-    public void PaintGameUserInterface(GameUserInterfaceLayer layer)
-    {
-        return;
-        // var sb = new StringBuilder();
-        // foreach (var hour in Enumerable.Range(0, 23))
-        // {
-        // }
-
-        var fakeNow = new DateTime(2023, 7, 16, Hour, 0, 0, DateTimeKind.Local);
-        var fakeNowUtc = fakeNow.ToUniversalTime();
-        var fakeNowPst = TimeZoneInfo.ConvertTimeFromUtc(fakeNowUtc, _pstTimeZoneInfo);
-        DrawDevText(() => $"""
-Fake Local: {fakeNow}
-Fake Utc:   {fakeNowUtc}
-Fake Pst:   {fakeNowPst}
-""", 0, 0);
-
-//         DrawDevText(() => $"""
-// Utc:   {DateTime.UtcNow}
-// Local: {DateTime.Now}
-// Pst:   {TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _pstTimeZoneInfo)}
-// """);
     }
 
     private void DrawDebug()
     {
-        return;
-        // DrawDevText(() => $"{hour} {(hour%2)} {(hour%3)} {(hour%4)}", 0, 0);
-        // foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Scos_ZoneEvent))
         foreach (var chest in HelltidesStore.GetAllMysteriousChests())
         {
             if (!Map.WorldToMapCoordinate(chest.X, chest.Y, out var mapX, out var mapY))
@@ -107,7 +75,6 @@ Fake Pst:   {fakeNowPst}
             LineStyle.DrawEllipse(mapX, mapY, 5f, 5f, strokeWidthCorrection: 2f);
             var text = $"{chest.Tag}\n{chest.X:#.00} {chest.Y:#.00}";
             DrawDevText(() => text, mapX, mapY);
-            // DrawDevOutline(Math.Min(x0, mapX), Math.Min(y0, mapY), Math.Abs(mapX - x0), Math.Abs(mapY - y0));
         }
 
         var fakeNow = new DateTime(2023, 7, 15, Hour, 0, 0, DateTimeKind.Local);
@@ -115,37 +82,34 @@ Fake Pst:   {fakeNowPst}
         var fakeNowPst = TimeZoneInfo.ConvertTimeFromUtc(fakeNowUtc, _pstTimeZoneInfo);
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Frac_Tundra_S, fakeNowPst.Hour))
         {
-            DrawChest(chest, out var mapX, out var mapY);
+            DrawChest(chest, out _, out _);
         }
 
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Scos_ZoneEvent, fakeNowPst.Hour))
         {
-            DrawChest(chest, out var mapX, out var mapY);
+            DrawChest(chest, out _, out _);
         }
 
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Step_TempleOfRot, fakeNowPst.Hour))
         {
-            DrawChest(chest, out var mapX, out var mapY);
+            DrawChest(chest, out _, out _);
         }
 
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Hawe_ZoneEvent, fakeNowPst.Hour))
         {
-            DrawChest(chest, out var mapX, out var mapY);
+            DrawChest(chest, out _, out _);
         }
 
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Kehj_ZoneEvent, fakeNowPst.Hour))
         {
-            DrawChest(chest, out var mapX, out var mapY);
+            DrawChest(chest, out _, out _);
         }
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
     {
-//         Map.WorldToMapCoordinate(0, 0, out var x0, out var y0);
-//         DrawDevText(() => $"""
-// {x0:#.00,8} {y0:#.00,8}
-// {Game.MyPlayer.Coordinate.MapX:#.00,8} {Game.MyPlayer.Coordinate.MapY:#.00,8}
-// """);
+        if (layer != GameWorldLayer.Map)
+            return;
 
         var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _pstTimeZoneInfo);
         DrawDebug();
@@ -162,33 +126,6 @@ Fake Pst:   {fakeNowPst}
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(helltide.SubzoneSno.SnoId, now.Hour))
         {
             DrawChest(chest, out var mapX, out var mapY);
-        }
-
-        DrawDevText(() => $"H {helltide.SubzoneSno.SnoId} {helltide.WorldCoordinate} {helltide.WorldCoordinate.OffsetBy(0, 0, 0)} ", Game.WindowWidth / 2, 0);
-        // var refCoord = Game.GlobalMarkers.First(x => x.GizmoType == GizmoType.Waypoint && x.LevelAreaSno?.NameEnglish == "Jirandai");
-        // if (Map.WorldToMapCoordinate(refCoord.WorldCoordinate, out var mapX, out var mapY))
-        // {
-        //     Textures.LegendaryIcon.Draw(mapX, mapY, 20, 20);
-        // }
-        // var coord = refCoord.WorldCoordinate.OffsetBy(OffsetX, OffsetY, 0f);
-        // if (Map.WorldToMapCoordinate(OffsetX, OffsetY, out var mapX2, out var mapY2))
-        // {
-        //     Textures.UniqueIcon.Draw(mapX2, mapY2, 20, 20);
-        // }
-
-        if (!CinderCaches.Enabled)
-            return;
-
-        switch (layer)
-        {
-            case GameWorldLayer.Ground:
-                CinderCaches.PaintGround();
-
-                break;
-            case GameWorldLayer.Map:
-                CinderCaches.PaintMap();
-
-                break;
         }
     }
 
@@ -207,3 +144,4 @@ Fake Pst:   {fakeNowPst}
         // LineStyle.DrawEllipse(mapX, mapY, 5f, 5f);
     }
 }
+//*/

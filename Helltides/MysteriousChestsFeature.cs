@@ -43,10 +43,22 @@ public sealed class MysteriousChestsFeature : WorldFeature<ICommonActor>
             return;
 
         var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _pstTimeZoneInfo);
+        var chestAround = Game.GizmoActors.FirstOrDefault(x => x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
+
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(helltide.SubzoneSno.SnoId, now.Hour))
         {
             if (!Map.WorldToMapCoordinate(chest.X, chest.Y, out var mapX, out var mapY))
                 continue;
+
+            if (chestAround is not null)
+            {
+                // hijack the chest actor to get the map coordinates
+                if (Math.Abs(mapX - chestAround.Coordinate.MapX) < 20 && Math.Abs(mapY - chestAround.Coordinate.MapY) < 20)
+                {
+                    mapX = chestAround.Coordinate.MapX;
+                    mapY = chestAround.Coordinate.MapY;
+                }
+            }
 
             MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
             MapIconTexture?.Draw(mapX - (MapIconSize / 2), mapY - (MapIconSize / 2), MapIconSize, MapIconSize);
