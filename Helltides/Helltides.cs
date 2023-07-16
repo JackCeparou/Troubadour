@@ -3,6 +3,7 @@ namespace T4.Plugins.Troubadour;
 public sealed class Helltides : BasePlugin, IGameWorldPainter
 {
     public IWorldFeature CinderCaches { get; private set; }
+    public IWorldFeature ZoneEvents { get; private set; }
     public IWorldFeature MysteriousChests { get; private set; }
     public Feature Developer { get; private set; }
 
@@ -25,6 +26,7 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter
     public override void Load()
     {
         CinderCaches = HelltideCindersFeature.Create(this, nameof(CinderCaches));
+        ZoneEvents = HelltideEventsFeature.Create(this, nameof(ZoneEvents));
         MysteriousChests = MysteriousChestsFeature.Create(this, nameof(MysteriousChests));
         return;
         Developer = new Feature
@@ -67,7 +69,9 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter
 
     public void PaintGameWorld(GameWorldLayer layer)
     {
-        if (!CinderCaches.Enabled && !MysteriousChests.Enabled)
+        if (Game.WorldTier < WorldTier.WorldTier3) // there is no helltide in T1 and T2
+            return;
+        if (!CinderCaches.Enabled && !MysteriousChests.Enabled && !ZoneEvents.Enabled)
             return;
 
         switch (layer)
@@ -80,6 +84,7 @@ public sealed class Helltides : BasePlugin, IGameWorldPainter
             case GameWorldLayer.Map:
                 CinderCaches.PaintMap();
                 MysteriousChests.PaintMap();
+                ZoneEvents.PaintMap();
 
                 break;
         }

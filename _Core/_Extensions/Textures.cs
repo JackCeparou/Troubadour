@@ -19,4 +19,6 @@ public static class Textures
     // public static ITexture GlobeBackground { get; } = Render.GetTexture(SupportedTextureId.UISkills_001);
 
     public static ITexture HelltideChest { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_213);
+    
+    public static ITexture BountyEvent { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_046);
 }

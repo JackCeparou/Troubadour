@@ -18,7 +18,10 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
     {
         var feature = new HelltideCindersFeature
         {
-            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "cinders caches"), Resources = new List<AbstractFeatureResource>()
+            Plugin = plugin,
+            NameOf = nameOf,
+            DisplayName = () => Translation.Translate(plugin, "cinders caches"),
+            Resources = new List<AbstractFeatureResource>()
         };
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
