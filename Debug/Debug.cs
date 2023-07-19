@@ -1,6 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
+public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
 {
     public Feature Config { get; private set; }
     public Feature Developer { get; private set; }
@@ -27,14 +27,9 @@ public sealed class Debug : BasePlugin, IGameWorldPainter, IGameUserInterfacePai
     public Debug()
     {
         Order = int.MaxValue;
-        EnabledByDefault = true;
+        Group = PluginCategory.Utility;
+        Description = "displays debug information when debug overlay (F11) is turned on";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Utility;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "displays debug information when debug overlay (F11) is turned on");
 
     public override void Load()
     {

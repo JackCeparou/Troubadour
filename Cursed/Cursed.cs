@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed class Cursed : BasePlugin, IGameWorldPainter
+public sealed class Cursed : JackPlugin, IGameWorldPainter
 {
     public Feature OnMap { get; private set; }
     public Feature OnGround { get; private set; }
@@ -10,19 +10,14 @@ public sealed class Cursed : BasePlugin, IGameWorldPainter
     public IFillStyle MapFillStyle { get; } = Render.GetFillStyle(128, 255, 0, 0);
 
     public float GroundIconSize { get; set; } = 100f;
-    public ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_078);
+    public ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_94699383);
 
     public Cursed()
     {
-        EnabledByDefault = true;
         Order = -1; // draw before chests
+        Group = PluginCategory.Fight;
+        Description = "Displays cursed chests and shrines on the map and ground.";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Fight;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "Displays cursed chests and shrines on the map and ground.");
 
     public void PaintGameWorld(GameWorldLayer layer)
     {

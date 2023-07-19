@@ -36,11 +36,12 @@ public sealed partial class InventoryFeatures : Feature
     public bool HasLines { get; private set; }
     public bool HasOverlays { get; private set; }
     public bool HasHints { get; private set; }
+    public InventoryPage InventoryPage { get; private set; }
 
     public IFont GetFont(bool hasError)
         => hasError ? ErrorFont : NormalFont;
 
-    public static InventoryFeatures Create(IPlugin plugin, string name, string displayName, IFont font = null, IFont errorFont = null)
+    public static InventoryFeatures Create(IPlugin plugin, string name, string displayName, IFont font = null, IFont errorFont = null, InventoryPage page = null)
     {
         font ??= CreateDefaultFont();
         errorFont ??= CreateDefaultErrorFont();
@@ -52,7 +53,13 @@ public sealed partial class InventoryFeatures : Feature
             Resources = new(),
             NormalFont = font,
             ErrorFont = errorFont,
+            InventoryPage = page,
         };
+    }
+
+    public void Draw()
+    {
+        InventoryPage?.Draw(this);
     }
 
     public InventoryFeatures PaperDoll()

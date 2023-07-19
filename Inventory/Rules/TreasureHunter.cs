@@ -9,7 +9,7 @@ public static partial class Inventory
         OffsetY = 3f,
         Show = (_, features) => features.TreasureHunterIconEnabled,
         Texture = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? Textures.TreasureHunterGoldenOpenIcon : null,
-        BackgroundTexture = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? Textures.UiStash004 : null,
+        // BackgroundTexture = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? Textures.UiStash004 : null,
     };
 
     private static ItemOverlay CreateTreasureHunterHighlight() => new()

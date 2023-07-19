@@ -13,6 +13,7 @@ public static class DungeonQuestsStore
         ActorSnoId.DSH_Spawner_Switch_Spikes,
         // level floor switch
         ActorSnoId.DGN_Frac_KorDraganBarracks_FloorLever,
+        // ActorSnoId.DGN_Frac_BlackAsylum_ChainReleaseWinch, // cause issues
         // defaced shrine
         ActorSnoId.Receptacle_DefacedShrine,
 

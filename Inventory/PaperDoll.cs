@@ -2,14 +2,15 @@
 
 namespace T4.Plugins.Troubadour;
 
-public sealed partial class PaperDoll : BasePlugin, IGameUserInterfacePainter
+public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
 {
     public InventoryFeatures Equipped { get; private set; }
     private readonly Throttler _throttler = Throttler.Create(100);
 
     public PaperDoll()
     {
-        EnabledByDefault = true;
+        Group = PluginCategory.Inventory;
+        Description = "displays information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.";
     }
 
     public override void Load()
@@ -28,12 +29,6 @@ public sealed partial class PaperDoll : BasePlugin, IGameUserInterfacePainter
             .PaperDoll()
             .Register();
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Inventory;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "displays information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

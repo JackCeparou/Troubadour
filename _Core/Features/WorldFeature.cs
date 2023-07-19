@@ -10,31 +10,6 @@ public interface IWorldFeature
     void PaintMap();
 }
 
-public static class WorldFeatureExtensions
-{
-    public static void PaintGround(this IEnumerable<IWorldFeature> features)
-    {
-        foreach (var feature in features)
-        {
-            if (!feature.Enabled || !feature.OnGroundEnabled)
-                continue;
-
-            feature.PaintGround();
-        }
-    }
-
-    public static void PaintMap(this IEnumerable<IWorldFeature> features)
-    {
-        foreach (var feature in features)
-        {
-            if (!feature.Enabled || !feature.OnMapEnabled)
-                continue;
-
-            feature.PaintMap();
-        }
-    }
-}
-
 public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommonActor
 {
     public virtual bool OnGroundEnabled { get; set; } = true;
@@ -52,16 +27,19 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
     public virtual float MapIconSize { get; set; } = 2f;
 
     public abstract IEnumerable<T> GetWorldObjects();
-    public virtual void PaintGroundExtra(T item) { }
-    public virtual void PaintMapExtra(T item, float mapX, float mapY) { }
+    public virtual void PaintGroundBefore(T actor) { }
+    public virtual void PaintGroundAfter(T actor) { }
+    public virtual void PaintMapBefore(T actor, float mapX, float mapY) { }
+    public virtual void PaintMapAfter(T actor, float mapX, float mapY) { }
 
-    public void PaintGround()
+    public virtual void PaintGround()
     {
         if (!Enabled || !OnGroundEnabled)
             return;
 
         foreach (var item in GetWorldObjects())
         {
+            PaintGroundBefore(item);
             LineStyle?.DrawWorldEllipse(WorldCircleSize, -1, item.Coordinate, strokeWidthCorrection: WorldCircleStroke);
             if (WorldIconTexture is not null)
             {
@@ -71,7 +49,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
                 WorldIconTexture.Draw(x, y, size, size);
             }
 
-            PaintGroundExtra(item);
+            PaintGroundAfter(item);
         }
     }
 
@@ -85,6 +63,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
             if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
                 continue;
 
+            PaintMapBefore(item, mapX, mapY);
             MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
             if (MapIconTexture is not null)
             {
@@ -94,7 +73,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
                 MapIconTexture.Draw(x, y, size, size);
             }
 
-            PaintMapExtra(item, mapX, mapY);
+            PaintMapAfter(item, mapX, mapY);
         }
     }
 

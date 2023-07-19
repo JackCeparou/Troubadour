@@ -2,7 +2,7 @@ using static T4.Plugins.Troubadour.GetOutStore;
 
 namespace T4.Plugins.Troubadour;
 
-public sealed class GetOut : BasePlugin, IGameWorldPainter
+public sealed class GetOut : JackPlugin, IGameWorldPainter
 {
     public Feature Config { get; private set; }
     public Feature Developer { get; private set; }
@@ -17,13 +17,10 @@ public sealed class GetOut : BasePlugin, IGameWorldPainter
     public GetOut()
     {
         EnabledByDefault = false;
+        TroubadourExperiment = true;
+        Group = PluginCategory.Fight;
+        Description = "displays dangerous affixes on ground";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Fight;
-
-    public override string GetDescription()
-        => Translation.TranslateExperimentalPlugin(this, "displays dangerous affixes on ground");
 
     public override void Load()
     {

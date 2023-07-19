@@ -1,7 +1,7 @@
 /*
 namespace T4.Plugins.Troubadour;
 
-public sealed class HelltidesDebug : BasePlugin, IGameWorldPainter
+public sealed class HelltidesDebug : JackPlugin, IGameWorldPainter
 {
     public Feature Developer { get; private set; }
 
@@ -18,10 +18,9 @@ public sealed class HelltidesDebug : BasePlugin, IGameWorldPainter
     {
         Order = -1;
         EnabledByDefault = false;
+        Group = PluginCategory.Utility;
+        Description = "Helltide companion debugger";
     }
-
-    public override PluginCategory Category => PluginCategory.Utility;
-    public override string GetDescription() => "Helltide companion debugger";
 
     public override void Load()
     {
@@ -66,7 +65,7 @@ public sealed class HelltidesDebug : BasePlugin, IGameWorldPainter
 
     private void DrawDebug()
     {
-        foreach (var chest in HelltidesStore.GetAllMysteriousChests())
+        foreach (var chest in GetAllMysteriousChests())
         {
             if (!Map.WorldToMapCoordinate(chest.X, chest.Y, out var mapX, out var mapY))
                 continue;
@@ -142,6 +141,69 @@ public sealed class HelltidesDebug : BasePlugin, IGameWorldPainter
         // LineStyle2.DrawEllipse(mapX, mapY, radius, radius, strokeWidthCorrection: 1.5f);
         Textures.HelltideChest.Draw(mapX - halfSize, mapY - halfSize, size, size);
         // LineStyle.DrawEllipse(mapX, mapY, 5f, 5f);
+    }
+
+    public static IEnumerable<HelltideChest> GetAllMysteriousChests()
+    {
+        foreach (var chest in HelltidesStore.FP_G1_1A_2B)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.FP_G2_1B_2A)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.SG_G1_1A_2D)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.SG_G2_1D_2A)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.SG_G3_1C_2B)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.SG_G4_1B_2C)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.DS_G1_1A_2B)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.DS_G2_1B_2A)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.HZ_G1_1A_2B)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.HZ_G2_1B_2A)
+        {
+            yield return chest;
+        }
+
+        foreach (var chest in HelltidesStore.KJ_G1_1A_1B_1C)
+        {
+            yield return chest;
+        }
+
+        yield return HelltidesStore.KJ_G2_2A;
+        yield return HelltidesStore.KJ_G2_3A;
+        yield return HelltidesStore.KJ_G3_2B;
+        yield return HelltidesStore.KJ_G3_3B;
     }
 }
 //*/

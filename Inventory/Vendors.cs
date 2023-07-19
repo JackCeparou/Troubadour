@@ -2,20 +2,15 @@ using static T4.Plugins.Troubadour.TreasureHunterStore;
 
 namespace T4.Plugins.Troubadour;
 
-public sealed partial class Vendors : BasePlugin, IGameUserInterfacePainter, IItemDetector
+public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IItemDetector
 {
     public InventoryFeatures OnShopList { get; private set; }
 
     public Vendors()
     {
-        EnabledByDefault = true;
+        Group = PluginCategory.Inventory;
+        Description = "displays information about items on vendor panels.";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Inventory;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "displays information about items on vendor panels.");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {

@@ -1,6 +1,6 @@
 ﻿// namespace T4.Plugins.Troubadour;
 //
-// public class Completionist : BasePlugin, IGameWorldPainter, IMenuUserInterfacePainter
+// public class Completionist : JackPlugin, IGameWorldPainter, IMenuUserInterfacePainter
 // {
 //     public ITexture Icon { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_182, 96);
 //     public IFont Font { get; } = Render.GetFont(255, 255, 255, 255);
@@ -9,7 +9,7 @@
 //
 //     public Feature IconOnMap { get; private set; }
 //
-//     public override string GetDescription() => Translation.Translate(this, "display all Altar Of Lilith locations on the map");
+//     // public override string GetDescription() => Translation.Translate(this, "display all Altar Of Lilith locations on the map");
 //
 //     public override void Load()
 //     {
@@ -85,30 +85,30 @@
 //         if (Map.MapWorldSno.SnoId != WorldSnoId.Sanctuary_Eastern_Continent)
 //             return;
 //
-//         var events = GameData.AllQuestSno
-//             .Where(x => x.BountyType is BountyType.Event /*or BountyType.OWC*/)
-//             .Where(x => !Blacklist.Contains(x.SnoId))
-//             .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Step_South or SubzoneSnoId.Step_Central
-//                 or SubzoneSnoId.Scos_Coast or SubzoneSnoId.Scos_Deep_Forest
-//                 or SubzoneSnoId.Frac_Tundra_N or SubzoneSnoId.Frac_Tundra_S
-//                 or SubzoneSnoId.Hawe_Verge or SubzoneSnoId.Hawe_Wetland
-//                 or SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert
-//             )
-//             // .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert)
-//             ;
-//         foreach (var @event in events)
-//         {
-//             var isOnMap = Map.WorldToMapCoordinate(@event.WorldCoordinate, out var mapX, out var mapY);
-//             if (!isOnMap)
-//                 continue;
-//
-//             var size = 24f;
-//             Textures.BountyEvent.Draw(mapX - (size / 2f), mapY - (size / 2f), size, size, sharpen: false);
-//         }
+//         // var events = GameData.AllQuestSno
+//         //     .Where(x => x.BountyType is BountyType.Event /*or BountyType.OWC*/)
+//         //     .Where(x => !Blacklist.Contains(x.SnoId))
+//         //     .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Step_South or SubzoneSnoId.Step_Central
+//         //         or SubzoneSnoId.Scos_Coast or SubzoneSnoId.Scos_Deep_Forest
+//         //         or SubzoneSnoId.Frac_Tundra_N or SubzoneSnoId.Frac_Tundra_S
+//         //         or SubzoneSnoId.Hawe_Verge or SubzoneSnoId.Hawe_Wetland
+//         //         or SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert
+//         //     )
+//         //     // .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert)
+//         //     ;
+//         // foreach (var @event in events)
+//         // {
+//         //     var isOnMap = Map.WorldToMapCoordinate(@event.WorldCoordinate, out var mapX, out var mapY);
+//         //     if (!isOnMap)
+//         //         continue;
+//         //
+//         //     var size = 24f;
+//         //     Textures.BountyEventActive.Draw(mapX - (size / 2f), mapY - (size / 2f), size, size, sharpen: false);
+//         // }
 //
 //         var markers = Game.GlobalMarkers
 //                 .Where(x => x.WorldSno == Map.MapWorldSno)
-//                 .Where(x => false)
+//                 // .Where(x => false)
 //             ;
 //         // .Where(x => x.WorldSno == Map.MapWorldSno); // && x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
 //         // .Where(x => x.WorldSno == Map.MapWorldSno && x.ActorSno?.NameEnglish == "Altar of Lilith");

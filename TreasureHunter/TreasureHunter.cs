@@ -2,7 +2,7 @@ using static T4.Plugins.Troubadour.TreasureHunterStore;
 
 namespace T4.Plugins.Troubadour;
 
-public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetector
+public sealed class TreasureHunter : JackPlugin, IGameWorldPainter, IItemDetector
 {
     public Feature OnInventory { get; private set; }
     public Feature OnDrop { get; private set; }
@@ -11,15 +11,10 @@ public sealed class TreasureHunter : BasePlugin, IGameWorldPainter, IItemDetecto
 
     public TreasureHunter()
     {
-        EnabledByDefault = true;
         Order = int.MaxValue;
+        Group = PluginCategory.Loot;
+        Description = "Highlight most wanted items.\nClose this window and press F3 to configure rules.";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Loot;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "Highlight most wanted items.\nClose this window and press F3 to configure rules.");
 
     public void PaintGameWorld(GameWorldLayer layer)
     {

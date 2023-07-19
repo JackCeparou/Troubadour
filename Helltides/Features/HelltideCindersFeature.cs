@@ -4,14 +4,14 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
 {
     private HelltideCindersFeature()
     {
-        CinderCachesSnoIdsSet = new HashSet<ActorSnoId>(CinderCachesSnoIds);
+        _cinderCachesSnoIdsSet = _cinderCachesSnoIds.ToHashSet();
         LineStyle = Render.GetLineStyle(200, 255, 255, 0);
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
     public override IEnumerable<ICommonActor> GetWorldObjects()
     {
-        return Game.GizmoActors.Where(x => CinderCachesSnoIdsSet.Contains(x.ActorSno.SnoId));
+        return Game.GizmoActors.Where(x => _cinderCachesSnoIdsSet.Contains(x.ActorSno.SnoId));
     }
 
     public static HelltideCindersFeature Create(IPlugin plugin, string nameOf)
@@ -28,7 +28,7 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
         return feature.Register();
     }
 
-    public List<ActorSnoId> CinderCachesSnoIds { get; } = new()
+    private readonly IEnumerable<ActorSnoId> _cinderCachesSnoIds = new List<ActorSnoId>()
     {
         ActorSnoId.HelltideBonus_BreakableContainer_Any_1x1_01_Arrangement,
         ActorSnoId.HelltideBonus_BreakableContainer_Any_1x1_02_Arrangement,
@@ -51,5 +51,5 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
         // ActorSnoId.USZ_HarvestNode_Ore_UberSubzone_001_Pieces_Dyn,
     };
 
-    public HashSet<ActorSnoId> CinderCachesSnoIdsSet { get; }
+    private readonly HashSet<ActorSnoId> _cinderCachesSnoIdsSet;
 }

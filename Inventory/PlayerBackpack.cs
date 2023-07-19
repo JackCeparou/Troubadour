@@ -1,8 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed partial class PlayerBackpack : BasePlugin,
-    IGameUserInterfacePainter,
-    ITroubadourPlugin
+public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePainter
 {
     public InventoryFeatures Equipment { get; private set; }
     public InventoryFeatures Consumables { get; private set; }
@@ -11,7 +9,8 @@ public sealed partial class PlayerBackpack : BasePlugin,
     public PlayerBackpack()
     {
         Order = 42;
-        EnabledByDefault = true;
+        Group = PluginCategory.Inventory;
+        Description = "displays information on items in player inventory.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.";
     }
 
     public override void Load()
@@ -19,6 +18,7 @@ public sealed partial class PlayerBackpack : BasePlugin,
         UserInterface.RegisterInventoryControls();
 
         Equipment = InventoryFeatures.Create(this, nameof(Equipment), "equipment",
+                page: Inventory.Equipment,
                 font: CreateDefaultFont(bold: true),
                 errorFont: CreateDefaultErrorFont(bold: true))
             .AspectHunterIcon().AspectHunterHighlight(false)
@@ -34,6 +34,7 @@ public sealed partial class PlayerBackpack : BasePlugin,
             .Register();
 
         Consumables = InventoryFeatures.Create(this, nameof(Consumables), "consumables",
+                page: Inventory.Consumables,
                 font: CreateDefaultFont(bold: true),
                 errorFont: CreateDefaultErrorFont(bold: true))
             .ElixirHunterHighlight(false)
@@ -45,6 +46,7 @@ public sealed partial class PlayerBackpack : BasePlugin,
             .Register();
 
         Aspects = InventoryFeatures.Create(this, nameof(Aspects), "aspects",
+                page: Inventory.Aspects,
                 font: CreateDefaultFont(bold: true),
                 errorFont: CreateDefaultErrorFont(bold: true))
             .AspectHunterIcon().AspectHunterHighlight(false)
@@ -54,17 +56,6 @@ public sealed partial class PlayerBackpack : BasePlugin,
             .Register();
     }
 
-    public void OnScreenResize()
-    {
-        // noop
-    }
-
-    public override PluginCategory Category
-        => PluginCategory.Inventory;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "displays information on items in player inventory.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.");
-
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {
         if (layer != GameUserInterfaceLayer.OverPanels)
@@ -72,8 +63,8 @@ public sealed partial class PlayerBackpack : BasePlugin,
         if (!UserInterface.InventoryControl.Visible)
             return;
 
-        Inventory.Equipment.Draw(Equipment);
-        Inventory.Consumables.Draw(Consumables);
-        Inventory.Aspects.Draw(Aspects);
+        Equipment.Draw();
+        Consumables.Draw();
+        Aspects.Draw();
     }
 }

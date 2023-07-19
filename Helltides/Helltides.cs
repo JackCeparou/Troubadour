@@ -1,50 +1,35 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class Helltides : BasePlugin, IGameWorldPainter
+public sealed class Helltides : JackPlugin, IGameWorldPainter
 {
     public IWorldFeature CinderCaches { get; private set; }
     public IWorldFeature ZoneEvents { get; private set; }
     public IWorldFeature MysteriousChests { get; private set; }
+    public IWorldFeature ChestIcons { get; private set; }
 
     public Helltides()
     {
         Order = -1;
-        EnabledByDefault = true;
+        Group = PluginCategory.WorldEvent;
+        Description = "Helltide companion";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.WorldEvent;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "Helltide companion");
 
     public override void Load()
     {
-        CinderCaches = HelltideCindersFeature.Create(this, nameof(CinderCaches));
-        ZoneEvents = HelltideEventsFeature.Create(this, nameof(ZoneEvents));
-        MysteriousChests = MysteriousChestsFeature.Create(this, nameof(MysteriousChests));
+        WorldFeatures = new[]
+        {
+            MysteriousChests = MysteriousChestsFeature.Create(this, nameof(MysteriousChests)), //
+            // ChestIcons = HelltideChestIconsFeature.Create(this, nameof(ChestIcons)), //
+            ZoneEvents = HelltideEventsFeature.Create(this, nameof(ZoneEvents)), //
+            CinderCaches = HelltideCindersFeature.Create(this, nameof(CinderCaches))
+        };
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
     {
-        if (Game.WorldTier < WorldTier.WorldTier3) // there is no helltide in T1 and T2
-            return;
-        if (!CinderCaches.Enabled && !MysteriousChests.Enabled && !ZoneEvents.Enabled)
+        if (Game.WorldTier < WorldTier.WorldTier3) // there is no helltide below WT3
             return;
 
-        switch (layer)
-        {
-            case GameWorldLayer.Ground:
-                CinderCaches.PaintGround();
-                MysteriousChests.PaintGround();
-
-                break;
-            case GameWorldLayer.Map:
-                CinderCaches.PaintMap();
-                MysteriousChests.PaintMap();
-                ZoneEvents.PaintMap();
-
-                break;
-        }
+        PaintWorld(layer);
     }
 }

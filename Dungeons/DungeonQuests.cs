@@ -2,7 +2,7 @@
 
 namespace T4.Plugins.Troubadour;
 
-public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
+public sealed class DungeonQuests : JackPlugin, IGameWorldPainter
 {
     public Feature Developer { get; private set; }
     public CarryableItemsFeature CarryableItems { get; private set; }
@@ -16,14 +16,9 @@ public sealed class DungeonQuests : BasePlugin, IGameWorldPainter
 
     public DungeonQuests()
     {
-        EnabledByDefault = true;
+        Group = PluginCategory.Dungeon;
+        Description = "displays dungeon quest objectives on map and ground.";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Dungeon;
-
-    public override string GetDescription()
-        => Translation.TranslateExperimentalPlugin(this, "displays dungeon quest objectives on map and ground");
 
     public override void Load()
     {

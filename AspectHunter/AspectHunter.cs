@@ -2,7 +2,7 @@
 
 namespace T4.Plugins.Troubadour;
 
-public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameWorldPainter
+public sealed class AspectHunter : JackPlugin, IGameUserInterfacePainter, IGameWorldPainter
 {
     public Feature OnMap { get; private set; }
     public Feature OnGround { get; private set; }
@@ -23,14 +23,9 @@ public sealed class AspectHunter : BasePlugin, IGameUserInterfacePainter, IGameW
     public AspectHunter()
     {
         Order = int.MaxValue;
-        EnabledByDefault = true;
+        Group = PluginCategory.Loot;
+        Description = "Highlight most wanted aspects.";
     }
-
-    public override PluginCategory Category
-        => PluginCategory.Loot;
-
-    public override string GetDescription()
-        => Translation.Translate(this, "Highlight most wanted aspects.");
 
     public void PaintGameWorld(GameWorldLayer layer)
     {

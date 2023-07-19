@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePainter
+public class Auras : JackPlugin, IGameUserInterfacePainter, IMenuUserInterfacePainter
 {
     public Feature Config { get; private set; }
     // public Feature Hitpoints { get; private set; }
@@ -14,6 +14,9 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
     public Auras()
     {
         EnabledByDefault = false;
+        TroubadourExperiment = true;
+        Group = PluginCategory.ActionBar;
+        Description = "Displays information around the player";
     }
 
     public void PaintMenuUserInterface()
@@ -25,12 +28,6 @@ public class Auras : BasePlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
         HitpointsGlobe.Draw();
         ResourceGlobe.Draw();
     }
-
-    public override PluginCategory Category
-        => PluginCategory.ActionBar;
-
-    public override string GetDescription()
-        => Translation.TranslateExperimentalPlugin(this, "displays information around the player");
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {
