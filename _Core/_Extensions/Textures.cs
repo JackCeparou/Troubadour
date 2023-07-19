@@ -7,7 +7,7 @@ public static class Textures
     public static ITexture NearBreakpointIcon { get; } = Render.GetTexture(SupportedTextureId.UISkills_4275309202);
     public static ITexture AspectHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UITest_3915375899);
 
-    public static ITexture UiStash004 { get; } = Render.GetTexture(SupportedTextureId.UIStash_360267698);
+    // public static ITexture UiStash004 { get; } = Render.GetTexture(SupportedTextureId.UIStash_360267698);
 
     public static ITexture ShrineIcon { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_66845578);
 
@@ -17,7 +17,8 @@ public static class Textures
 
     public static ITexture GlobeForeground { get; } = Render.GetTexture(SupportedTextureId.UIControls_2475801208);
     // public static ITexture GlobeBackground { get; } = Render.GetTexture(SupportedTextureId.UISkills_001);
-    public static ITexture CircleBackground { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
+    // public static ITexture CircleBackground { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
+    public static ITexture CircleBackground { get; } = Render.GetTexture(SupportedTextureId.UIInventoryIcons_1144197672);
 
     public static ITexture HelltideChest { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
 

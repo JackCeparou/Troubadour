@@ -19,6 +19,7 @@ public sealed class GameObserverService
         LastKnownWidth = Game.WindowWidth;
         LastKnownHeight = Game.WindowHeight;
 
-        OnScreenResize();
+        // OnScreenResize();
+        ScreenAnchors.Update();
     }
 }

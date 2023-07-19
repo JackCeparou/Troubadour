@@ -33,7 +33,7 @@ public class Auras : JackPlugin, IGameUserInterfacePainter, IMenuUserInterfacePa
     {
         if (layer != GameUserInterfaceLayer.BeforeClip)
             return;
-        if (!ShowInTown && IsInTown)
+        if (!ShowInTown && Game.MyPlayer.LevelAreaSno.IsTown)
             return;
 
         GameObserver.CheckScreenSize();

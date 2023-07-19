@@ -4,6 +4,8 @@ public static class BountyEvents
 {
     public static IEnumerable<IQuestSno> GetBountyEvents(this IGameDataService gameData)
         => gameData.AllQuestSno.Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId));
+    public static IEnumerable<IQuestSno> GetBountyEvents(this IGameDataService gameData, Func<IQuestSno, bool> predicate)
+        => gameData.AllQuestSno.Where(x => x.BountyType is BountyType.Event && !EventBlacklist.Contains(x.SnoId)).Where(predicate);
 
     public static readonly HashSet<QuestSnoId> EventBlacklist = new()
     {

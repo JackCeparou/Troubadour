@@ -33,6 +33,8 @@ public static partial class AffixSnoIds
         AffixSnoId.legendary_generic_109,
         AffixSnoId.Legendary_Generic_110,
         AffixSnoId.Legendary_Generic_111,
+        AffixSnoId.legendary_generic_112, // S01
+        AffixSnoId.legendary_generic_113, // S01
     };
 
     public static HashSet<AffixSnoId> GenericSet => _genericSet ??= new(Generic);
@@ -54,6 +56,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Pants_Unique_Generic_100,
         AffixSnoId.Ring_Unique_Generic_100,
         AffixSnoId.Ring_Unique_Generic_101,
+        AffixSnoId._2HStaff_Unique_Generic_100, // S01
     };
 
     public static HashSet<AffixSnoId> GenericUniqueSet => _genericUniqueSet ??= new(GenericUnique);
@@ -99,6 +102,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Legendary_Barb_108,
         AffixSnoId.Legendary_Barb_109,
         AffixSnoId.Legendary_Barb_110,
+        AffixSnoId.legendary_barb_111, // S01
     };
 
     public static HashSet<AffixSnoId> BarbarianSet => _barbarianSet ??= new(Barbarian);
@@ -116,6 +120,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Boots_Unique_Barb_100,
         AffixSnoId.Chest_Unique_Barb_100,
         AffixSnoId.Gloves_Unique_Barb_001,
+        AffixSnoId._1HSword_Unique_Barb_102, // S01
     };
 
     public static HashSet<AffixSnoId> BarbarianUniqueSet => _barbarianUniqueSet ??= new(BarbarianUnique);
@@ -164,6 +169,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Legendary_Druid_117,
         AffixSnoId.Legendary_Druid_118,
         AffixSnoId.Legendary_Druid_119,
+        AffixSnoId.legendary_druid_121, // S01
     };
 
     public static HashSet<AffixSnoId> DruidSet => _druidSet ??= new(Druid);
@@ -180,6 +186,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Helm_Unique_Druid_101,
         AffixSnoId.Pants_Unique_Druid_001,
         AffixSnoId.Ring_Unique_Druid_003,
+        AffixSnoId._1HMace_Unique_Druid_001, //S01
     };
 
     public static HashSet<AffixSnoId> DruidUniqueSet => _druidUniqueSet ??= new(DruidUnique);
@@ -229,6 +236,7 @@ public static partial class AffixSnoIds
         AffixSnoId.legendary_necro_120,
         AffixSnoId.Legendary_Necro_121,
         AffixSnoId.Legendary_Necro_122,
+        AffixSnoId.legendary_necro_123, // S01
     };
 
     public static HashSet<AffixSnoId> NecromancerSet => _necromancerSet ??= new(Necromancer);
@@ -245,6 +253,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Gloves_Unique_Necro_100,
         AffixSnoId.Helm_Unique_Necro_100,
         AffixSnoId.Ring_Unique_Necro_100,
+        AffixSnoId._1HShield_Unique_Necro_100, // S01
     };
 
     public static HashSet<AffixSnoId> NecromancerUniqueSet => _necromancerUniqueSet ??= new(NecromancerUnique);
@@ -293,6 +302,7 @@ public static partial class AffixSnoIds
         AffixSnoId.legendary_rogue_123,
         AffixSnoId.Legendary_Rogue_124,
         AffixSnoId.Legendary_Rogue_125,
+        AffixSnoId.legendary_rogue_126, // S01
     };
 
     public static HashSet<AffixSnoId> RogueSet => _rogueSet ??= new(Rogue);
@@ -309,6 +319,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Gloves_Unique_Rogue_100,
         AffixSnoId.Helm_Unique_Rogue_001,
         AffixSnoId.Pants_Unique_Rogue_004,
+        AffixSnoId._2HBow_Unique_Rogue_100, // S01
     };
 
     public static HashSet<AffixSnoId> RogueUniqueSet => _rogueUniqueSet ??= new(RogueUnique);
@@ -323,6 +334,7 @@ public static partial class AffixSnoIds
         AffixSnoId.legendary_sorc_012,
         AffixSnoId.legendary_sorc_017,
         AffixSnoId.legendary_sorc_027,
+        // AffixSnoId.legendary_sorc_034, // S01 // WTF is this? `(PH) of Ensnaring Current`
         AffixSnoId.legendary_sorc_035,
         AffixSnoId.legendary_sorc_039,
         AffixSnoId.legendary_sorc_043,
@@ -360,6 +372,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Legendary_Sorc_133,
         AffixSnoId.Legendary_Sorc_134,
         AffixSnoId.Legendary_Sorc_135,
+        AffixSnoId.legendary_sorc_136, // S01
     };
 
     public static HashSet<AffixSnoId> SorcererSet => _sorcererSet ??= new(Sorcerer);
@@ -376,6 +389,7 @@ public static partial class AffixSnoIds
         AffixSnoId.Chest_Unique_Sorc_002,
         AffixSnoId.Gloves_Unique_Sorc_002,
         AffixSnoId.Pants_Unique_Sorc_100,
+        AffixSnoId._1HWand_Unique_Sorc_101, // S01
     };
 
     public static HashSet<AffixSnoId> SorcererUniqueSet => _sorcererUniqueSet ??= new(SorcererUnique);
@@ -439,6 +453,13 @@ public static partial class AffixSnoIds
             AffixSnoId.Ring_Unique_Generic_100 => ItemSnoId.Ring_Unique_Generic_100,
             AffixSnoId.Ring_Unique_Generic_101 => ItemSnoId.Ring_Unique_Generic_101,
             AffixSnoId.Ring_Unique_Necro_100 => ItemSnoId.Ring_Unique_Necro_100,
+            // S01
+            AffixSnoId._1HMace_Unique_Druid_001 => ItemSnoId._1HMace_Unique_Druid_001,
+            AffixSnoId._1HShield_Unique_Necro_100 => ItemSnoId._1HShield_Unique_Necro_100,
+            AffixSnoId._1HSword_Unique_Barb_102 => ItemSnoId._1HSword_Unique_Barb_102,
+            AffixSnoId._1HWand_Unique_Sorc_101 => ItemSnoId._1HWand_Unique_Sorc_101,
+            AffixSnoId._2HBow_Unique_Rogue_100 => ItemSnoId._2HBow_Unique_Rogue_100,
+            AffixSnoId._2HStaff_Unique_Generic_100 => ItemSnoId._2HStaff_Unique_Generic_100,
             _ => ItemSnoId.Axe__Bad__Data,
         };
 
@@ -503,6 +524,13 @@ public static partial class AffixSnoIds
             ItemSnoId.Ring_Unique_Generic_100 => AffixSnoId.Ring_Unique_Generic_100,
             ItemSnoId.Ring_Unique_Generic_101 => AffixSnoId.Ring_Unique_Generic_101,
             ItemSnoId.Ring_Unique_Necro_100 => AffixSnoId.Ring_Unique_Necro_100,
+            // S01
+            ItemSnoId._1HMace_Unique_Druid_001 => AffixSnoId._1HMace_Unique_Druid_001,
+            ItemSnoId._1HShield_Unique_Necro_100 => AffixSnoId._1HShield_Unique_Necro_100,
+            ItemSnoId._1HSword_Unique_Barb_102 => AffixSnoId._1HSword_Unique_Barb_102,
+            ItemSnoId._1HWand_Unique_Sorc_101 => AffixSnoId._1HWand_Unique_Sorc_101,
+            ItemSnoId._2HBow_Unique_Rogue_100 => AffixSnoId._2HBow_Unique_Rogue_100,
+            ItemSnoId._2HStaff_Unique_Generic_100 => AffixSnoId._2HStaff_Unique_Generic_100,
             _ => AffixSnoId.Axe__Bad__Data,
         };
 
