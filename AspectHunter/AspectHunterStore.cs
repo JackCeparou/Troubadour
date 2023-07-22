@@ -81,6 +81,11 @@ public static class AspectHunterStore
             return affixSnoId.IsAspectHunted();
         }
 
+        if (!item.MainAffixes.Any(x => x.MagicType is not MagicType.None))
+        {
+            return item.GetEternalAffix()?.SnoId.IsAspectHunted() ?? false;
+        }
+
         return item.MainAffixes
             .Where(x => x.MagicType is not MagicType.None)
             .Any(affix => affix.SnoId.IsAspectHunted());

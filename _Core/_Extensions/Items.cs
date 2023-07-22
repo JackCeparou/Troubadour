@@ -3,7 +3,16 @@ namespace T4.Plugins.Troubadour;
 public static class ItemExtensions
 {
     public static bool IsEquippedTemp(this IItem item) => EquippedItemLocationsSet.Contains(item.Location);
-    // public static IAffixSno GetAffix(this IItem item) => item.LegendaryAffixEquipped ?? item.Affix1 ?? item.Affix2; // ?? item.EnchantedAffix;
+
+    public static IAffixSno GetEternalAffix(this IItem item)
+    {
+        if (item.Affix1 is not null && !item.Affix1.SnoId.IsMalignantHeartAffix())
+            return item.Affix1;
+        if (item.Affix2 is not null && !item.Affix2.SnoId.IsMalignantHeartAffix())
+            return item.Affix2;
+
+        return null;
+    }
 
     public static IEnumerable<ItemLocation> EquippedItemLocations { get; } = new List<ItemLocation>
     {
@@ -111,7 +120,9 @@ public static class ItemExtensions
         switch (item.Quality)
         {
             case ItemQuality.Legendary:
-                return item.MainAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None)?.GetFriendlyName() ?? string.Empty;
+                return item.MainAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None)?.GetFriendlyName()
+                       ?? item.GetEternalAffix()?.GetFriendlyName()
+                       ?? string.Empty;
             case ItemQuality.Set:
             case ItemQuality.Unique:
                 var name = item.ItemSno.NameLocalized ?? string.Empty;
@@ -149,12 +160,12 @@ public static class ItemExtensions
 
 
 Id: {item.ItemSno.SnoId} | {item.ItemSno.NameLocalized}
-Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.LegendaryAffixEquipped?.SnoId} | {item.EnchantedAffix?.SnoId}
-
+Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.EnchantedAffix?.SnoId}
+Inherent:
 {string.Join(Environment.NewLine, item.InherentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
-
+Main:
 {string.Join(Environment.NewLine, item.MainAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
-
+----------------
 Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
 ItemLevel: {item.ItemPowerTotal} | {item.GetFormattedItemPower(true, true)}
 NearBreakpoint: {item.IsNearBreakpoint()} ({item.GetNextReachableBreakpoint()})
