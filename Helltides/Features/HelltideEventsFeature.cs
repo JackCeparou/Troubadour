@@ -42,40 +42,35 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
         }
     }
 
-    public static IEnumerable<IQuestSno> GetZoneEvents(SubzoneSnoId snoId)
+    private static IEnumerable<IQuestSno> GetZoneEvents(SubzoneSnoId snoId)
     {
         switch (snoId)
         {
             case SubzoneSnoId.Frac_Tundra_N:
             case SubzoneSnoId.Frac_Tundra_S:
-                return GameData.GetBountyEvents()
-                    .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Frac_Tundra_N or SubzoneSnoId.Frac_Tundra_S);
+                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Frac_Tundra_N or SubzoneSnoId.Frac_Tundra_S);
 
             case SubzoneSnoId.Scos_Coast:
             case SubzoneSnoId.Scos_Deep_Forest:
             case SubzoneSnoId.Scos_ZoneEvent:
-                return GameData.GetBountyEvents()
-                    .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Scos_Coast or SubzoneSnoId.Scos_Deep_Forest);
+                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Scos_Coast or SubzoneSnoId.Scos_Deep_Forest);
 
             case SubzoneSnoId.Step_South:
             case SubzoneSnoId.Step_Central:
             case SubzoneSnoId.Step_TempleOfRot:
             case SubzoneSnoId.Step_ZoneEvent:
-                return GameData.GetBountyEvents()
-                    .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Step_South or SubzoneSnoId.Step_Central);
+                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Step_South or SubzoneSnoId.Step_Central);
 
             case SubzoneSnoId.Kehj_Oasis:
             case SubzoneSnoId.Kehj_LowDesert:
             case SubzoneSnoId.Kehj_HighDesert:
             case SubzoneSnoId.Kehj_ZoneEvent:
-                return GameData.GetBountyEvents()
-                    .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert);
+                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert);
 
             case SubzoneSnoId.Hawe_Verge:
             case SubzoneSnoId.Hawe_Wetland:
             case SubzoneSnoId.Hawe_ZoneEvent:
-                return GameData.GetBountyEvents()
-                    .Where(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Hawe_Verge or SubzoneSnoId.Hawe_Wetland);
+                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Hawe_Verge or SubzoneSnoId.Hawe_Wetland);
 
             default:
                 return Array.Empty<IQuestSno>();

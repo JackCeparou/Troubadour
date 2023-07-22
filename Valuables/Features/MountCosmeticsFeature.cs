@@ -1,10 +1,18 @@
 ﻿namespace T4.Plugins.Troubadour;
 
+public static partial class MountCosmetics
+{
+    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(200, 255, 255, 0);
+
+    public static bool IsMountCosmeticItem(this IItem item)
+        => MountCosmeticItemSnoIdsSet.Contains(item.ItemSno.SnoId);
+}
+
 public sealed class MountCosmeticsFeature : WorldFeature<IItem>
 {
     private MountCosmeticsFeature()
     {
-        LineStyle = MountCosmeticsStore.LineStyle;
+        LineStyle = MountCosmetics.LineStyle;
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 

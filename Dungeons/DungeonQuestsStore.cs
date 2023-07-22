@@ -14,6 +14,7 @@ public static class DungeonQuestsStore
         // level floor switch
         ActorSnoId.DGN_Frac_KorDraganBarracks_FloorLever,
         // ActorSnoId.DGN_Frac_BlackAsylum_ChainReleaseWinch, // cause issues
+        // ActorSnoId.DGN_Kehj_TomboftheSaints_ChainReleaseWinch, // cause issues
         // defaced shrine
         ActorSnoId.Receptacle_DefacedShrine,
 

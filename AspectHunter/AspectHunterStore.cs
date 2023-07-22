@@ -23,23 +23,10 @@ public static class AspectHunterStore
 
         switch (item.Quality)
         {
-            case ItemQuality.Legendary:
-                var affix = item.GetAffix();
-                if (affix is null)
-                    return false;
-
-                return AffixSnoIdEnabled.TryGetValue(affix.SnoId, out var affixEnabled) && affixEnabled;
-
             case ItemQuality.Set:
             case ItemQuality.Unique:
-                var uniqueAffix = item.GetAffix();
-                if (uniqueAffix is not null)
-                    return AffixSnoIdEnabled.TryGetValue(uniqueAffix.SnoId, out var uniqueAffixEnabled) && uniqueAffixEnabled;
-
-                if (item.ItemSno.SnoId.TryGetUniqueAffixSnoId(out var uniqueAffixSnoId))
-                    return AffixSnoIdEnabled.TryGetValue(uniqueAffixSnoId, out var uniqueEnabled) && uniqueEnabled;
-
-                return false;
+            case ItemQuality.Legendary:
+                return item.IsAspectHunted();
 
             default:
                 return false;
@@ -89,34 +76,37 @@ public static class AspectHunterStore
         if (item.ItemSno is null)
             return false;
 
-        var affix = item.GetAffix();
-        if (affix is null)
+        if (item.Quality is ItemQuality.Unique && item.ItemSno.SnoId.TryGetUniqueAffixSnoId(out var affixSnoId))
         {
-            if (item.Quality is not ItemQuality.Unique || !item.ItemSno.SnoId.TryGetUniqueAffixSnoId(out var affixSnoId))
-                return false;
-
-            return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var uniqueValue) && uniqueValue;
+            return affixSnoId.IsAspectHunted();
         }
 
-        if (!OnlyMyCurrentClass) 
-            return AffixSnoIdEnabled.TryGetValue(affix.SnoId, out var enabled) && enabled;
+        return item.MainAffixes
+            .Where(x => x.MagicType is not MagicType.None)
+            .Any(affix => affix.SnoId.IsAspectHunted());
+    }
 
-        var isGeneric = AffixSnoIds.GenericSet.Contains(affix.SnoId) || AffixSnoIds.GenericUniqueSet.Contains(affix.SnoId);
+    public static bool IsAspectHunted(this AffixSnoId affixSnoId)
+    {
+        if (!OnlyMyCurrentClass)
+            return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var enabled) && enabled;
+
+        var isGeneric = AffixSnoIds.GenericSet.Contains(affixSnoId) || AffixSnoIds.GenericUniqueSet.Contains(affixSnoId);
         if (isGeneric)
-            return AffixSnoIdEnabled.TryGetValue(affix.SnoId, out var genericEnabled) && genericEnabled;
+            return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var genericEnabled) && genericEnabled;
 
         var isMyClass = Game.MyPlayerActor.PlayerClassSno.SnoId switch
         {
-            PlayerClassSnoId.Barbarian => AffixSnoIds.BarbarianSet.Contains(affix.SnoId) || AffixSnoIds.BarbarianUniqueSet.Contains(affix.SnoId),
-            PlayerClassSnoId.Druid => AffixSnoIds.DruidSet.Contains(affix.SnoId) || AffixSnoIds.DruidUniqueSet.Contains(affix.SnoId),
-            PlayerClassSnoId.Necromancer => AffixSnoIds.NecromancerSet.Contains(affix.SnoId) || AffixSnoIds.NecromancerUniqueSet.Contains(affix.SnoId),
-            PlayerClassSnoId.Rogue => AffixSnoIds.RogueSet.Contains(affix.SnoId) || AffixSnoIds.RogueUniqueSet.Contains(affix.SnoId),
-            PlayerClassSnoId.Sorcerer => AffixSnoIds.SorcererSet.Contains(affix.SnoId) || AffixSnoIds.SorcererUniqueSet.Contains(affix.SnoId),
+            PlayerClassSnoId.Barbarian => AffixSnoIds.BarbarianSet.Contains(affixSnoId) || AffixSnoIds.BarbarianUniqueSet.Contains(affixSnoId),
+            PlayerClassSnoId.Druid => AffixSnoIds.DruidSet.Contains(affixSnoId) || AffixSnoIds.DruidUniqueSet.Contains(affixSnoId),
+            PlayerClassSnoId.Necromancer => AffixSnoIds.NecromancerSet.Contains(affixSnoId) || AffixSnoIds.NecromancerUniqueSet.Contains(affixSnoId),
+            PlayerClassSnoId.Rogue => AffixSnoIds.RogueSet.Contains(affixSnoId) || AffixSnoIds.RogueUniqueSet.Contains(affixSnoId),
+            PlayerClassSnoId.Sorcerer => AffixSnoIds.SorcererSet.Contains(affixSnoId) || AffixSnoIds.SorcererUniqueSet.Contains(affixSnoId),
             _ => false,
         };
         if (!isMyClass)
             return false;
 
-        return AffixSnoIdEnabled.TryGetValue(affix.SnoId, out var affixEnabled) && affixEnabled;
+        return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var affixEnabled) && affixEnabled;
     }
 }

@@ -10,7 +10,7 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
     public IFillStyle MapFillStyle { get; } = Render.GetFillStyle(128, 255, 0, 0);
 
     public float GroundIconSize { get; set; } = 100f;
-    public ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_94699383);
+    public ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_3845477221);
 
     public Cursed()
     {
@@ -27,8 +27,7 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
                 foreach (var actor in CursedStore.GetCursedActors())
                 {
                     var offset = GroundIconSize / 2f;
-                    Render.WorldToScreenCoordinate(actor.Coordinate, out var worldX, out var worldY);
-                    GroundIcon.Draw(worldX - offset, worldY - offset, GroundIconSize, GroundIconSize);
+                    GroundIcon.Draw(actor.Coordinate.ScreenX - offset, actor.Coordinate.ScreenY - offset, GroundIconSize, GroundIconSize);
                 }
 
                 break;

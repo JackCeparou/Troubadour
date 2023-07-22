@@ -1,12 +1,8 @@
 namespace T4.Plugins.Troubadour;
 
-public static class MountCosmeticsStore
+public static partial class MountCosmetics
 {
-    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(200, 255, 255, 0);
-
-    public static bool IsMountCosmeticItem(this IItem item)
-        => MountCosmeticItemSnoIdsSet.Contains(item.ItemSno.SnoId);
-
+    // TODO: change this by using the use type of the item
     public static List<ItemSnoId> MountCosmeticItemSnoIds { get; } = new()
     {
         ItemSnoId.mnt_amor00_horse,

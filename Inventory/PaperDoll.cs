@@ -145,7 +145,7 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
                 x = uiControl.Left;
                 alignRight = true;
 
-                var isBarbarianMainHand = Game.MyPlayer.Actor.PlayerClassSno.SnoId == PlayerClassSnoId.Barbarian;
+                var isBarbarianMainHand = Game.MyPlayer?.Actor?.PlayerClassSno?.SnoId == PlayerClassSnoId.Barbarian;
                 if (isBarbarianMainHand)
                 {
                     x = uiControl.Left + uiControl.Width - (uiControl.Width * 0.35f);
@@ -160,7 +160,7 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
                 expandUpwards = true;
                 alignRight = true;
 
-                var isBarbarianOffHand = Game.MyPlayer.Actor.PlayerClassSno.SnoId == PlayerClassSnoId.Barbarian;
+                var isBarbarianOffHand = Game.MyPlayer?.Actor?.PlayerClassSno?.SnoId == PlayerClassSnoId.Barbarian;
                 if (isBarbarianOffHand)
                 {
                     x = uiControl.Left + (uiControl.Width * 0.35f);

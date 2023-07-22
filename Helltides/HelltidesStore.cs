@@ -82,7 +82,7 @@ public static class HelltidesStore
             case SubzoneSnoId.Kehj_LowDesert:
             case SubzoneSnoId.Kehj_HighDesert:
             case SubzoneSnoId.Kehj_ZoneEvent:
-                return GetActiveMysteriousChests(hour);
+                return GetActiveKehjistanMysteriousChests(hour);
 
             case SubzoneSnoId.Hawe_Verge:
             case SubzoneSnoId.Hawe_Wetland:
@@ -100,7 +100,7 @@ public static class HelltidesStore
         }
     }
 
-    public static IEnumerable<HelltideChest> GetActiveMysteriousChests(int hour)
+    private static IEnumerable<HelltideChest> GetActiveKehjistanMysteriousChests(int hour)
     {
         // Group 1
         // 0AM - 1B	0AM

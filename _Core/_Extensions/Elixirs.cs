@@ -1,17 +1,8 @@
-namespace T4.Plugins.Troubadour;
+﻿namespace T4.Plugins.Troubadour;
 
-public static class ElixirsStore
+public static partial class Elixirs
 {
-    public static bool InvertSelection { get; set; }
-    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(200, 255, 255, 0);
-
-    public static Dictionary<ItemSnoId, bool> ElixirSnoIdEnabled { get; } = new();
-
-    public static bool IsElixirHunted(this IItem item)
-        => ElixirSnoIdEnabled.TryGetValue(item.ItemSno.SnoId, out var enabled) && InvertSelection ? !enabled : enabled;
-
-    public static bool IsElixirItem(this IItem item)
-        => ElixirItemSnoIdsSet.Contains(item.ItemSno.SnoId);
+    public static bool IsElixirItem(this IItem item) => ElixirItemSnoIdsSet.Contains(item.ItemSno.SnoId);
 
     public static List<ItemSnoId> ElixirItemSnoIds { get; } = new()
     {

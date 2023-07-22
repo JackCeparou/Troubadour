@@ -5,7 +5,7 @@ public static partial class Inventory
     private static ItemOverlay CreateElixirHunterHighlight() => new()
     {
         Show = (_, features) => features.ElixirHunterHighlightEnabled,
-        Style = (item, _) => item.IsElixirHunted() || Host.DebugEnabled ? ElixirsStore.LineStyle : null,
+        Style = (item, _) => item.IsElixirHunted() || Host.DebugEnabled ? Elixirs.LineStyle : null,
     };
 }
 

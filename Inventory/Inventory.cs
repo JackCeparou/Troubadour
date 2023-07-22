@@ -65,8 +65,8 @@ public static partial class Inventory
 
         // that's awful 🤠
         var duplicatePowers = items
-            .Select(x => x.GetAffix())
-            .Where(x => x is not null)
+            .SelectMany(x => x.MainAffixes)
+            .Where(x => x is not null && x.MagicType is not MagicType.None)
             .Select(x => x.SnoId)
             .GroupBy(x => x)
             .Where(x => x.Count() > 1)
