@@ -6,6 +6,7 @@ public sealed class AspectHunter : JackPlugin, IGameUserInterfacePainter, IGameW
 {
     public Feature OnMap { get; private set; }
     public Feature OnGround { get; private set; }
+    public Feature OnCodex { get; private set; }
     public Feature OnlyMyClass { get; private set; }
     public Feature Generic { get; private set; }
     public Feature GenericUnique { get; private set; }
@@ -59,7 +60,35 @@ public sealed class AspectHunter : JackPlugin, IGameUserInterfacePainter, IGameW
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {
-        // TODO: Add UI on stash & vendors
+        if (layer != GameUserInterfaceLayer.OverPanels)
+            return;
+        if (!OnCodex.Enabled)
+            return;
+
+        if (UserInterface.CodexOfPowerCollectionControl.Visible)
+        {
+            foreach (var (aspect, control) in UserInterface.CodexOfPowerCollectionAspectControls)
+            {
+                if (!control.Visible || control.Height == 0 || control.Height < control.Width * 0.5f)
+                    continue;
+                if (aspect.AffixSno is null || !aspect.AffixSno.SnoId.IsAspectHunted())
+                    continue;
+
+                LineStyle.DrawRectangle(control.Left, control.Top, control.Width, control.Height * 0.95f, strokeWidthCorrection: 1f);
+            }
+        }
+        else if (UserInterface.OccultistPanelControl.Visible)
+        {
+            foreach (var (aspect, control) in UserInterface.CodexOfPowerCraftingAspectControls)
+            {
+                if (!control.Visible || control.Height == 0 || control.Height < control.Width * 0.5f)
+                    continue;
+                if (aspect.AffixSno is null || !aspect.AffixSno.SnoId.IsAspectHunted())
+                    continue;
+
+                LineStyle.DrawRectangle(control.Left, control.Top, control.Width, control.Height * 0.95f, strokeWidthCorrection: 1f);
+            }
+        }
     }
 
     public override void Load()
@@ -131,6 +160,20 @@ public sealed class AspectHunter : JackPlugin, IGameUserInterfacePainter, IGameW
                     DisplayText = () => Translation.Translate(this, "draw line to item"),
                     Getter = () => OnGroundLineEnabled,
                     Setter = newValue => OnGroundLineEnabled = newValue
+                },
+            }
+        }.Register();
+
+        OnCodex = new Feature
+        {
+            Plugin = this,
+            NameOf = nameof(OnMap),
+            DisplayName = () => Translation.Translate(this, "codex"),
+            Resources = new List<AbstractFeatureResource>
+            {
+                new LineStyleFeatureResource
+                {
+                    NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle
                 },
             }
         }.Register();

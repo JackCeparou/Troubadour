@@ -19,8 +19,8 @@ public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePaint
 
         Equipment = InventoryFeatures.Create(this, nameof(Equipment), "equipment",
                 page: Inventory.Equipment,
-                font: CreateDefaultFont(bold: true),
-                errorFont: CreateDefaultErrorFont(bold: true))
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
             .AspectHunterIcon().AspectHunterHighlight(false)
             .TreasureHunterIcon().TreasureHunterHighlight(false).TreasureHunterFilterCount(false)
             .QualityLegendaryIcon(false)
@@ -36,8 +36,8 @@ public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePaint
 
         Consumables = InventoryFeatures.Create(this, nameof(Consumables), "consumables",
                 page: Inventory.Consumables,
-                font: CreateDefaultFont(bold: true),
-                errorFont: CreateDefaultErrorFont(bold: true))
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
             .ElixirHunterHighlight(false)
             .ItemLevel()
             .MonsterLevel(false)
@@ -48,8 +48,8 @@ public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePaint
 
         Aspects = InventoryFeatures.Create(this, nameof(Aspects), "aspects",
                 page: Inventory.Aspects,
-                font: CreateDefaultFont(bold: true),
-                errorFont: CreateDefaultErrorFont(bold: true))
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
             .AspectHunterIcon().AspectHunterHighlight(false)
             .AspectName()
             .ShowHint()

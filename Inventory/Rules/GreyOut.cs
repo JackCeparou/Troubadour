@@ -29,6 +29,9 @@ public static partial class Inventory
         if (item.IsAspectItem() && AspectHunterStore.AffixSnoIdEnabled.Any(x => x.Value))
             return !item.IsAspectHunted();
 
+        // S01 //*
+        if (item.IsMalignantInvoker())
+            return false;
         if (SeasonOfTheMalignantStore.MalignantHeartAffixSnoIdEnabled.Any(x => x.Value))
         {
             if (item.IsMalignantHeart())
@@ -37,6 +40,7 @@ public static partial class Inventory
             if (heart is not null)
                 return !heart.SnoId.IsMalignantHeartHunted();
         }
+        // S01 */
 
         return item.MatchingFilterNames.Length == 0 && !item.IsAspectHunted();
     }

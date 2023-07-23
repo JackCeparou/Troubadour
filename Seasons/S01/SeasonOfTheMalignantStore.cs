@@ -22,7 +22,12 @@ public static class SeasonOfTheMalignantStore
 
     public static bool IsMalignantHeart(this IItem item)
     {
-        return MalignantHeartsSnoIds.Contains(item.ItemSno.SnoId);
+        return MalignantHeartsSnoIdsSet.Contains(item.ItemSno.SnoId);
+    }
+
+    public static bool IsMalignantInvoker(this IItem item)
+    {
+        return MalignantInvokersSnoIdsSet.Contains(item.ItemSno.SnoId);
     }
 
     public static bool IsMalignantHeartAffix(this AffixSnoId affixSnoId) => MalignantHeartAffixesSnoIdsSet.Contains(affixSnoId);
@@ -37,6 +42,18 @@ public static class SeasonOfTheMalignantStore
     };
 
     public static readonly IEnumerable<ItemSnoId> MalignantHeartsSnoIdsSet = new HashSet<ItemSnoId>(MalignantHeartsSnoIds);
+
+    public static readonly IEnumerable<ItemSnoId> MalignantInvokersSnoIds = new List<ItemSnoId>
+    {
+        ItemSnoId.S01_Malignant_Key_Defensive,
+        ItemSnoId.S01_Malignant_Key_Offensive,
+        ItemSnoId.S01_Malignant_Key_Utility,
+        ItemSnoId.S01_Malignant_Key_Varshan,
+        ItemSnoId.S01_Malignant_Key_Universal,
+        ItemSnoId.S01_Malignant_Key_Varshan_T3,
+        ItemSnoId.S01_Malignant_Key_Varshan_T4,
+    };
+    public static readonly IEnumerable<ItemSnoId> MalignantInvokersSnoIdsSet = new HashSet<ItemSnoId>(MalignantInvokersSnoIds);
 
     public static readonly IEnumerable<AffixSnoId> MalignantHeartAffixesSnoIds = new List<AffixSnoId>
     {

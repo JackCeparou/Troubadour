@@ -163,6 +163,7 @@ Current:
 {string.Join(Environment.NewLine, item.CurrentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
 ----------------
 ItemLevel: {item.ItemPowerTotal} | {item.GetFormattedItemPower(true, true)}
+UseType: {item.ItemSno.ItemUseType}
 NearBreakpoint: {item.IsNearBreakpoint()} ({item.GetNextReachableBreakpoint()})
 UseType: {item.ItemSno.ItemUseType}
 Filters: {string.Join(", ", item.MatchingFilterNames)}
@@ -172,6 +173,7 @@ Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemText
 
 
 """;
+
             // Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.EnchantedAffix?.SnoId}
             // Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
 

@@ -15,8 +15,8 @@ public sealed partial class PlayerStash : JackPlugin, IGameUserInterfacePainter
     {
         Stash = InventoryFeatures.Create(this, nameof(Stash), "items",
                 page: Inventory.Stash,
-                font: CreateDefaultFont(bold: true),
-                errorFont: CreateDefaultErrorFont(bold: true))
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
             .AspectHunterIcon().AspectHunterHighlight(false)
             .TreasureHunterIcon().TreasureHunterHighlight(false).TreasureHunterFilterCount(false)
             .ElixirHunterHighlight(false)

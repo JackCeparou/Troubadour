@@ -55,8 +55,8 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
     public override void Load()
     {
         OnShopList = InventoryFeatures.Create(this, nameof(OnShopList), "shop list",
-                font: CreateDefaultFont(bold: true),
-                errorFont: CreateDefaultErrorFont(bold: true))
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
             // .AspectHunterIcon().AspectHunterHighlight(false)
             // .TreasureHunterIcon().TreasureHunterHighlight(false)
             //.GreyOut(false)
