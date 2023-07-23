@@ -45,7 +45,8 @@ public sealed class CagedMalignantHeartsFeature : WorldFeature<ICommonActor>
 
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
-        foreach (var snoId in MalignantHeartAffixesSnoIds)
+        var sortedSnoIds = MalignantHeartAffixesSnoIds.OrderBy(x => GameData.GetAffixSno(x)?.GetFriendlyName()).ToList();
+        foreach (var snoId in sortedSnoIds)
         {
             MalignantHeartAffixSnoIdEnabled[snoId] = false;
             feature.Resources.Add(new BooleanFeatureResource()

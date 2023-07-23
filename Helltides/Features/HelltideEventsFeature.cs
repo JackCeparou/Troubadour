@@ -1,11 +1,12 @@
-﻿namespace T4.Plugins.Troubadour;
+﻿using static T4.Plugins.Troubadour.WorldEventsOnMap;
+
+namespace T4.Plugins.Troubadour;
 
 public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
 {
     private HelltideEventsFeature()
     {
         OnGroundEnabled = false;
-        MapIconSize = 24f;
         MapIconTexture = Textures.BountyEventActive;
     }
 
@@ -18,7 +19,30 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
     {
         var feature = new HelltideEventsFeature
         {
-            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "events"), Resources = new List<AbstractFeatureResource>()
+            Plugin = plugin,
+            NameOf = nameOf,
+            DisplayName = () => Translation.Translate(plugin, "events"),
+            Resources = new List<AbstractFeatureResource>
+            {
+                new FloatFeatureResource
+                {
+                    NameOf = nameof(IconSize),
+                    DisplayText = () => Translation.Translate(plugin, "icon size"),
+                    MinValue = 10,
+                    MaxValue = 42,
+                    Getter = () => IconSize,
+                    Setter = newValue => IconSize = newValue
+                },
+                new FloatFeatureResource
+                {
+                    NameOf = nameof(MaxMapZoomLevel),
+                    DisplayText = () => Translation.Translate(plugin, "maximum zoom level"),
+                    MinValue = 1,
+                    MaxValue = 10,
+                    Getter = () => MaxMapZoomLevel,
+                    Setter = newValue => MaxMapZoomLevel = newValue,
+                },
+            }
         };
 
         return feature.Register();
@@ -28,17 +52,24 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
     {
         if (!Enabled || !OnMapEnabled)
             return;
+        if (OnMap is not null && !OnMap.Enabled)
+            return;
+        if (Map.CurrentMode == MapMode.Map && Map.MapZoomLevel > MaxMapZoomLevel)
+            return;
         var helltide = Game.HelltideEventMarkers.FirstOrDefault(x => x.EndsInMilliseconds > 0);
         if (helltide is null)
             return;
 
+        var currentWorldSno = Map.MapWorldSno;
         foreach (var quest in GetZoneEvents(helltide.SubzoneSno.SnoId))
         {
+            if (quest.WorldSno != currentWorldSno || quest.WorldCoordinate.IsZero)
+                continue;
             if (!Map.WorldToMapCoordinate(quest.WorldCoordinate, out var mapX, out var mapY))
                 continue;
 
-            MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
-            MapIconTexture?.Draw(mapX - (MapIconSize / 2), mapY - (MapIconSize / 2), MapIconSize, MapIconSize);
+            var size = IconSize;
+            MapIconTexture?.Draw(mapX - (size / 2), mapY - (size / 2), size, size);
         }
     }
 
@@ -65,7 +96,8 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
             case SubzoneSnoId.Kehj_LowDesert:
             case SubzoneSnoId.Kehj_HighDesert:
             case SubzoneSnoId.Kehj_ZoneEvent:
-                return GameData.GetBountyEvents(x => x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert);
+                return GameData.GetBountyEvents(x =>
+                    x.SubzoneSno?.SnoId is SubzoneSnoId.Kehj_Oasis or SubzoneSnoId.Kehj_LowDesert or SubzoneSnoId.Kehj_HighDesert);
 
             case SubzoneSnoId.Hawe_Verge:
             case SubzoneSnoId.Hawe_Wetland:

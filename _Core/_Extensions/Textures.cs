@@ -24,6 +24,7 @@ public static class Textures
     public static ITexture HelltideChest { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
 
     public static ITexture BountyEventActive { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_503808014);
+    public static ITexture CaveEntrance { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_3564463460);
     // public static ITexture BountyEventInactive { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_094);
     // public static ITexture BountyEventDisabled { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_129);
     //
