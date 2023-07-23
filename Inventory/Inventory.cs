@@ -2,8 +2,24 @@ namespace T4.Plugins.Troubadour;
 
 public static partial class Inventory
 {
-    public static List<ItemTextLine> ItemLines { get; } = new() { CreateItemLevel(), CreateMonsterLevel(), CreateAspectName(), CreateSigilName(), CreateElixirName() };
-    public static List<ItemIcon> ItemIcons { get; } = new() { CreateTreasureHunter(), CreateAspectHunterIcon(), CreateQuality(), CreateNearBreakpoint() };
+    public static List<ItemTextLine> ItemLines { get; } = new()
+    {
+        CreateItemLevel(),
+        CreateMonsterLevel(),
+        CreateMalignantHeartName(), // S01
+        CreateAspectName(),
+        CreateSigilName(),
+        CreateElixirName(),
+    };
+
+    public static List<ItemIcon> ItemIcons { get; } = new()
+    {
+        CreateTreasureHunter(),
+        CreateAspectHunterIcon(),
+        CreateMalignantHeartHunterIcon(), // S01
+        CreateQuality(),
+        CreateNearBreakpoint(),
+    };
 
     public static List<ItemOverlay> ItemOverlays { get; } = new()
     {
@@ -11,7 +27,8 @@ public static partial class Inventory
         CreateAspectHunterHighlight(),
         CreateTreasureHunterHighlight(),
         CreateTreasureHunterMatchedFilterCount(),
-        CreateElixirHunterHighlight()
+        CreateElixirHunterHighlight(),
+        CreateMalignantHeartHunterHighlight(), // S01
     };
 
     public static List<AffixSnoId> DuplicateEquippedPowers { get; } = new();
@@ -65,7 +82,7 @@ public static partial class Inventory
 
         // that's awful 🤠
         var duplicatePowers = items
-            .SelectMany(x => x.MainAffixes)
+            .Select(x => x.GetEternalLegendaryAffix())
             .Where(x => x is not null && x.MagicType is not MagicType.None)
             .Select(x => x.SnoId)
             .GroupBy(x => x)

@@ -1,10 +1,9 @@
 namespace T4.Plugins.Troubadour;
 
-
 public sealed class SeasonOfTheMalignant : JackPlugin, IGameWorldPainter
 {
     public IWorldFeature MalignantHearts { get; private set; }
-    public IWorldFeature MountCosmetics { get; private set; }
+    public IWorldFeature CagedHearts { get; private set; }
 
     public SeasonOfTheMalignant()
     {
@@ -18,6 +17,7 @@ public sealed class SeasonOfTheMalignant : JackPlugin, IGameWorldPainter
         WorldFeatures = new[]
         {
             MalignantHearts = MalignantHeartsFeature.Create(this, nameof(MalignantHearts)), //
+            CagedHearts = CagedMalignantHeartsFeature.Create(this, nameof(CagedHearts)), //
             // MountCosmetics = MountCosmeticsFeature.Create(this, nameof(MountCosmetics)),
         };
     }

@@ -27,6 +27,7 @@ public sealed partial class PlayerStash : JackPlugin, IGameUserInterfacePainter
             .MonsterLevel()
             .ItemQualityModifier()
             .AspectName(false).ElixirName(false) //.SigilName(false)
+            .MalignantHeartIcon(false).MalignantHeartHighlight(false) // S01
             .ShowHint()
             .GreyOut(false)
             .Register();

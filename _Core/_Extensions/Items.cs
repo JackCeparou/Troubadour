@@ -4,14 +4,9 @@ public static class ItemExtensions
 {
     public static bool IsEquippedTemp(this IItem item) => EquippedItemLocationsSet.Contains(item.Location);
 
-    public static IAffixSno GetEternalAffix(this IItem item)
+    public static IAffixSno GetEternalLegendaryAffix(this IItem item)
     {
-        if (item.Affix1 is not null && !item.Affix1.SnoId.IsMalignantHeartAffix())
-            return item.Affix1;
-        if (item.Affix2 is not null && !item.Affix2.SnoId.IsMalignantHeartAffix())
-            return item.Affix2;
-
-        return null;
+        return item.ImprintedAffix ?? item.MainAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None && !x.SnoId.IsMalignantHeartAffix());
     }
 
     public static IEnumerable<ItemLocation> EquippedItemLocations { get; } = new List<ItemLocation>
@@ -120,8 +115,8 @@ public static class ItemExtensions
         switch (item.Quality)
         {
             case ItemQuality.Legendary:
-                return item.MainAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None)?.GetFriendlyName()
-                       ?? item.GetEternalAffix()?.GetFriendlyName()
+                return item.GetEternalLegendaryAffix()?.GetFriendlyName()
+                       ?? item.GetMalignantHeartLegendaryAffix()?.GetFriendlyName()
                        ?? string.Empty;
             case ItemQuality.Set:
             case ItemQuality.Unique:
@@ -160,13 +155,13 @@ public static class ItemExtensions
 
 
 Id: {item.ItemSno.SnoId} | {item.ItemSno.NameLocalized}
-Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.EnchantedAffix?.SnoId}
 Inherent:
 {string.Join(Environment.NewLine, item.InherentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
 Main:
 {string.Join(Environment.NewLine, item.MainAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
+Current:
+{string.Join(Environment.NewLine, item.CurrentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
 ----------------
-Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
 ItemLevel: {item.ItemPowerTotal} | {item.GetFormattedItemPower(true, true)}
 NearBreakpoint: {item.IsNearBreakpoint()} ({item.GetNextReachableBreakpoint()})
 UseType: {item.ItemSno.ItemUseType}
@@ -177,6 +172,8 @@ Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemText
 
 
 """;
+            // Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.EnchantedAffix?.SnoId}
+            // Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
 
             Hint.SetHint(text);
             return;

@@ -29,6 +29,15 @@ public static partial class Inventory
         if (item.IsAspectItem() && AspectHunterStore.AffixSnoIdEnabled.Any(x => x.Value))
             return !item.IsAspectHunted();
 
+        if (SeasonOfTheMalignantStore.MalignantHeartAffixSnoIdEnabled.Any(x => x.Value))
+        {
+            if (item.IsMalignantHeart())
+                return !item.IsMalignantHeartHunted();
+            var heart = item.GetMalignantHeartLegendaryAffix();
+            if (heart is not null)
+                return !heart.SnoId.IsMalignantHeartHunted();
+        }
+
         return item.MatchingFilterNames.Length == 0 && !item.IsAspectHunted();
     }
 }

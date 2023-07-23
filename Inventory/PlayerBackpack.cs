@@ -29,6 +29,7 @@ public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePaint
             .ItemLevel()
             .ItemQualityModifier()
             .AspectName(false)
+            .MalignantHeartIcon(false).MalignantHeartHighlight(false) // S01
             .ShowHint()
             .GreyOut(false)
             .Register();

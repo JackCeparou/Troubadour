@@ -2,10 +2,13 @@
 
 public sealed class MalignantHeartsFeature : WorldFeature<ICommonActor>
 {
+    public static ILineStyle SharedLineStyle { get; } = Render.GetLineStyle(200, 178, 0, 255);
+    public static ILineStyle SharedMapLineStyle { get; } = Render.GetLineStyle(200, 178, 0, 255);
+
     private MalignantHeartsFeature()
     {
-        LineStyle = Render.GetLineStyle(200, 255, 255, 0);
-        MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
+        LineStyle = SharedLineStyle;
+        MapLineStyle = SharedMapLineStyle;
         SnoIdsSet = _snoIds.ToHashSet();
     }
 
@@ -37,12 +40,11 @@ public sealed class MalignantHeartsFeature : WorldFeature<ICommonActor>
     }
 
     private HashSet<ActorSnoId> SnoIdsSet { get; }
+
     private readonly IEnumerable<ActorSnoId> _snoIds = new[]
     {
-        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Pink_Dyn,
-        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Blue_Dyn,
-        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Black_Dyn,
-        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Orange_Dyn,
+        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Pink_Dyn, ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Blue_Dyn,
+        ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Black_Dyn, ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Orange_Dyn,
         // ActorSnoId.S01_MalignantHeart_CaptureSequence_Main_Dyn, // <-- not sure about this one.
     };
 }

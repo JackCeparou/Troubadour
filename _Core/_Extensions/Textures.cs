@@ -6,6 +6,7 @@ public static class Textures
     public static ITexture UniqueIcon { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_3759295089);
     public static ITexture NearBreakpointIcon { get; } = Render.GetTexture(SupportedTextureId.UISkills_4275309202);
     public static ITexture AspectHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UITest_3915375899);
+    public static ITexture HeartHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UIActionBarBarbarian_2231519537);
 
     // public static ITexture UiStash004 { get; } = Render.GetTexture(SupportedTextureId.UIStash_360267698);
 

@@ -21,11 +21,12 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
             .QualityLegendaryIcon(false)
             .QualityUniqueIcon()
             .AspectHunterIcon(false)
-            .TreasureHunterIcon(false).TreasureHunterHighlight(false)
+            .TreasureHunterIcon(false)//.TreasureHunterHighlight(false)
             .NearBreakpointIcon()
             .ItemLevel()
             .ItemQualityModifier()
             .AspectName()
+            .MalignantHeartIcon(false).MalignantHeartName() // S01
             .PaperDoll()
             .Register();
     }

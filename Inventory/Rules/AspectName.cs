@@ -8,7 +8,7 @@ public static partial class Inventory
         Show = (item, features) => features.AspectNameEnabled && item.ItemSno.GemType == GemType.None,
         Text = (item, _) => item.GetFriendlyAffixName(),
         HasError = item =>
-            item.IsEquippedTemp() && item.MainAffixes
+            item.IsEquippedTemp() && item.CurrentAffixes
                 .Where(x => x.MagicType is not MagicType.None)
                 .Any(x => DuplicateEquippedPowers.Contains(x.SnoId)),
     };
