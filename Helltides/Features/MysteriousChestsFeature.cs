@@ -14,7 +14,7 @@ public sealed class MysteriousChestsFeature : WorldFeature<ICommonActor>
         Try(() => _pstTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         return Game.GizmoActors.Where(x => x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber);
     }

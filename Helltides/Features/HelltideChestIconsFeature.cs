@@ -21,7 +21,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         _uberChests = _uberChestsTextures.Keys.ToHashSet();
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         return Game.GizmoActors.Where(x => _uberChests.Contains(x.ActorSno.SnoId));
     }
@@ -46,7 +46,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         if (!Enabled || !OnGroundEnabled)
             return;
 
-        foreach (var item in GetWorldObjects())
+        foreach (var item in GetWorldActors())
         {
             _uberChestsTextures.TryGetValue(item.ActorSno.SnoId, out var texture);
             if (texture is null) 
@@ -65,7 +65,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         if (!Enabled || !OnMapEnabled)
             return;
 
-        foreach (var item in GetWorldObjects())
+        foreach (var item in GetWorldActors())
         {
             if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
                 continue;

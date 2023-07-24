@@ -9,7 +9,7 @@ public sealed class CarryableItemsFeature : WorldFeature<ICommonActor>
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         foreach (var gizmo in Game.GizmoActors.Where(x => CarryableSnoIdsSet.Contains(x.ActorSno.SnoId)))
         {

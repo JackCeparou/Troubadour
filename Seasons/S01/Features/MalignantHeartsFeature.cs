@@ -12,7 +12,7 @@ public sealed class MalignantHeartsFeature : WorldFeature<ICommonActor>
         SnoIdsSet = _snoIds.ToHashSet();
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         return Game.GizmoActors.Where(item =>
         {

@@ -16,7 +16,7 @@ public sealed class MountCosmeticsFeature : WorldFeature<IItem>
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
-    public override IEnumerable<IItem> GetWorldObjects()
+    public override IEnumerable<IItem> GetWorldActors()
     {
         return Game.Items.Where(item =>
         {

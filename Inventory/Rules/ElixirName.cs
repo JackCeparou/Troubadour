@@ -6,7 +6,21 @@ public static partial class Inventory
     {
         IsName = true,
         Show = (item, features) => features.ElixirNameEnabled && item.ItemSno.ItemUseType == ItemUseType.ElixirScrollWhatever,
-        Text = (item, _) => item.NameLocalized ?? item.NameEnglish ?? "42",
+        Text = (item, _) =>
+        {
+            var name = item.NameLocalized ?? string.Empty;
+            switch (Translation.Language)
+            {
+                case Language.enUS:
+                    if (name.Contains("Elixir of "))
+                        name = name.Replace("Elixir of ", " ");
+                    else if (name.EndsWith(" Elixir"))
+                        name = name.Substring(0, name.Length - 7);
+                    break;
+            }
+
+            return name;
+        }
     };
 }
 

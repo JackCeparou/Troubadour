@@ -9,7 +9,7 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         return Game.GizmoActors.Where(x => _cinderCachesSnoIdsSet.Contains(x.ActorSno.SnoId));
     }

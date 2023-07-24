@@ -14,7 +14,7 @@ public sealed class CagedMalignantHeartsFeature : WorldFeature<ICommonActor>
         MapCircleStroke = 4f;
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         return Game.Items.Where(item =>
         {

@@ -26,7 +26,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
     public virtual ITexture MapIconTexture { get; init; }
     public virtual float MapIconSize { get; set; } = 2f;
 
-    public abstract IEnumerable<T> GetWorldObjects();
+    public abstract IEnumerable<T> GetWorldActors();
     public virtual void PaintGroundBefore(T actor) { }
     public virtual void PaintGroundAfter(T actor) { }
     public virtual void PaintMapBefore(T actor, float mapX, float mapY) { }
@@ -37,19 +37,19 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
         if (!Enabled || !OnGroundEnabled)
             return;
 
-        foreach (var item in GetWorldObjects())
+        foreach (var actor in GetWorldActors())
         {
-            PaintGroundBefore(item);
-            LineStyle?.DrawWorldEllipse(WorldCircleSize, -1, item.Coordinate, strokeWidthCorrection: WorldCircleStroke);
+            PaintGroundBefore(actor);
+            LineStyle?.DrawWorldEllipse(WorldCircleSize, -1, actor.Coordinate, strokeWidthCorrection: WorldCircleStroke);
             if (WorldIconTexture is not null)
             {
                 var size = WorldIconSize;
-                var x = item.Coordinate.ScreenX - (size / 2);
-                var y = item.Coordinate.ScreenY - (size / 2);
+                var x = actor.Coordinate.ScreenX - (size / 2);
+                var y = actor.Coordinate.ScreenY - (size / 2);
                 WorldIconTexture.Draw(x, y, size, size);
             }
 
-            PaintGroundAfter(item);
+            PaintGroundAfter(actor);
         }
     }
 
@@ -58,7 +58,7 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
         if (!Enabled || !OnMapEnabled)
             return;
 
-        foreach (var item in GetWorldObjects())
+        foreach (var item in GetWorldActors())
         {
             if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
                 continue;
@@ -68,8 +68,8 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
             if (MapIconTexture is not null)
             {
                 var size = MapIconSize;
-                var x = item.Coordinate.ScreenX - (size / 2);
-                var y = item.Coordinate.ScreenY - (size / 2);
+                var x = item.Coordinate.MapX - (size / 2);
+                var y = item.Coordinate.MapY - (size / 2);
                 MapIconTexture.Draw(x, y, size, size);
             }
 

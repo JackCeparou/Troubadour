@@ -10,7 +10,7 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
         MapIconTexture = Textures.BountyEventActive;
     }
 
-    public override IEnumerable<ICommonActor> GetWorldObjects()
+    public override IEnumerable<ICommonActor> GetWorldActors()
     {
         yield break;
     }
