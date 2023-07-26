@@ -21,48 +21,28 @@ public static class CursedStore
     };
 
     private static HashSet<ActorSnoId> CursedActorIdsSet { get; } = new(SnoIds);
-    private static Dictionary<ActorSnoId, bool> CursedActorEnabled { get; } = new();
-
-    public static void Init()
-    {
-        if (CursedActorEnabled.Any())
-            return;
-
-        foreach (var snoId in SnoIds)
-        {
-            CursedActorEnabled[snoId] = true;
-        }
-    }
 
     public static IEnumerable<ICommonActor> GetCursedActors()
     {
         var actors = Game.GenericActors
-            .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId))
-            .Where(x => CursedActorEnabled.TryGetValue(x.ActorSno.SnoId, out var enabled) && enabled);
+            .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId));
         foreach (var actor in actors)
         {
             yield return actor;
         }
 
         var gizmos = Game.GizmoActors
-                .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId))
-                .Where(x => CursedActorEnabled.TryGetValue(x.ActorSno.SnoId, out var enabled) && enabled);
+                .Where(x => (x.GizmoType == GizmoType.Chest && x.IsDisabledByScript) || CursedActorIdsSet.Contains(x.ActorSno.SnoId));
         foreach (var actor in gizmos)
         {
             yield return actor;
         }
 
         var monsters = Game.Monsters
-                .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId))
-                .Where(x => CursedActorEnabled.TryGetValue(x.ActorSno.SnoId, out var enabled) && enabled);
+                .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId));
         foreach (var monster in monsters)
         {
             yield return monster;
         }
-    }
-    
-    public static bool IsShrine(this ICommonActor actor)
-    {
-        return actor.ActorSno.SnoId == ActorSnoId.DE_CursedShrine_Debuff_Trigger;
     }
 }

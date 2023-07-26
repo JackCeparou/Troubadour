@@ -142,10 +142,10 @@ public static class ItemExtensions
         return combinedName;
     }
 
-    public static string GetFriendlyName(this AffixSnoId affixSnoId) =>
-        affixSnoId.TryGetUniqueItemSnoId(out var uniqueItemSnoId) && uniqueItemSnoId != ItemSnoId.Axe__Bad__Data
-            ? GameData.GetItemSno(uniqueItemSnoId)?.NameLocalized ?? string.Empty
-            : GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
+    // public static string GetFriendlyName(this AffixSnoId affixSnoId) =>
+    //     affixSnoId.TryGetUniqueItemSnoId(out var uniqueItemSnoId) && uniqueItemSnoId != ItemSnoId.Axe__Bad__Data
+    //         ? GameData.GetItemSno(uniqueItemSnoId)?.NameLocalized ?? string.Empty
+    //         : GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
 
     public static void SetHint(this IItem item, IPlugin plugin)
     {

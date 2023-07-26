@@ -14,50 +14,15 @@ public sealed class GetOut : JackPlugin, IGameWorldPainter
     public bool OnGizmos { get; set; }
     public bool OnGenerics { get; set; }
 
-    public GetOut()
+    public GetOut() : base(PluginCategory.Fight, "displays dangerous affixes on ground.")
     {
         EnabledByDefault = false;
-        TroubadourExperiment = true;
-        Group = PluginCategory.Fight;
-        Description = "displays dangerous affixes on ground";
-    }
-
-    public override void Load()
-    {
-        Config = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, "config"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                // new FontFeatureResource { NameOf = nameof(TrapFont), DisplayText = () => nameof(TrapFont), Font = TrapFont, },
-                new LineStyleFeatureResource { NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle, },
-            }
-        }.Register();
-
-        Developer = new Feature
-        {
-            // Enabled = false,
-            Plugin = this,
-            NameOf = nameof(Developer),
-            DisplayName = () => Translation.Translate(this, "developer"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnMonsters), DisplayText = () => nameof(OnMonsters), Getter = () => OnMonsters, Setter = value => OnMonsters = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnGizmos), DisplayText = () => nameof(OnGizmos), Getter = () => OnGizmos, Setter = value => OnGizmos = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnGenerics), DisplayText = () => nameof(OnGenerics), Getter = () => OnGenerics, Setter = value => OnGenerics = value,
-                },
-            }
-        }.Register();
+        Config = AddFeature(nameof(Config), "config")
+            .AddLineStyleResource(nameof(LineStyle), LineStyle, "line style");
+        Developer = AddFeature(nameof(Developer), "developer")
+            .AddBooleanResource(nameof(OnMonsters), "`on monsters", () => OnMonsters, v => OnMonsters = v)
+            .AddBooleanResource(nameof(OnGizmos), "`on gizmos", () => OnGizmos, v => OnGizmos = v)
+            .AddBooleanResource(nameof(OnGenerics), "`on generics", () => OnGenerics, v => OnGenerics = v);
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
@@ -84,9 +49,6 @@ public sealed class GetOut : JackPlugin, IGameWorldPainter
         {
             var radius = actor.GetWorldRadius();
             LineStyle.DrawWorldEllipse(radius, -1, actor.Coordinate, false, strokeWidthCorrection: 2f);
-            // Render.WorldToScreenCoordinate(actor.Coordinate, out var x, out var y);
-            // var tl = TrapFont.GetTextLayout(actor.ActorSno.NameLocalized);
-            // tl.DrawText(x - (tl.Width / 2f), y - (tl.Height / 2f));
         }
     }
 }

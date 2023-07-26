@@ -3,7 +3,6 @@
 public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
 {
 
-    // public IFillStyle FillStyle { get; }
     public ITexture BackgroundTexture { get; }
     private HelltideChestIconsFeature()
     {
@@ -16,7 +15,6 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         WorldIconSize = 64f;
         MapIconTexture = Textures.HelltideChest;
         BackgroundTexture = Textures.CircleBackground;
-        // MapCircleSize = 10f;
 
         _uberChests = _uberChestsTextures.Keys.ToHashSet();
     }
@@ -38,7 +36,8 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         // feature.AddDefaultGroundResources();
         // feature.AddDefaultMapResources();
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 
     public override void PaintGround()
@@ -67,7 +66,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
 
         foreach (var item in GetWorldActors())
         {
-            if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
+            if (!item.Coordinate.IsOnMap)
                 continue;
 
             _uberChestsTextures.TryGetValue(item.ActorSno.SnoId, out var texture);
@@ -80,11 +79,6 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
             BackgroundTexture.Draw(x, y, size, size);
             texture.Draw(x, y, size, size);
         }
-    }
-
-    private ITexture GetTexture(ActorSnoId snoId)
-    {
-        return _uberChestsTextures.TryGetValue(snoId, out var texture) ? texture : null;
     }
 
     private readonly HashSet<ActorSnoId> _uberChests;

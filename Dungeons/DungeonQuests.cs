@@ -4,8 +4,8 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class DungeonQuests : JackPlugin, IGameWorldPainter
 {
-    public Feature Developer { get; private set; }
-    public CarryableItemsFeature CarryableItems { get; private set; }
+    public Feature Developer { get; }
+    public CarryableItemsFeature CarryableItems { get; }
 
     public static IFont Font { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
     public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 255, 255, 0, DashStyle.Dash);
@@ -14,37 +14,13 @@ public sealed class DungeonQuests : JackPlugin, IGameWorldPainter
     public bool OnGizmos { get; set; }
     public bool OnGenerics { get; set; }
 
-    public DungeonQuests()
-    {
-        Group = PluginCategory.Dungeon;
-        Description = "displays dungeon quest objectives on map and ground.";
-    }
-
-    public override void Load()
+    public DungeonQuests() : base(PluginCategory.Dungeon, "displays dungeon quest objectives on map and ground.")
     {
         CarryableItems = CarryableItemsFeature.Create(this, nameof(CarryableItems));
-
-        Developer = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(Developer),
-            DisplayName = () => Translation.Translate(this, "developer"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnMonsters), DisplayText = () => nameof(OnMonsters), Getter = () => OnMonsters, Setter = value => OnMonsters = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnGizmos), DisplayText = () => nameof(OnGizmos), Getter = () => OnGizmos, Setter = value => OnGizmos = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnGenerics), DisplayText = () => nameof(OnGenerics), Getter = () => OnGenerics, Setter = value => OnGenerics = value,
-                },
-            }
-        }.Register();
+        Developer = AddFeature(nameof(Developer), "developer")
+            .AddBooleanResource(nameof(OnMonsters), "`on monsters", () => OnMonsters, v => OnMonsters = v)
+            .AddBooleanResource(nameof(OnGizmos), "`on gizmos", () => OnGizmos, v => OnGizmos = v)
+            .AddBooleanResource(nameof(OnGenerics), "`on generics", () => OnGenerics, v => OnGenerics = v);
     }
 
     public void PaintGameWorld(GameWorldLayer layer)

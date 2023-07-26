@@ -47,21 +47,17 @@ public sealed class ElixirsFeature : WorldFeature<IItem>
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
 
-        if (Elixirs.ElixirSnoIdEnabled.Count != 0) 
-            return feature.Register();
-
-        foreach (var snoId in Elixirs.ElixirItemSnoIds)
+        if (Elixirs.ElixirSnoIdEnabled.Count == 0)
         {
-            Elixirs.ElixirSnoIdEnabled[snoId] = false;
-            feature.Resources.Add(new BooleanFeatureResource
+            foreach (var snoId in Elixirs.ElixirItemSnoIds)
             {
-                DisplayText = () => GameData.GetItemSno(snoId)?.NameLocalized ?? snoId.ToString(),
-                Getter = () => Elixirs.ElixirSnoIdEnabled.TryGetValue(snoId, out var enabled) && enabled,
-                Setter = newValue => Elixirs.ElixirSnoIdEnabled[snoId] = newValue,
-                NameOf = snoId.ToString()
-            });
+                Elixirs.ElixirSnoIdEnabled[snoId] = false;
+                feature.AddBooleanResource(snoId.ToString(), GameData.GetItemSno(snoId)?.NameLocalized ?? snoId.ToString(),
+                    () => Elixirs.ElixirSnoIdEnabled[snoId], newValue => Elixirs.ElixirSnoIdEnabled[snoId] = newValue);
+            }
         }
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 }

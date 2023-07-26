@@ -6,10 +6,24 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
 {
     public InventoryFeatures OnShopList { get; private set; }
 
-    public Vendors()
+    public InventoryPage ShopList { get; } = new(8, 1) // TODO: fix it for scroll
     {
-        Group = PluginCategory.Inventory;
-        Description = "displays information about items on vendor panels.";
+        ItemPredicate = x => x.Location == ItemLocation.Merchant,
+        GetUiContainer = () => UserInterface.GetShopListControl(),
+        GetItemControl = item => UserInterface.GetShopListSlotControl(item.InventoryX, item.InventoryY),
+    };
+
+    public Vendors() : base(PluginCategory.Inventory, "displays information about items on vendor panels.")
+    {
+        OnShopList = InventoryFeatures.Create(this, nameof(OnShopList), "shop list",
+                font: CreateDefaultFont(bold: false),
+                errorFont: CreateDefaultErrorFont(bold: false))
+            // .AspectHunterIcon().AspectHunterHighlight(false)
+            // .TreasureHunterIcon().TreasureHunterHighlight(false)
+            //.GreyOut(false)
+            .TreasureHunterHighlight();
+        OnShopList.AddBooleanResource(nameof(ShopNotificationEnabled), "treasure hunter notification", 
+            () => ShopNotificationEnabled, v => ShopNotificationEnabled = v);
     }
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
@@ -30,7 +44,7 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
             var x = shopList.Left + (shopList.Width * 0.005f);
             var y = shopList.Top + (shopList.Height * 0.005f);
             var w = shopList.Width * 0.925f;
-            var h = (shopList.Height / 8) * Math.Min(items.Length, 8);
+            var h = shopList.Height / 8 * Math.Min(items.Length, 8);
             LineStyle.DrawRectangle(x, y, w, h, strokeWidthCorrection: 1.5f);
             var lines = items.SelectMany(item => item.MatchingFilterNames).Distinct().OrderBy(item => item);
             var tl = OnShopList.NormalFont.GetTextLayout(string.Join(Environment.NewLine, lines), shopList.Width);
@@ -40,7 +54,7 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
         if (!Host.DebugEnabled)
             return;
 
-        Inventory.ShopList.Draw(OnShopList);
+        ShopList.Draw(OnShopList);
 
         var vendorItems = Game.Items.Where(x => x.Location == ItemLocation.Merchant).OrderBy(x => x.InventoryX);
         var text = string.Join("\n", vendorItems.Select(x => $"{x.NameLocalized} {x.InventoryX} {x.InventoryY} {x.ItemPower} {x.Quality}"));
@@ -50,25 +64,6 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
         {
             DrawDevOutline(rect);
         }
-    }
-
-    public override void Load()
-    {
-        OnShopList = InventoryFeatures.Create(this, nameof(OnShopList), "shop list",
-                font: CreateDefaultFont(bold: false),
-                errorFont: CreateDefaultErrorFont(bold: false))
-            // .AspectHunterIcon().AspectHunterHighlight(false)
-            // .TreasureHunterIcon().TreasureHunterHighlight(false)
-            //.GreyOut(false)
-            .TreasureHunterHighlight();
-        OnShopList.Resources.Add(new BooleanFeatureResource
-        {
-            NameOf = nameof(ShopNotificationEnabled),
-            DisplayText = () => Translation.Translate(this, "treasure hunter notification"),
-            Getter = () => ShopNotificationEnabled,
-            Setter = newValue => ShopNotificationEnabled = newValue
-        });
-        OnShopList.Register();
     }
 
     public void OnItemDetected(IItem item)

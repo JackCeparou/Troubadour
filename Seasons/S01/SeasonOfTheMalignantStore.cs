@@ -2,8 +2,6 @@
 
 public static class SeasonOfTheMalignantStore
 {
-    public static Dictionary<AffixSnoId, bool> MalignantHeartAffixSnoIdEnabled { get; } = new();
-
     public static IAffixSno GetMalignantHeartLegendaryAffix(this IItem item)
     {
         return item.CurrentAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None && x.SnoId.IsMalignantHeartAffix());
@@ -17,7 +15,7 @@ public static class SeasonOfTheMalignantStore
 
     public static bool IsMalignantHeartHunted(this AffixSnoId affixSnoId)
     {
-        return MalignantHeartAffixSnoIdEnabled.TryGetValue(affixSnoId, out var enabled) && enabled;
+        return Customization.InterestingAffixes.Any(x => x.SnoId == affixSnoId);
     }
 
     public static bool IsMalignantHeart(this IItem item)

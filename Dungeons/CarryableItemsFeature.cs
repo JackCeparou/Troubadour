@@ -15,6 +15,7 @@ public sealed class CarryableItemsFeature : WorldFeature<ICommonActor>
         {
             yield return gizmo;
         }
+
         foreach (var item in Game.Items.Where(x => x.Location == ItemLocation.None && CarryableSnoIdsSet.Contains(x.ActorSno.SnoId)))
         {
             yield return item;
@@ -25,11 +26,17 @@ public sealed class CarryableItemsFeature : WorldFeature<ICommonActor>
     {
         var feature = new CarryableItemsFeature
         {
-            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "carryable items"), Resources = new List<AbstractFeatureResource>()
+            Plugin = plugin,
+            NameOf = nameOf,
+            DisplayName = () => Translation.Translate(plugin, "carryable items"),
+            Resources = new List<AbstractFeatureResource>()
         };
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
-        return feature.Register();
+
+        plugin.Features.Add(feature);
+
+        return feature;
     }
 
     public List<ActorSnoId> CarryableItemSnoIds { get; } = new()

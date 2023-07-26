@@ -30,7 +30,8 @@ public sealed class SilentChestsFeature : WorldFeature<ICommonActor>
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 
     private HashSet<ActorSnoId> SilentChestSnoIdsSet { get; }

@@ -2,18 +2,11 @@
 
 public abstract class JackPlugin : BasePlugin, ITroubadourPlugin
 {
-    public bool TroubadourExperiment { get; init; }
-    public required string Description { get; init; }
-    public required PluginCategory Group { get; init; }
+    protected IEnumerable<IWorldFeature> WorldFeatures { get; init; } = Array.Empty<IWorldFeature>();
 
-    protected IEnumerable<IWorldFeature> WorldFeatures { get; set; } = Array.Empty<IWorldFeature>();
-
-    public sealed override string GetDescription() => TroubadourExperiment
-        ? Translation.TranslateExperimentalPlugin(this, Description)
-        : Translation.Translate(this, Description);
-
-    // ReSharper disable once ConvertToAutoProperty
-    public sealed override PluginCategory Category => Group;
+    protected JackPlugin(PluginCategory group, string description) : base(group, description)
+    {
+    }
 
     protected void PaintWorld(GameWorldLayer layer)
     {

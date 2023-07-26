@@ -31,7 +31,8 @@ public sealed class MysteriousChestsFeature : WorldFeature<ICommonActor>
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 
     public override void PaintMap()

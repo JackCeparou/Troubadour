@@ -24,110 +24,33 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
     public bool ShowActorFrame { get; set; }
     public bool ShowUserInterfaceControls { get; set; }
 
-    public Debug()
+    public Debug() : base(PluginCategory.Utility, "displays debug information when debug overlay (F11) is turned on")
     {
         Order = int.MaxValue;
-        Group = PluginCategory.Utility;
-        Description = "displays debug information when debug overlay (F11) is turned on";
-    }
-
-    public override void Load()
-    {
-        Config = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, "config"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowPlayerSkills),
-                    DisplayText = () => Translation.Translate(this, "player skills"),
-                    Getter = () => ShowPlayerSkills,
-                    Setter = value => ShowPlayerSkills = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowGenericActors),
-                    DisplayText = () => Translation.Translate(this, "generic actors"),
-                    Getter = () => ShowGenericActors,
-                    Setter = value => ShowGenericActors = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowGizmoActors),
-                    DisplayText = () => Translation.Translate(this, "gizmo actors"),
-                    Getter = () => ShowGizmoActors,
-                    Setter = value => ShowGizmoActors = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowMonsterActors),
-                    DisplayText = () => Translation.Translate(this, "monster actors"),
-                    Getter = () => ShowMonsterActors,
-                    Setter = value => ShowMonsterActors = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowNpcActors),
-                    DisplayText = () => Translation.Translate(this, "NPC actors"),
-                    Getter = () => ShowNpcActors,
-                    Setter = value => ShowNpcActors = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowItems),
-                    DisplayText = () => Translation.Translate(this, "items"),
-                    Getter = () => ShowItems,
-                    Setter = value => ShowItems = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowItemsLine),
-                    DisplayText = () => Translation.Translate(this, "items line"),
-                    Getter = () => ShowItemsLine,
-                    Setter = value => ShowItemsLine = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowName),
-                    DisplayText = () => Translation.Translate(this, "name"),
-                    Getter = () => ShowName,
-                    Setter = value => ShowName = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowActorFrame),
-                    DisplayText = () => Translation.Translate(this, "actor frame"),
-                    Getter = () => ShowActorFrame,
-                    Setter = value => ShowActorFrame = value,
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowUserInterfaceControls),
-                    DisplayText = () => Translation.Translate(this, "UI controls"),
-                    Getter = () => ShowUserInterfaceControls,
-                    Setter = value => ShowUserInterfaceControls = value,
-                },
-            }
-        }.Register();
-        Developer = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(Developer),
-            DisplayName = () => Translation.Translate(this, "developer"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(IsDeveloper),
-                    DisplayText = () => "troubadour developer session",
-                    Getter = () => IsDeveloper,
-                    Setter = value => IsDeveloper = value,
-                },
-            }
-        }.Register();
+        Config = AddFeature(nameof(Config), "config")
+            .AddBooleanResource(nameof(ShowPlayerSkills), "player skills",
+                () => ShowPlayerSkills, v => ShowPlayerSkills = v)
+            .AddBooleanResource(nameof(ShowGenericActors), "generic actors",
+                () => ShowGenericActors, v => ShowGenericActors = v)
+            .AddBooleanResource(nameof(ShowGizmoActors), "gizmo actors",
+                () => ShowGizmoActors, v => ShowGizmoActors = v)
+            .AddBooleanResource(nameof(ShowMonsterActors), "monster actors",
+                () => ShowMonsterActors, v => ShowMonsterActors = v)
+            .AddBooleanResource(nameof(ShowNpcActors), "NPC actors",
+                () => ShowNpcActors, v => ShowNpcActors = v)
+            .AddBooleanResource(nameof(ShowItems), "items",
+                () => ShowItems, v => ShowItems = v)
+            .AddBooleanResource(nameof(ShowItemsLine), "items line",
+                () => ShowItemsLine, v => ShowItemsLine = v)
+            .AddBooleanResource(nameof(ShowName), "name",
+                () => ShowName, v => ShowName = v)
+            .AddBooleanResource(nameof(ShowActorFrame), "actor frame",
+                () => ShowActorFrame, v => ShowActorFrame = v)
+            .AddBooleanResource(nameof(ShowUserInterfaceControls), "UI controls",
+                () => ShowUserInterfaceControls, v => ShowUserInterfaceControls = v);
+        Developer = AddFeature(nameof(Developer), "developer")
+            .AddBooleanResource(nameof(IsDeveloper), "troubadour developer session",
+                () => IsDeveloper, v => IsDeveloper = v);
     }
 
     public void HandleKeyRelease(DirectKey key)
@@ -257,7 +180,7 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
                 debugActors.LineStyle.DrawWorldLine(actor.Coordinate, Game.MyPlayerActor.Coordinate, sharpen: false);
             if (actor.Coordinate.IsOnScreen)
                 debugActors.CircleStyle.DrawWorldEllipse(0.5f, -1, actor.Coordinate, sharpen: false);
-            var name = string.Empty;
+            string name;
             if (actor.ActorSno.SnoId == ActorSnoId.Generic_Proxy)
             {
                 name = $"GenericProxy {actor.AcdId} {actor.AnnId}";

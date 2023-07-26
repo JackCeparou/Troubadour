@@ -6,15 +6,9 @@ public sealed class Valuables : JackPlugin, IGameWorldPainter
     public IWorldFeature SilentChests { get; private set; }
     public IWorldFeature MountCosmetics { get; private set; }
 
-    public Valuables()
+    public Valuables() : base(PluginCategory.Loot, "Highlight most valuable goods.")
     {
         Order = int.MaxValue;
-        Group = PluginCategory.Loot;
-        Description = "Highlight most valuable goods.";
-    }
-
-    public override void Load()
-    {
         WorldFeatures = new[]
         {
             Elixirs = ElixirsFeature.Create(this, nameof(Elixirs)), //

@@ -31,12 +31,16 @@ public sealed class MountCosmeticsFeature : WorldFeature<IItem>
     {
         var feature = new MountCosmeticsFeature
         {
-            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "mount cosmetics"), Resources = new List<AbstractFeatureResource>()
+            Plugin = plugin,
+            NameOf = nameOf,
+            DisplayName = () => Translation.Translate(plugin, "mount cosmetics"),
+            Resources = new List<AbstractFeatureResource>()
         };
 
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 }

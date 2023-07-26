@@ -25,7 +25,8 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
         };
         feature.AddDefaultGroundResources();
         feature.AddDefaultMapResources();
-        return feature.Register();
+        plugin.Features.Add(feature);
+        return feature;
     }
 
     private readonly IEnumerable<ActorSnoId> _cinderCachesSnoIds = new List<ActorSnoId>()

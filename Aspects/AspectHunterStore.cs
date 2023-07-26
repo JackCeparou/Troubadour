@@ -12,10 +12,6 @@ public static class AspectHunterStore
     public static float MapCircleSize { get; set; } = 8f;
     public static float MapCircleStroke { get; set; } = 4f;
 
-    public static bool OnlyMyCurrentClass { get; set; }
-
-    public static Dictionary<AffixSnoId, bool> AffixSnoIdEnabled { get; } = new();
-
     public static Func<IItem, bool> WorldItemPredicate { get; } = item =>
     {
         if (item.Location != ItemLocation.None)
@@ -93,25 +89,6 @@ public static class AspectHunterStore
 
     public static bool IsAspectHunted(this AffixSnoId affixSnoId)
     {
-        if (!OnlyMyCurrentClass)
-            return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var enabled) && enabled;
-
-        var isGeneric = AffixSnoIds.GenericSet.Contains(affixSnoId) || AffixSnoIds.GenericUniqueSet.Contains(affixSnoId);
-        if (isGeneric)
-            return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var genericEnabled) && genericEnabled;
-
-        var isMyClass = Game.MyPlayerActor.PlayerClassSno.SnoId switch
-        {
-            PlayerClassSnoId.Barbarian => AffixSnoIds.BarbarianSet.Contains(affixSnoId) || AffixSnoIds.BarbarianUniqueSet.Contains(affixSnoId),
-            PlayerClassSnoId.Druid => AffixSnoIds.DruidSet.Contains(affixSnoId) || AffixSnoIds.DruidUniqueSet.Contains(affixSnoId),
-            PlayerClassSnoId.Necromancer => AffixSnoIds.NecromancerSet.Contains(affixSnoId) || AffixSnoIds.NecromancerUniqueSet.Contains(affixSnoId),
-            PlayerClassSnoId.Rogue => AffixSnoIds.RogueSet.Contains(affixSnoId) || AffixSnoIds.RogueUniqueSet.Contains(affixSnoId),
-            PlayerClassSnoId.Sorcerer => AffixSnoIds.SorcererSet.Contains(affixSnoId) || AffixSnoIds.SorcererUniqueSet.Contains(affixSnoId),
-            _ => false,
-        };
-        if (!isMyClass)
-            return false;
-
-        return AffixSnoIdEnabled.TryGetValue(affixSnoId, out var affixEnabled) && affixEnabled;
+        return Customization.InterestingAffixes.FirstOrDefault(x => x.SnoId == affixSnoId) is not null;
     }
 }

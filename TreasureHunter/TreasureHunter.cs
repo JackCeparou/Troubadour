@@ -4,16 +4,38 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class TreasureHunter : JackPlugin, IGameWorldPainter, IItemDetector
 {
-    public Feature OnInventory { get; private set; }
-    public Feature OnDrop { get; private set; }
-    public Feature OnMap { get; private set; }
-    public Feature OnGround { get; private set; }
+    public Feature OnInventory { get; }
+    public Feature OnDrop { get; }
+    public Feature OnMap { get; }
+    public Feature OnGround { get; }
 
-    public TreasureHunter()
+    public TreasureHunter() : base(PluginCategory.Loot, "Highlight most wanted items.\nClose this window and press F5 to configure rules.")
     {
         Order = int.MaxValue;
-        Group = PluginCategory.Loot;
-        Description = "Highlight most wanted items.\nClose this window and press F3 to configure rules.";
+        OnInventory = AddFeature(nameof(OnInventory), "on inventory")
+            .AddFillStyleResource(nameof(GreyOutFillStyle), GreyOutFillStyle, "grey out")
+            .AddFontResource(nameof(MatchedFilterCounterFont), MatchedFilterCounterFont, "matched filter count");
+        OnDrop = AddFeature(nameof(OnDrop), "on item drop")
+            .AddBooleanResource(nameof(DropNotificationEnabled), "notify",
+                () => DropNotificationEnabled, v => DropNotificationEnabled = v);
+        OnMap = AddFeature(nameof(OnMap), "items on map")
+            .AddLineStyleResource(nameof(MapLineStyle), MapLineStyle, "line style")
+            .AddFloatResource(nameof(MapCircleSize), "radius",
+                0, 20, () => MapCircleSize, v => MapCircleSize = v)
+            .AddFloatResource(nameof(MapCircleStroke), "stroke",
+                0, 10, () => MapCircleStroke, v => MapCircleStroke = v);
+        OnGround = AddFeature(nameof(OnGround), "items on ground")
+            .AddBooleanResource(nameof(ShowFilterNamesOnGround), "matched filter names",
+                () => ShowFilterNamesOnGround, v => ShowFilterNamesOnGround = v)
+            .AddFillStyleResource(nameof(FilterNamesOnGroundBackground), FilterNamesOnGroundBackground, "background color")
+            .AddFontResource(nameof(FilterNamesOnGroundFont), FilterNamesOnGroundFont, "normal font")
+            .AddLineStyleResource(nameof(LineStyle), LineStyle, "line style")
+            .AddFloatResource(nameof(WorldCircleSize), "radius",
+                0, 2, () => WorldCircleSize, v => WorldCircleSize = v)
+            .AddFloatResource(nameof(WorldCircleStroke), "stroke",
+                0, 10, () => WorldCircleStroke, v => WorldCircleStroke = v)
+            .AddBooleanResource(nameof(OnGroundLineEnabled), "draw line to item",
+                () => OnGroundLineEnabled, v => OnGroundLineEnabled = v);
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
@@ -52,136 +74,6 @@ public sealed class TreasureHunter : JackPlugin, IGameWorldPainter, IItemDetecto
 
                 break;
         }
-    }
-
-    public override void Load()
-    {
-        OnInventory = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(OnInventory),
-            DisplayName = () => Translation.Translate(this, "on inventory"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new FillStyleFeatureResource
-                {
-                    NameOf = nameof(GreyOutFillStyle), DisplayText = () => Translation.Translate(this, "grey out"), FillStyle = GreyOutFillStyle,
-                },
-                new FontFeatureResource
-                {
-                    NameOf = nameof(MatchedFilterCounterFont),
-                    DisplayText = () => Translation.Translate(this, "matched filter count"),
-                    Font = MatchedFilterCounterFont,
-                },
-            }
-        }.Register();
-
-        OnDrop = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(OnDrop),
-            DisplayName = () => Translation.Translate(this, "on item drop"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(DropNotificationEnabled),
-                    DisplayText = () => Translation.Translate(this, "notify"),
-                    Getter = () => DropNotificationEnabled,
-                    Setter = newValue => DropNotificationEnabled = newValue
-                },
-            }
-        }.Register();
-
-        OnMap = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(OnMap),
-            DisplayName = () => Translation.Translate(this, "items on map"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new LineStyleFeatureResource
-                {
-                    NameOf = nameof(MapLineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = MapLineStyle
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(MapCircleSize),
-                    DisplayText = () => Translation.Translate(this, "radius"),
-                    Getter = () => MapCircleSize,
-                    Setter = newValue => MapCircleSize = newValue,
-                    MinValue = 0,
-                    MaxValue = 20
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(MapCircleStroke),
-                    DisplayText = () => Translation.Translate(this, "stroke"),
-                    Getter = () => MapCircleStroke,
-                    Setter = newValue => MapCircleStroke = newValue,
-                    MinValue = 0,
-                    MaxValue = 10
-                },
-            }
-        }.Register();
-
-        OnGround = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(OnGround),
-            DisplayName = () => Translation.Translate(this, "items on ground"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(ShowFilterNamesOnGround),
-                    DisplayText = () => Translation.Translate(this, "matched filter names"),
-                    Getter = () => ShowFilterNamesOnGround,
-                    Setter = newValue => ShowFilterNamesOnGround = newValue
-                },
-                new FillStyleFeatureResource
-                {
-                    NameOf = nameof(FilterNamesOnGroundBackground),
-                    DisplayText = () => Translation.Translate(this, "background color"),
-                    FillStyle = FilterNamesOnGroundBackground,
-                },
-                new FontFeatureResource
-                {
-                    NameOf = nameof(FilterNamesOnGroundFont),
-                    DisplayText = () => Translation.Translate(this, "normal font"),
-                    Font = FilterNamesOnGroundFont,
-                },
-                new LineStyleFeatureResource
-                {
-                    NameOf = nameof(LineStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = LineStyle
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(WorldCircleSize),
-                    DisplayText = () => Translation.Translate(this, "radius"),
-                    Getter = () => WorldCircleSize,
-                    Setter = newValue => WorldCircleSize = newValue,
-                    MinValue = 0,
-                    MaxValue = 2
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(WorldCircleStroke),
-                    DisplayText = () => Translation.Translate(this, "stroke"),
-                    Getter = () => WorldCircleStroke,
-                    Setter = newValue => WorldCircleStroke = newValue,
-                    MinValue = 0,
-                    MaxValue = 10
-                },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(OnGroundLineEnabled),
-                    DisplayText = () => Translation.Translate(this, "draw line to item"),
-                    Getter = () => OnGroundLineEnabled,
-                    Setter = newValue => OnGroundLineEnabled = newValue
-                },
-            }
-        }.Register();
     }
 
     public void OnItemDetected(IItem item)

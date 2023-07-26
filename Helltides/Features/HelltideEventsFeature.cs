@@ -19,33 +19,16 @@ public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
     {
         var feature = new HelltideEventsFeature
         {
-            Plugin = plugin,
-            NameOf = nameOf,
-            DisplayName = () => Translation.Translate(plugin, "events"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(IconSize),
-                    DisplayText = () => Translation.Translate(plugin, "icon size"),
-                    MinValue = 10,
-                    MaxValue = 42,
-                    Getter = () => IconSize,
-                    Setter = newValue => IconSize = newValue
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(MaxMapZoomLevel),
-                    DisplayText = () => Translation.Translate(plugin, "maximum zoom level"),
-                    MinValue = 1,
-                    MaxValue = 10,
-                    Getter = () => MaxMapZoomLevel,
-                    Setter = newValue => MaxMapZoomLevel = newValue,
-                },
-            }
+            Plugin = plugin, NameOf = nameOf, DisplayName = () => Translation.Translate(plugin, "events"), Resources = new List<AbstractFeatureResource>()
         };
+        feature.AddFloatResource(nameof(IconSize), "icon size",
+            10, 42, () => IconSize, v => IconSize = v);
+        feature.AddFloatResource(nameof(MaxMapZoomLevel), "maximum zoom level",
+            1, 10, () => MaxMapZoomLevel, v => MaxMapZoomLevel = v);
 
-        return feature.Register();
+        plugin.Features.Add(feature);
+
+        return feature;
     }
 
     public override void PaintMap()

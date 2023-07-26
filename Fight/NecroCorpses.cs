@@ -2,7 +2,7 @@
 
 public sealed class NecroCorpses : JackPlugin, IGameWorldPainter
 {
-    public Feature Config { get; set; }
+    public Feature Config { get; }
 
     public bool SymbolEnabled { get; set; } = true;
     public IFont Font { get; } = Render.GetFont(255, 255, 0, 0, size: 16f);
@@ -10,51 +10,15 @@ public sealed class NecroCorpses : JackPlugin, IGameWorldPainter
     public float GroundCircleSize { get; set; } = 0.5f;
     public ILineStyle GroundCircleStyle { get; } = Render.GetLineStyle(255, 255, 0, 0);
 
-    public NecroCorpses()
+    public NecroCorpses() : base(PluginCategory.Fight, "Display necromancer corpses on ground.")
     {
-        Group = PluginCategory.Fight;
-        Description = "Display necromancer corpses on ground.";
-    }
-
-    public override void Load()
-    {
-        Config = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(Config),
-            DisplayName = () => Translation.Translate(this, "corpses on ground"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(SymbolEnabled),
-                    DisplayText = () => Translation.Translate(this, "show symbol"),
-                    Getter = () => SymbolEnabled,
-                    Setter = newValue => SymbolEnabled = newValue
-                },
-                new FontFeatureResource { NameOf = nameof(Font), DisplayText = () => Translation.Translate(this, "normal font"), Font = Font },
-                new BooleanFeatureResource
-                {
-                    NameOf = nameof(GroundCircleEnabled),
-                    DisplayText = () => Translation.Translate(this, "show ground circle"),
-                    Getter = () => GroundCircleEnabled,
-                    Setter = newValue => GroundCircleEnabled = newValue
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(GroundCircleSize),
-                    DisplayText = () => Translation.Translate(this, "radius"),
-                    Getter = () => GroundCircleSize,
-                    Setter = newValue => GroundCircleSize = newValue,
-                    MinValue = 0,
-                    MaxValue = 2
-                },
-                new LineStyleFeatureResource
-                {
-                    NameOf = nameof(GroundCircleStyle), DisplayText = () => Translation.Translate(this, "line style"), LineStyle = GroundCircleStyle
-                },
-            }
-        }.Register();
+        Config = AddFeature(nameof(Config), "config")
+            .AddBooleanResource(nameof(SymbolEnabled), "show symbol", () => SymbolEnabled, v => SymbolEnabled = v)
+            .AddFontResource(nameof(Font), Font, "normal font")
+            .AddBooleanResource(nameof(GroundCircleEnabled), "show ground circle", () => GroundCircleEnabled, v => GroundCircleEnabled = v)
+            .AddFloatResource(nameof(GroundCircleSize), "radius",
+                0, 2, () => GroundCircleSize, v => GroundCircleSize = v)
+            .AddLineStyleResource(nameof(GroundCircleStyle), GroundCircleStyle, "line style");
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
@@ -75,19 +39,6 @@ public sealed class NecroCorpses : JackPlugin, IGameWorldPainter
                 Render.WorldToScreenCoordinate(corpse.Coordinate, out var x, out var y);
                 var tl = Font.GetTextLayout(symbol);
                 tl.DrawText(x - (tl.Width / 2), y - (tl.Height / 2));
-                if (Host.DebugEnabled)
-                {
-                    DrawDebugText(() => $"""
-                        Untargetable {corpse.Untargetable}
-                        IsStealth {corpse.IsStealthed}
-                        IsNPC {corpse.IsNPC}
-                        IsDisabled {corpse.IsDisabled}
-                        AttachedToACD {corpse.AttachedToACD}
-                        IsLoading {corpse.IsLoading}
-                        IsAnimTreeEnabled {corpse.IsAnimTreeEnabled}
-                        IsSelected {corpse.IsSelected}
-                    """, x, y + 20);
-                }
             }
 
             if (GroundCircleEnabled)

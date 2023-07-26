@@ -56,7 +56,7 @@ public class InventoryPage
         if (!features.HasOverlays)
             return;
 
-        foreach (var highlight in Inventory.ItemOverlays)
+        foreach (var highlight in features.ItemOverlays)
         {
             if (!highlight.Show.Invoke(item, features))
                 continue;
@@ -72,7 +72,7 @@ public class InventoryPage
 
         var x = control.Left;
         var y = control.Top;
-        foreach (var icon in Inventory.ItemIcons)
+        foreach (var icon in features.ItemIcons)
         {
             x += icon.Draw(item, features, x, y, false, false);
         }
@@ -86,7 +86,7 @@ public class InventoryPage
         var x = control.Left + control.Width - (offset * 1.25f);
         var y = control.Top + control.Height - offset;
         var first = true;
-        foreach (var line in Inventory.ItemLines)
+        foreach (var line in features.ItemLines)
         {
             if (!line.Show.Invoke(item, features))
                 continue;

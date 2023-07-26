@@ -1,34 +1,22 @@
-﻿using static T4.Plugins.Troubadour.Inventory;
-
-namespace T4.Plugins.Troubadour;
+﻿namespace T4.Plugins.Troubadour;
 
 public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
 {
-    public InventoryFeatures Equipped { get; private set; }
+    public InventoryFeatures Equipped { get; }
     private readonly Throttler _throttler = Throttler.Create(100);
 
-    public PaperDoll()
-    {
-        Group = PluginCategory.Inventory;
-        Description = "displays information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.";
-    }
-
-    public override void Load()
+    public PaperDoll() : base(PluginCategory.Inventory, "displays information about items on paper doll.\ni.e. iLvl, BreakPoint, Aspect name, etc.")
     {
         Equipped = InventoryFeatures.Create(this, nameof(Equipped), "equipped items",
                 font: CreateDefaultFont(wordWrap: true),
                 errorFont: CreateDefaultErrorFont(wordWrap: true))
-            .QualityLegendaryIcon(false)
-            .QualityUniqueIcon()
+            .QualityIcon(false)
             .AspectHunterIcon(false)
-            .TreasureHunterIcon(false)//.TreasureHunterHighlight(false)
+            .TreasureHunterIcon(false)
             .NearBreakpointIcon()
             .ItemLevel()
-            .ItemQualityModifier()
             .AspectName()
-            .MalignantHeartIcon(false).MalignantHeartName() // S01
-            .PaperDoll()
-            .Register();
+            .PaperDoll();
     }
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
@@ -41,7 +29,7 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
             return;
 
         var items = Game.GetEquippedItems();
-        _throttler.RunWhenElapsed(() => items.RefreshDuplicatePowers());
+        _throttler.RunWhenElapsed(() => items.RefreshDuplicateLegendaryAffixes());
         foreach (var item in items)
         {
             var uiControl = UserInterface.GetEquippedItemLocationControl(item.Location);
@@ -58,30 +46,12 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
                 item.SetHint(this);
             }
         }
-
-        /*
-        var control = UserInterface.GetRegisteredControlByPath("inventory_dialog_mainPage.InventoryContainer.stats");
-        if (control is null || !control.Visible || !Game.CursorInsideRect(control.Left, control.Top, control.Width, control.Height))
-            return;
-
-        var timeSpan = TimeSpan.FromSeconds(Game.MyPlayer.SecondsPlayed);
-        var text = timeSpan switch
-        {
-            {Days: > 0} => $"{timeSpan.Days}d {timeSpan.Hours}h {timeSpan.Minutes}m {timeSpan.Seconds}s",
-            {Hours: > 0} => $"{timeSpan.Hours}h {timeSpan.Minutes}m {timeSpan.Seconds}s",
-            {Minutes: > 0} => $"{timeSpan.Minutes}m {timeSpan.Seconds}s",
-            {Seconds: > 0} => $"{timeSpan.Seconds}s",
-            _ => "0s"
-        };
-        var tl = DebugFont.GetTextLayout(text);
-        tl.DrawText(control.Left + (control.Width * 0.48f) - (tl.Width / 2), control.Top + (control.Width * 0.125f) - (tl.Height / 2));
-        //*/
     }
 
     private float DrawIconsLine(IItem item, float x, float y, bool expandUpwards, bool alignRight)
     {
         var height = 0f;
-        foreach (var icon in ItemIcons)
+        foreach (var icon in Equipped.ItemIcons)
         {
             var size = icon.Draw(item, Equipped, x, y, expandUpwards, alignRight);
             if (size == 0)
@@ -103,7 +73,7 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
 
     private void DrawTextLines(IItem item, IScreenRectangle uiControl, float xPos, float yPos, bool expandUpwards, bool alignRight)
     {
-        foreach (var line in ItemLines)
+        foreach (var line in Equipped.ItemLines)
         {
             if (!line.Show.Invoke(item, Equipped))
                 continue;

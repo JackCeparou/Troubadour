@@ -6,42 +6,14 @@ public sealed class WorldEventsOnMap : JackPlugin, IGameWorldPainter
     public static Feature OnMap { get; private set; }
     public static float MaxMapZoomLevel { get; set; } = 10;
 
-    public WorldEventsOnMap()
+    public WorldEventsOnMap() : base(PluginCategory.WorldEvent, "displays world events on map.")
     {
         EnabledByDefault = false;
-        Group = PluginCategory.WorldEvent;
-        Description = "displays world events on map.";
-    }
-
-    public override void Load()
-    {
-        OnMap = new Feature
-        {
-            Plugin = this,
-            NameOf = nameof(WorldEventsOnMap),
-            DisplayName = () => Translation.Translate(this, "on map"),
-            Resources = new List<AbstractFeatureResource>
-            {
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(IconSize),
-                    DisplayText = () => Translation.Translate(this, "icon size"),
-                    MinValue = 10,
-                    MaxValue = 42,
-                    Getter = () => IconSize,
-                    Setter = newValue => IconSize = newValue
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(MaxMapZoomLevel),
-                    DisplayText = () => Translation.Translate(this, "maximum zoom level"),
-                    MinValue = 1,
-                    MaxValue = 10,
-                    Getter = () => MaxMapZoomLevel,
-                    Setter = newValue => MaxMapZoomLevel = newValue,
-                },
-            }
-        }.Register();
+        OnMap = AddFeature(nameof(OnMap), "on map")
+            .AddFloatResource(nameof(IconSize), "icon size",
+                10, 42, () => IconSize, v => IconSize = v)
+            .AddFloatResource(nameof(MaxMapZoomLevel), "maximum zoom level",
+                1, 10, () => MaxMapZoomLevel, v => MaxMapZoomLevel = v);
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
