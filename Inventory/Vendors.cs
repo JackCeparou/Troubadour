@@ -4,7 +4,7 @@ namespace T4.Plugins.Troubadour;
 
 public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IItemDetector
 {
-    public InventoryFeatures OnShopList { get; private set; }
+    public InventoryFeatures OnShopList { get; }
 
     public InventoryPage ShopList { get; } = new(8, 1) // TODO: fix it for scroll
     {

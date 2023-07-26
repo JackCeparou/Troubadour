@@ -2,12 +2,12 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class SeasonOfTheMalignant : JackPlugin, IGameWorldPainter
 {
-    public Feature HeartsOnGround { get; private set; }
+    public Feature HeartsOnGround { get; }
     public ILineStyle LineStyle { get; } = Render.GetLineStyle(200, 255, 255, 0);
     public float WorldCircleSize { get; set; } = 0.5f;
     public float WorldCircleStroke { get; set; } = 1f;
 
-    public Feature HeartsOnMap { get; private set; }
+    public Feature HeartsOnMap { get; }
     public ILineStyle MapLineStyle { get; } = Render.GetLineStyle(200, 255, 255, 0);
     public float MapCircleSize { get; set; } = 8f;
     public float MapCircleStroke { get; set; } = 2f;

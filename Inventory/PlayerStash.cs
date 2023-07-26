@@ -2,7 +2,7 @@
 
 public sealed partial class PlayerStash : JackPlugin, IGameUserInterfacePainter
 {
-    public InventoryFeatures Stash { get; private set; }
+    public InventoryFeatures Stash { get; }
 
     public PlayerStash() : base(PluginCategory.Inventory, "displays information on items in player stash.\ni.e. iLvl, BreakPoint, Dungeon tier, Aspect name, etc.")
     {

@@ -2,7 +2,7 @@
 
 public sealed class Auras : JackPlugin, IGameUserInterfacePainter, IMenuUserInterfacePainter
 {
-    public Feature Config { get; private set; }
+    public Feature Config { get; }
     // public Feature Hitpoints { get; private set; }
     // public Feature PrimaryResource { get; private set; }
 

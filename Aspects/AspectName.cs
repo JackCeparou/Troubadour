@@ -23,8 +23,8 @@ public class AspectName : JackPlugin, IGameUserInterfacePainter
     public bool CleanupNameOnCraftingPanel { get; private set; } = true;
     public bool CleanupNameOnCollectionPanel { get; private set; } = true;
 
-    public Feature NameOnCraftingPanel { get; private set; }
-    public Feature NameOnCollectionPanel { get; private set; }
+    public Feature NameOnCraftingPanel { get; }
+    public Feature NameOnCollectionPanel { get; }
 
     public AspectName() : base(PluginCategory.Utility, "display aspect names on crafting panel/collection panel")
     {

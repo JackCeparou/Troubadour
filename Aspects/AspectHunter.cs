@@ -4,8 +4,8 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class AspectHunter : JackPlugin, IGameWorldPainter
 {
-    public Feature OnMap { get; private set; }
-    public Feature OnGround { get; private set; }
+    public Feature OnMap { get; }
+    public Feature OnGround { get; }
 
     public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 178, 0, 255);
     public float WorldCircleSize { get; set; } = 0.5f;

@@ -2,22 +2,19 @@
 
 public sealed class CellarsOnMap : JackPlugin, IGameWorldPainter
 {
-    public static float IconSize { get; set; } = 24f;
     public static Feature OnMap { get; private set; }
+
+    public static float IconSize { get; set; } = 24f;
     public static float MaxMapZoomLevel { get; set; } = 10;
 
-    public CellarsOnMap() : base(PluginCategory.Map, "displays cellars on map.")
+    public CellarsOnMap() : base(PluginCategory.Marker, "displays cellars on map.")
     {
         EnabledByDefault = false;
         OnMap = AddFeature(nameof(OnMap), "on map")
             .AddFloatResource(nameof(IconSize), "icon size",
-                10, 42,
-                () => IconSize,
-                v => IconSize = v)
+                10, 42, () => IconSize, v => IconSize = v)
             .AddFloatResource(nameof(MaxMapZoomLevel), "maximum zoom level",
-                1, 10,
-                () => MaxMapZoomLevel,
-                v => MaxMapZoomLevel = v);
+                1, 10, () => MaxMapZoomLevel, v => MaxMapZoomLevel = v);
     }
 
     public void PaintGameWorld(GameWorldLayer layer)
@@ -39,12 +36,6 @@ public sealed class CellarsOnMap : JackPlugin, IGameWorldPainter
                 continue;
 
             Textures.CaveEntrance?.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
-
-            if (!Host.DebugEnabled)
-                continue;
-
-            var tl = DebugFont.GetTextLayout($"{marker.ActorSno.SnoId}\n{marker.GizmoType}", Game.WindowWidth);
-            tl.DrawText(mapX - (tl.Width / 2), mapY - (tl.Height / 2));
         }
     }
 }

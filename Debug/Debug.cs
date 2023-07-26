@@ -2,8 +2,10 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
 {
-    public Feature Config { get; private set; }
-    public Feature Developer { get; private set; }
+    public Feature World { get; }
+    public Feature OnMap { get; }
+    public Feature UiOutlines { get; }
+    public Feature Developer { get; }
 
     public static bool IsDeveloper { get; private set; }
 
@@ -13,43 +15,58 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
     private readonly ILineStyle _uiLine = Render.GetLineStyle(255, 255, 255, 0);
     private readonly HashSet<string> _controlsToSkip = new(StringComparer.OrdinalIgnoreCase) { "RTCDebugText_main", "ObjectiveTracker", "Chat", };
 
-    public bool ShowPlayerSkills { get; set; }
-    public bool ShowGenericActors { get; set; } = true;
-    public bool ShowGizmoActors { get; set; } = true;
-    public bool ShowMonsterActors { get; set; } = true;
-    public bool ShowNpcActors { get; set; }
-    public bool ShowItems { get; set; } = true;
-    public bool ShowItemsLine { get; set; }
-    public bool ShowName { get; set; }
-    public bool ShowActorFrame { get; set; }
-    public bool ShowUserInterfaceControls { get; set; }
+    // world
+    public bool ShowPlayerSkills { get; private set; }
+    public bool ShowGenericActors { get; private set; } = true;
+    public bool ShowGizmoActors { get; private set; } = true;
+    public bool ShowMonsterActors { get; private set; } = true;
+    public bool ShowNpcActors { get; private set; }
+    public bool ShowItems { get; private set; } = true;
+    public bool ShowItemsLine { get; private set; }
+    public bool ShowName { get; private set; }
+
+    public bool ShowActorFrame { get; private set; }
+
+    // map
+    public bool ShowQuests { get; private set; }
+    public bool ShowQuestNames { get; private set; }
+    public bool ShowGlobalMarkers { get; private set; }
+    public bool ShowGlobalMarkerNames { get; private set; }
 
     public Debug() : base(PluginCategory.Utility, "displays debug information when debug overlay (F11) is turned on")
     {
         Order = int.MaxValue;
-        Config = AddFeature(nameof(Config), "config")
-            .AddBooleanResource(nameof(ShowPlayerSkills), "player skills",
+        World = AddFeature(nameof(World), "`world")
+            .AddBooleanResource(nameof(ShowPlayerSkills), "`player skills",
                 () => ShowPlayerSkills, v => ShowPlayerSkills = v)
-            .AddBooleanResource(nameof(ShowGenericActors), "generic actors",
+            .AddBooleanResource(nameof(ShowGenericActors), "`generic actors",
                 () => ShowGenericActors, v => ShowGenericActors = v)
-            .AddBooleanResource(nameof(ShowGizmoActors), "gizmo actors",
+            .AddBooleanResource(nameof(ShowGizmoActors), "`gizmo actors",
                 () => ShowGizmoActors, v => ShowGizmoActors = v)
-            .AddBooleanResource(nameof(ShowMonsterActors), "monster actors",
+            .AddBooleanResource(nameof(ShowMonsterActors), "`monster actors",
                 () => ShowMonsterActors, v => ShowMonsterActors = v)
-            .AddBooleanResource(nameof(ShowNpcActors), "NPC actors",
+            .AddBooleanResource(nameof(ShowNpcActors), "`NPC actors",
                 () => ShowNpcActors, v => ShowNpcActors = v)
-            .AddBooleanResource(nameof(ShowItems), "items",
+            .AddBooleanResource(nameof(ShowItems), "`items",
                 () => ShowItems, v => ShowItems = v)
-            .AddBooleanResource(nameof(ShowItemsLine), "items line",
+            .AddBooleanResource(nameof(ShowItemsLine), "`items line",
                 () => ShowItemsLine, v => ShowItemsLine = v)
-            .AddBooleanResource(nameof(ShowName), "name",
+            .AddBooleanResource(nameof(ShowName), "`name",
                 () => ShowName, v => ShowName = v)
-            .AddBooleanResource(nameof(ShowActorFrame), "actor frame",
-                () => ShowActorFrame, v => ShowActorFrame = v)
-            .AddBooleanResource(nameof(ShowUserInterfaceControls), "UI controls",
-                () => ShowUserInterfaceControls, v => ShowUserInterfaceControls = v);
-        Developer = AddFeature(nameof(Developer), "developer")
-            .AddBooleanResource(nameof(IsDeveloper), "troubadour developer session",
+            .AddBooleanResource(nameof(ShowActorFrame), "`actor frame",
+                () => ShowActorFrame, v => ShowActorFrame = v);
+        OnMap = AddFeature(nameof(OnMap), "`map")
+            .AddBooleanResource(nameof(ShowQuests), "`quests",
+                () => ShowQuests, v => ShowQuests = v)
+            .AddBooleanResource(nameof(ShowQuestNames), "`quest names",
+                () => ShowQuestNames, v => ShowQuestNames = v)
+            .AddBooleanResource(nameof(ShowGlobalMarkers), "`global markers",
+                () => ShowGlobalMarkers, v => ShowGlobalMarkers = v)
+            .AddBooleanResource(nameof(ShowGlobalMarkerNames), "`global marker names",
+                () => ShowGlobalMarkerNames, v => ShowGlobalMarkerNames = v);
+        UiOutlines = AddFeature(nameof(UiOutlines), "`UI controls");
+        Developer = AddFeature(nameof(Developer), "`developer")
+            .AddBooleanResource(nameof(IsDeveloper), "`troubadour developer session",
                 () => IsDeveloper, v => IsDeveloper = v);
     }
 
@@ -101,23 +118,66 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
 
     public void PaintGameWorld(GameWorldLayer layer)
     {
-        if (layer != GameWorldLayer.Ground || !Host.DebugEnabled)
+        if (!Host.DebugEnabled)
             return;
 
-        foreach (var actors in GetDebugActorsArray())
+        switch (layer)
         {
-            Actors(actors);
-        }
+            case GameWorldLayer.Ground:
+                foreach (var actors in GetDebugActorsArray())
+                {
+                    Actors(actors);
+                }
 
-        if (ShowActorFrame && _debugLines.Any())
-        {
-            DrawDebugFrame(_debugLines, (Game.WindowWidth * 0.125f) + 20f, 0);
+                if (ShowActorFrame && _debugLines.Any())
+                {
+                    DrawDebugFrame(_debugLines, (Game.WindowWidth * 0.125f) + 20f, 0);
+                }
+
+                break;
+            case GameWorldLayer.Map:
+                if (ShowQuests)
+                {
+                    foreach (var questSno in GameData.AllQuestSno)
+                    {
+                        var isOnMap = Map.WorldToMapCoordinate(questSno.WorldCoordinate, out var mapX, out var mapY);
+                        /*if (questSno.SnoId == QuestSnoId.LE_MonsterWaves_Standard_Update)
+                        {
+                            var isOnMap2 = Map.WorldToMapCoordinate(questSno.ActivationWorldCoordinate, out var mapX2, out var mapY2);
+                            var t = $"""
+{questSno.SnoId}
+{mapX} {mapY} {isOnMap}
+{mapX2} {mapY2} {isOnMap2}
+""";
+                            DrawDebugFrame(t, Game.WindowWidth / 2f, Game.WindowHeight / 2f);
+                        }//*/
+
+                        if (!isOnMap)
+                            continue;
+
+                        DrawDebugFrame(ShowQuestNames ? questSno.NameLocalized : questSno.SnoId.ToString(), mapX, mapY);
+                    }
+                }
+
+                if (ShowGlobalMarkers)
+                {
+                    foreach (var marker in Game.GlobalMarkers)
+                    {
+                        if (!Map.WorldToMapCoordinate(marker.WorldCoordinate, out var mapX, out var mapY))
+                            continue;
+
+                        var text = ShowGlobalMarkerNames ? marker.ActorSno?.NameLocalized : marker.ActorSno?.SnoId.ToString();
+                        DrawDebugFrame(text, mapX, mapY);
+                    }
+                }
+
+                break;
         }
     }
 
     public void PaintGameUserInterface(GameUserInterfaceLayer layer)
     {
-        if (layer != GameUserInterfaceLayer.AfterClip || !Host.DebugEnabled)
+        if (!Host.DebugEnabled || layer != GameUserInterfaceLayer.AfterClip)
             return;
 
         Game.Items.FirstOrDefault(x => x.IsSelected)?.SetHint(this);
@@ -147,7 +207,7 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
 
     private void UserInterfaceOutlines()
     {
-        if (!ShowUserInterfaceControls)
+        if (!UiOutlines.Enabled)
             return;
 
         var controls = UserInterface.AllRegisteredControls
@@ -251,7 +311,9 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 Enabled = () => ShowMonsterActors,
                 Toggle = () => ShowMonsterActors = !ShowMonsterActors,
                 CircleStyle = Render.GetLineStyle(255, 255, 64, 64),
-                Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen && !x.IsNPC)
+                Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen
+                                                        && !x.IsNPC
+                )
             },
             new()
             {
@@ -259,7 +321,9 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 Enabled = () => ShowNpcActors,
                 Toggle = () => ShowNpcActors = !ShowNpcActors,
                 CircleStyle = Render.GetLineStyle(255, 255, 64, 64),
-                Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen && x.IsNPC)
+                Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen
+                                                        && x.IsNPC
+                )
             },
             new()
             {

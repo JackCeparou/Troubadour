@@ -45,7 +45,7 @@ public sealed partial class InventoryFeatures : Feature
     public bool HasOverlays { get; private set; }
     public bool HasHints { get; private set; }
 
-    public InventoryPage InventoryPage { get; private set; }
+    private InventoryPage InventoryPage { get; init; }
     public List<ItemTextLine> ItemLines { get; } = new();
     public List<ItemIcon> ItemIcons { get; } = new();
     public List<ItemOverlay> ItemOverlays { get; } = new();
@@ -98,7 +98,7 @@ public sealed partial class InventoryFeatures : Feature
         return this;
     }
 
-    public InventoryFeatures AddIcon(ItemIcon itemIcon)
+    private void AddIcon(ItemIcon itemIcon)
     {
         if (!HasIcons)
         {
@@ -107,10 +107,9 @@ public sealed partial class InventoryFeatures : Feature
         }
 
         ItemIcons.Add(itemIcon);
-        return this;
     }
 
-    public InventoryFeatures AddTextLine(ItemTextLine itemTextLine)
+    private void AddTextLine(ItemTextLine itemTextLine)
     {
         if (!HasLines)
         {
@@ -120,14 +119,12 @@ public sealed partial class InventoryFeatures : Feature
         }
 
         ItemLines.Add(itemTextLine);
-        return this;
     }
 
-    public InventoryFeatures AddOverlay(ItemOverlay itemOverlay)
+    private void AddOverlay(ItemOverlay itemOverlay)
     {
         HasOverlays = true;
         ItemOverlays.Add(itemOverlay);
-        return this;
     }
 
     #endregion

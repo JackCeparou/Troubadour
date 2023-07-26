@@ -3,7 +3,7 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class HelltidesDebug : JackPlugin, IGameWorldPainter
 {
-    public Feature Developer { get; private set; }
+    public Feature Developer { get; }
 
     public int Hour { get; set; }
     public float OffsetX { get; set; }

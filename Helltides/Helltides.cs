@@ -2,10 +2,10 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class Helltides : JackPlugin, IGameWorldPainter
 {
-    public IWorldFeature CinderCaches { get; private set; }
-    public IWorldFeature ZoneEvents { get; private set; }
-    public IWorldFeature MysteriousChests { get; private set; }
-    // public IWorldFeature ChestIcons { get; private set; }
+    public IWorldFeature CinderCaches { get; }
+    public IWorldFeature ZoneEvents { get; }
+    public IWorldFeature MysteriousChests { get; }
+    // public IWorldFeature ChestIcons { get; }
 
     public Helltides() : base(PluginCategory.WorldEvent, "Helltide companion")
     {

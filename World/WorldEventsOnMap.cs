@@ -2,11 +2,12 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class WorldEventsOnMap : JackPlugin, IGameWorldPainter
 {
-    public static float IconSize { get; set; } = 24f;
     public static Feature OnMap { get; private set; }
+
+    public static float IconSize { get; set; } = 24f;
     public static float MaxMapZoomLevel { get; set; } = 10;
 
-    public WorldEventsOnMap() : base(PluginCategory.WorldEvent, "displays world events on map.")
+    public WorldEventsOnMap() : base(PluginCategory.Marker, "displays world events on map.")
     {
         EnabledByDefault = false;
         OnMap = AddFeature(nameof(OnMap), "on map")
@@ -34,12 +35,6 @@ public sealed class WorldEventsOnMap : JackPlugin, IGameWorldPainter
                 continue;
 
             Textures.BountyEventActive?.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
-
-            if (!Host.DebugEnabled)
-                continue;
-
-            var tl = DebugFont.GetTextLayout(quest.SnoId.ToString(), Game.WindowWidth);
-            tl.DrawText(mapX - (tl.Width / 2), mapY - (tl.Height / 2));
         }
     }
 }

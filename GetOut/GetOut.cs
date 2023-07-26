@@ -4,8 +4,8 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class GetOut : JackPlugin, IGameWorldPainter
 {
-    public Feature Config { get; private set; }
-    public Feature Developer { get; private set; }
+    public Feature Config { get; }
+    public Feature Developer { get; }
 
     public static IFont TrapFont { get; } = Render.GetFont(240, 255, 255, 255, "consolas");
     public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 255, 0, 0, DashStyle.Dash);
