@@ -38,11 +38,13 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
             case GameWorldLayer.Map when OnMap.Enabled:
                 foreach (var actor in CursedStore.GetCursedActors())
                 {
-                    if (!Map.WorldToMapCoordinate(actor.Coordinate, out var mapX, out var mapY))
+                    if (!actor.Coordinate.IsOnMap)
                         continue;
 
                     var size = MapCircleSize * 1.25f;
                     var offset = size / 2f;
+                    var mapX = actor.Coordinate.MapX;
+                    var mapY = actor.Coordinate.MapY;
                     if (actor.ActorSno.SnoId == ActorSnoId.DE_CursedShrine_Debuff_Trigger)
                     {
                         Textures.ShrineIcon.Draw(mapX - offset, mapY - offset, size, size);

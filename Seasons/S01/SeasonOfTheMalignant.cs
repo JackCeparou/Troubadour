@@ -43,10 +43,10 @@ public sealed class SeasonOfTheMalignant : JackPlugin, IGameWorldPainter
             case GameWorldLayer.Map when HeartsOnMap.Enabled:
                 foreach (var actor in Game.GizmoActors.Where(item => SnoIdsSet.Contains(item.ActorSno.SnoId)))
                 {
-                    if (!Map.WorldToMapCoordinate(actor.Coordinate, out var mapX, out var mapY))
+                    if (!actor.Coordinate.IsOnMap)
                         continue;
 
-                    MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
+                    MapLineStyle?.DrawEllipse(actor.Coordinate.MapX, actor.Coordinate.MapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
                 }
 
                 break;

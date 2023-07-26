@@ -1,8 +1,8 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
+public sealed class HelltideCinderCachesFeature : WorldFeature<ICommonActor>
 {
-    private HelltideCindersFeature()
+    private HelltideCinderCachesFeature()
     {
         _cinderCachesSnoIdsSet = _cinderCachesSnoIds.ToHashSet();
         LineStyle = Render.GetLineStyle(200, 255, 255, 0);
@@ -14,9 +14,9 @@ public sealed class HelltideCindersFeature : WorldFeature<ICommonActor>
         return Game.GizmoActors.Where(x => _cinderCachesSnoIdsSet.Contains(x.ActorSno.SnoId));
     }
 
-    public static HelltideCindersFeature Create(IPlugin plugin, string nameOf)
+    public static HelltideCinderCachesFeature Create(IPlugin plugin, string nameOf)
     {
-        var feature = new HelltideCindersFeature
+        var feature = new HelltideCinderCachesFeature
         {
             Plugin = plugin,
             NameOf = nameOf,

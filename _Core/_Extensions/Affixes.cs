@@ -13,7 +13,7 @@ public static partial class Affixes
 
         // that's awful 🤠
         var duplicatePowers = items
-            .Select(x => x.GetEternalLegendaryAffix())
+            .SelectMany(x => x.EquippedLegendaryAffixes)
             .Where(x => x is not null && x.MagicType is not MagicType.None)
             .Select(x => x.SnoId)
             .GroupBy(x => x)
@@ -85,7 +85,7 @@ public static partial class Affixes
             ItemSnoId.Ring_Unique_Generic_100 => AffixSnoId.Ring_Unique_Generic_100,
             ItemSnoId.Ring_Unique_Generic_101 => AffixSnoId.Ring_Unique_Generic_101,
             ItemSnoId.Ring_Unique_Necro_100 => AffixSnoId.Ring_Unique_Necro_100,
-            // S01
+            // added in S01
             ItemSnoId._1HMace_Unique_Druid_001 => AffixSnoId._1HMace_Unique_Druid_001,
             ItemSnoId._1HShield_Unique_Necro_100 => AffixSnoId._1HShield_Unique_Necro_100,
             ItemSnoId._1HSword_Unique_Barb_102 => AffixSnoId._1HSword_Unique_Barb_102,

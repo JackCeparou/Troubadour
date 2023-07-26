@@ -15,6 +15,7 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
             .TreasureHunterIcon(false)
             .NearBreakpointIcon()
             .ItemLevel()
+            .SeasonalAspectName()
             .AspectName()
             .PaperDoll();
     }

@@ -15,7 +15,7 @@ public sealed class Helltides : JackPlugin, IGameWorldPainter
             MysteriousChests = MysteriousChestsFeature.Create(this, nameof(MysteriousChests)), //
             // ChestIcons = HelltideChestIconsFeature.Create(this, nameof(ChestIcons)), //
             ZoneEvents = HelltideEventsFeature.Create(this, nameof(ZoneEvents)), //
-            CinderCaches = HelltideCindersFeature.Create(this, nameof(CinderCaches))
+            CinderCaches = HelltideCinderCachesFeature.Create(this, nameof(CinderCaches))
         };
     }
 

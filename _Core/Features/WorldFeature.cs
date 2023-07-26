@@ -60,16 +60,18 @@ public abstract class WorldFeature<T> : Feature, IWorldFeature where T : ICommon
 
         foreach (var item in GetWorldActors())
         {
-            if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
+            if (!item.Coordinate.IsOnMap)
                 continue;
 
+            var mapX = item.Coordinate.MapX;
+            var mapY = item.Coordinate.MapY;
             PaintMapBefore(item, mapX, mapY);
             MapLineStyle?.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
             if (MapIconTexture is not null)
             {
                 var size = MapIconSize;
-                var x = item.Coordinate.MapX - (size / 2);
-                var y = item.Coordinate.MapY - (size / 2);
+                var x = mapX - (size / 2);
+                var y = mapY - (size / 2);
                 MapIconTexture.Draw(x, y, size, size);
             }
 

@@ -49,12 +49,25 @@ public static partial class DebugService
         DebugLineStyle.DrawRectangle(x, y, width, height);
     }
 
-    public static void DrawDebugFrame(IEnumerable<string> lines, float x, float y, bool leftOf = false)
+    public static void DrawDebugFrame(IEnumerable<string> lines, float x, float y, bool leftOf = false, bool topOf = false)
     {
         if (!Host.DebugEnabled && !Debug.IsDeveloper)
             return;
 
-        var tl = DebugFont.GetTextLayout(string.Join(Environment.NewLine, lines));
+        DrawDebugFrame(string.Join(Environment.NewLine, lines), x, y, leftOf, topOf);
+    }
+
+
+    public static void DrawDebugFrame(string text, float x, float y, bool leftOf = false, bool topOf = false)
+    {
+        if (!Host.DebugEnabled && !Debug.IsDeveloper)
+            return;
+
+        var tl = DebugFont.GetTextLayout(text);
+        if (topOf)
+        {
+            y -= tl.Height;
+        }
         if (leftOf)
         {
             x -= tl.Width;

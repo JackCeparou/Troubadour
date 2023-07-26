@@ -2,32 +2,15 @@
 
 public static class SeasonOfTheMalignantStore
 {
-    public static IAffixSno GetMalignantHeartLegendaryAffix(this IItem item)
-    {
-        return item.CurrentAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None && x.SnoId.IsMalignantHeartAffix());
-    }
-
     public static bool IsMalignantHeartHunted(this IItem item)
     {
-        var affix = item.CurrentAffixes.FirstOrDefault(x => x.SnoId.IsMalignantHeartAffix());
+        var affix = item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal);
         return affix is not null && affix.SnoId.IsMalignantHeartHunted();
     }
 
-    public static bool IsMalignantHeartHunted(this AffixSnoId affixSnoId)
-    {
-        return Customization.InterestingAffixes.Any(x => x.SnoId == affixSnoId);
-    }
-
-    public static bool IsMalignantHeart(this IItem item)
-    {
-        return MalignantHeartsSnoIdsSet.Contains(item.ItemSno.SnoId);
-    }
-
-    public static bool IsMalignantInvoker(this IItem item)
-    {
-        return MalignantInvokersSnoIdsSet.Contains(item.ItemSno.SnoId);
-    }
-
+    public static bool IsMalignantHeartHunted(this AffixSnoId affixSnoId) => Customization.InterestingAffixes.Any(x => x.SnoId == affixSnoId);
+    public static bool IsMalignantHeart(this IItem item) => MalignantHeartsSnoIdsSet.Contains(item.ItemSno.SnoId);
+    public static bool IsMalignantInvoker(this IItem item) => MalignantInvokersSnoIdsSet.Contains(item.ItemSno.SnoId);
     public static bool IsMalignantHeartAffix(this AffixSnoId affixSnoId) => MalignantHeartAffixesSnoIdsSet.Contains(affixSnoId);
 
     public static readonly IEnumerable<ItemSnoId> MalignantHeartsSnoIds = new List<ItemSnoId>

@@ -33,6 +33,7 @@ public sealed partial class InventoryFeatures : Feature
     public bool ItemQualityModifierEnabled { get; set; }
     public bool MonsterLevelEnabled { get; set; }
     public bool AspectNameEnabled { get; set; }
+    public bool AspectNameSeasonalEnabled { get; set; }
 
     public bool ElixirNameEnabled { get; set; }
 
@@ -156,7 +157,7 @@ public sealed partial class InventoryFeatures : Feature
         {
             StrokeWidthCorrection = (_, _) => 1f,
             Show = (_, features) => features.AspectHunterHighlightEnabled,
-            Style = (item, _) => item.IsAspectHunted() || Host.DebugEnabled ? AspectHunterStore.LineStyle : null,
+            Style = (item, _) => item.IsAspectHunted() || Host.DebugEnabled ? AspectHunter.LineStyle : null,
         });
 
         AspectHunterHighlightEnabled = enabled;
@@ -167,23 +168,48 @@ public sealed partial class InventoryFeatures : Feature
         return this;
     }
 
-    public InventoryFeatures AspectName(bool enabled = true)
+    public InventoryFeatures AspectName(bool enabled = true, bool enabledSeasonal = true)
     {
         AddTextLine(new()
         {
             IsName = true,
             Show = (item, features) => features.AspectNameEnabled && item.ItemSno.GemType == GemType.None,
             Text = (item, _) => item.GetFriendlyAffixName(),
-            HasError = item =>
-                item.IsEquippedTemp() && item.CurrentAffixes
-                    .Where(x => x.MagicType is not MagicType.None)
-                    .Any(x => Affixes.DuplicateEquippedLegendaryAffixes.Contains(x.SnoId)),
+            HasError = item => item.IsEquippedTemp()
+                               && item.AspectAffix is not null
+                               && Affixes.DuplicateEquippedLegendaryAffixes.Contains(item.AspectAffix.SnoId),
         });
 
         AspectNameEnabled = enabled;
 
         AddBooleanResource(nameof(AspectNameEnabled), "aspect name",
             () => AspectNameEnabled, v => AspectNameEnabled = v);
+
+        return this;
+    }
+
+    public InventoryFeatures SeasonalAspectName(bool enabled = true)
+    {
+        AddTextLine(new()
+        {
+            IsName = true,
+            Show = (item, features) => features.AspectNameSeasonalEnabled && item.ItemSno.GemType == GemType.None,
+            Text = (item, _) => item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal)?.GetFriendlyName(),
+            HasError = item =>
+            {
+                if (!item.IsEquippedTemp())
+                    return false;
+
+                var seasonalAffix = item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal);
+
+                return seasonalAffix is not null && Affixes.DuplicateEquippedLegendaryAffixes.Contains(seasonalAffix.SnoId);
+            },
+        });
+
+        AspectNameSeasonalEnabled = enabled;
+
+        AddBooleanResource(nameof(AspectNameSeasonalEnabled), "aspect name (seasonal)",
+            () => AspectNameSeasonalEnabled, v => AspectNameSeasonalEnabled = v);
 
         return this;
     }
@@ -287,7 +313,7 @@ public sealed partial class InventoryFeatures : Feature
                 return false;
             if (item.IsMalignantHeart())
                 return !item.IsMalignantHeartHunted();
-            var heart = item.GetMalignantHeartLegendaryAffix();
+            var heart = item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal);
             if (heart is not null)
                 return !heart.SnoId.IsMalignantHeartHunted();
             // S01 */
@@ -455,7 +481,7 @@ public sealed partial class InventoryFeatures : Feature
 
         TreasureHunterMatchedFilterCountEnabled = enabled;
 
-        AddBooleanResource(nameof(TreasureHunterMatchedFilterCountEnabled),"treasure hunter matched filter count",
+        AddBooleanResource(nameof(TreasureHunterMatchedFilterCountEnabled), "treasure hunter matched filter count",
             () => TreasureHunterMatchedFilterCountEnabled, v => TreasureHunterMatchedFilterCountEnabled = v);
 
         return this;

@@ -7,6 +7,15 @@ public sealed class AspectHunter : JackPlugin, IGameWorldPainter
     public Feature OnMap { get; private set; }
     public Feature OnGround { get; private set; }
 
+    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 178, 0, 255);
+    public float WorldCircleSize { get; set; } = 0.5f;
+    public float WorldCircleStroke { get; set; } = 6f;
+    public bool OnGroundLineEnabled { get; set; }
+
+    public ILineStyle MapLineStyle { get; } = Render.GetLineStyle(255, 178, 0, 255);
+    public float MapCircleSize { get; set; } = 8f;
+    public float MapCircleStroke { get; set; } = 4f;
+
     public AspectHunter() : base(PluginCategory.Loot, "Highlight most wanted aspects.")
     {
         Order = int.MaxValue;
@@ -25,8 +34,8 @@ public sealed class AspectHunter : JackPlugin, IGameWorldPainter
     {
         switch (layer)
         {
-            case GameWorldLayer.Ground when OnGroundEnabled:
-                var groundItems = Game.Items.Where(WorldItemPredicate);
+            case GameWorldLayer.Ground when OnGround.Enabled:
+                var groundItems = Game.Items.Where(x => x.Location == ItemLocation.None && x.IsAspectHunted());
                 foreach (var item in groundItems)
                 {
                     LineStyle.DrawWorldEllipse(WorldCircleSize, -1, item.Coordinate, strokeWidthCorrection: WorldCircleStroke);
@@ -37,14 +46,14 @@ public sealed class AspectHunter : JackPlugin, IGameWorldPainter
                 }
 
                 break;
-            case GameWorldLayer.Map when OnMapEnabled:
-                var mapItems = Game.Items.Where(WorldItemPredicate);
+            case GameWorldLayer.Map when OnMap.Enabled:
+                var mapItems = Game.Items.Where(x => x.Location == ItemLocation.None && x.IsAspectHunted());
                 foreach (var item in mapItems)
                 {
-                    if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
+                    if (!item.Coordinate.IsOnMap)
                         continue;
 
-                    MapLineStyle.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
+                    MapLineStyle.DrawEllipse(item.Coordinate.MapX, item.Coordinate.MapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
                 }
 
                 break;

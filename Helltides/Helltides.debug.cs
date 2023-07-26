@@ -14,53 +14,38 @@ public sealed class HelltidesDebug : JackPlugin, IGameWorldPainter
 
     private TimeZoneInfo _pstTimeZoneInfo;
 
-    public HelltidesDebug()
+    public HelltidesDebug() : base(PluginCategory.Utility, "`Helltide companion debugger")
     {
         Order = -1;
         EnabledByDefault = false;
-        Group = PluginCategory.Utility;
-        Description = "Helltide companion debugger";
+        Developer = AddFeature( nameof(Developer), "Developer")
+                .AddFloatResource( nameof(Hour), "`Fake Hour", 0, 23, () => Hour, v => Hour = (int)Math.Floor(v))
+                .AddFloatResource( nameof(OffsetX), "`Offset X", -2000, 2000, () => OffsetX, v => OffsetX = v)
+                .AddFloatResource( nameof(OffsetY), "`Offset Y", -2000, 2000, () => OffsetY, v => OffsetY = v);
+        Try(() => _pstTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
     }
 
-    public override void Load()
+    public void PaintGameWorld(GameWorldLayer layer)
     {
-        Developer = new Feature
+        if (layer != GameWorldLayer.Map)
+            return;
+
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _pstTimeZoneInfo);
+        DrawDebug();
+
+        var helltide = Game.HelltideEventMarkers.FirstOrDefault(x => x.EndsInMilliseconds > 0);
+        if (helltide is null)
+            return;
+
+        foreach (var chest in Game.GizmoActors.Where(x => x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber))
         {
-            Plugin = this,
-            NameOf = nameof(Developer),
-            DisplayName = () => "Developer",
-            Resources = new List<AbstractFeatureResource>
-            {
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(Hour),
-                    DisplayText = () => "Fake Hour",
-                    MinValue = 0,
-                    MaxValue = 23,
-                    Getter = () => Hour,
-                    Setter = newValue => Hour = (int)Math.Floor(newValue)
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(OffsetX),
-                    DisplayText = () => "Offset X",
-                    MinValue = -2000,
-                    MaxValue = 2000,
-                    Getter = () => OffsetX,
-                    Setter = newValue => OffsetX = newValue
-                },
-                new FloatFeatureResource
-                {
-                    NameOf = nameof(OffsetY),
-                    DisplayText = () => "Offset Y",
-                    MinValue = -2000,
-                    MaxValue = 2000,
-                    Getter = () => OffsetY,
-                    Setter = newValue => OffsetY = newValue
-                }
-            }
-        }.Register();
-        Try(() => _pstTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            LineStyle2.DrawWorldEllipse(1f, -1, chest.Coordinate, strokeWidthCorrection: 2f);
+        }
+
+        foreach (var chest in HelltidesStore.GetActiveMysteriousChests(helltide.SubzoneSno.SnoId, now.Hour))
+        {
+            DrawChest(chest, out var mapX, out var mapY);
+        }
     }
 
     private void DrawDebug()
@@ -102,29 +87,6 @@ public sealed class HelltidesDebug : JackPlugin, IGameWorldPainter
         foreach (var chest in HelltidesStore.GetActiveMysteriousChests(SubzoneSnoId.Kehj_ZoneEvent, fakeNowPst.Hour))
         {
             DrawChest(chest, out _, out _);
-        }
-    }
-
-    public void PaintGameWorld(GameWorldLayer layer)
-    {
-        if (layer != GameWorldLayer.Map)
-            return;
-
-        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _pstTimeZoneInfo);
-        DrawDebug();
-
-        var helltide = Game.HelltideEventMarkers.FirstOrDefault(x => x.EndsInMilliseconds > 0);
-        if (helltide is null)
-            return;
-
-        foreach (var chest in Game.GizmoActors.Where(x => x.ActorSno.SnoId == ActorSnoId.usz_rewardGizmo_Uber))
-        {
-            LineStyle2.DrawWorldEllipse(1f, -1, chest.Coordinate, strokeWidthCorrection: 2f);
-        }
-
-        foreach (var chest in HelltidesStore.GetActiveMysteriousChests(helltide.SubzoneSno.SnoId, now.Hour))
-        {
-            DrawChest(chest, out var mapX, out var mapY);
         }
     }
 

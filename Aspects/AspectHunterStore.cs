@@ -2,33 +2,6 @@
 
 public static class AspectHunterStore
 {
-    public static bool OnGroundEnabled { get; set; } = true;
-    public static bool OnGroundLineEnabled { get; set; } = false;
-    public static ILineStyle LineStyle { get; } = Render.GetLineStyle(255, 178, 0, 255);
-    public static float WorldCircleSize { get; set; } = 0.5f;
-    public static float WorldCircleStroke { get; set; } = 6f;
-    public static bool OnMapEnabled { get; set; } = true;
-    public static ILineStyle MapLineStyle { get; } = Render.GetLineStyle(255, 178, 0, 255);
-    public static float MapCircleSize { get; set; } = 8f;
-    public static float MapCircleStroke { get; set; } = 4f;
-
-    public static Func<IItem, bool> WorldItemPredicate { get; } = item =>
-    {
-        if (item.Location != ItemLocation.None)
-            return false;
-
-        switch (item.Quality)
-        {
-            case ItemQuality.Set:
-            case ItemQuality.Unique:
-            case ItemQuality.Legendary:
-                return item.IsAspectHunted();
-
-            default:
-                return false;
-        }
-    };
-
     public static IEnumerable<ItemSnoId> AspectItemSnoIds { get; } = new List<ItemSnoId>
     {
         ItemSnoId.ItemAspect_Defensive_01,
@@ -74,21 +47,9 @@ public static class AspectHunterStore
 
         if (item.Quality is ItemQuality.Unique && item.ItemSno.SnoId.TryGetUniqueAffixSnoId(out var affixSnoId))
         {
-            return affixSnoId.IsAspectHunted();
+            return Customization.InterestingAffixes.FirstOrDefault(x => x.SnoId == affixSnoId) is not null;
         }
 
-        if (!item.MainAffixes.Any(x => x.MagicType is not MagicType.None))
-        {
-            return item.GetEternalLegendaryAffix()?.SnoId.IsAspectHunted() ?? false;
-        }
-
-        return item.MainAffixes
-            .Where(x => x.MagicType is not MagicType.None)
-            .Any(affix => affix.SnoId.IsAspectHunted());
-    }
-
-    public static bool IsAspectHunted(this AffixSnoId affixSnoId)
-    {
-        return Customization.InterestingAffixes.FirstOrDefault(x => x.SnoId == affixSnoId) is not null;
+        return Customization.InterestingAffixes.FirstOrDefault(x => x.SnoId == item.AspectAffix?.SnoId) is not null;
     }
 }

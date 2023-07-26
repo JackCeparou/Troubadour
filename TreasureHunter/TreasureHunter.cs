@@ -66,10 +66,10 @@ public sealed class TreasureHunter : JackPlugin, IGameWorldPainter, IItemDetecto
                 var mapItems = Game.Items.Where(WorldItemPredicate);
                 foreach (var item in mapItems)
                 {
-                    if (!Map.WorldToMapCoordinate(item.Coordinate, out var mapX, out var mapY))
+                    if (!item.Coordinate.IsOnMap)
                         continue;
 
-                    MapLineStyle.DrawEllipse(mapX, mapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
+                    MapLineStyle.DrawEllipse(item.Coordinate.MapX, item.Coordinate.MapY, MapCircleSize, MapCircleSize, strokeWidthCorrection: MapCircleStroke);
                 }
 
                 break;

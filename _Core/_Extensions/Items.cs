@@ -4,11 +4,6 @@ public static class ItemExtensions
 {
     public static bool IsEquippedTemp(this IItem item) => EquippedItemLocationsSet.Contains(item.Location);
 
-    public static IAffixSno GetEternalLegendaryAffix(this IItem item)
-    {
-        return item.ImprintedAffix ?? item.MainAffixes.FirstOrDefault(x => x.MagicType is not MagicType.None && !x.SnoId.IsMalignantHeartAffix());
-    }
-
     public static IEnumerable<ItemLocation> EquippedItemLocations { get; } = new List<ItemLocation>
     {
         ItemLocation.PlayerHead,
@@ -115,8 +110,8 @@ public static class ItemExtensions
         switch (item.Quality)
         {
             case ItemQuality.Legendary:
-                return item.GetEternalLegendaryAffix()?.GetFriendlyName()
-                       ?? item.GetMalignantHeartLegendaryAffix()?.GetFriendlyName()
+                return item.AspectAffix?.GetFriendlyName()
+                       ?? item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal)?.GetFriendlyName()
                        ?? string.Empty;
             case ItemQuality.Set:
             case ItemQuality.Unique:
@@ -142,45 +137,8 @@ public static class ItemExtensions
         return combinedName;
     }
 
-    // public static string GetFriendlyName(this AffixSnoId affixSnoId) =>
-    //     affixSnoId.TryGetUniqueItemSnoId(out var uniqueItemSnoId) && uniqueItemSnoId != ItemSnoId.Axe__Bad__Data
-    //         ? GameData.GetItemSno(uniqueItemSnoId)?.NameLocalized ?? string.Empty
-    //         : GameData.GetAffixSno(affixSnoId)?.GetFriendlyName() ?? string.Empty;
-
     public static void SetHint(this IItem item, IPlugin plugin)
     {
-        if (Host.DebugEnabled)
-        {
-            var text = $"""
-
-
-Id: {item.ItemSno.SnoId} | {item.ItemSno.NameLocalized}
-Inherent:
-{string.Join(Environment.NewLine, item.InherentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
-Main:
-{string.Join(Environment.NewLine, item.MainAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
-Current:
-{string.Join(Environment.NewLine, item.CurrentAffixes.Select(x => $"{x.SnoId} {x.MagicType}"))}
-----------------
-ItemLevel: {item.ItemPowerTotal} | {item.GetFormattedItemPower(true, true)}
-UseType: {item.ItemSno.ItemUseType}
-NearBreakpoint: {item.IsNearBreakpoint()} ({item.GetNextReachableBreakpoint()})
-UseType: {item.ItemSno.ItemUseType}
-Filters: {string.Join(", ", item.MatchingFilterNames)}
-AspectHunted: {item.IsAspectHunted()}
-Elixir: {item.IsElixirItem()} {item.IsElixirHunted()}
-Texture: {item.ActorSno?.ItemTextureMeta?.TextureSnoId} {item.ActorSno?.ItemTextureMeta?.TextureId}
-
-
-""";
-
-            // Affixes: {item.Affix1?.SnoId} | {item.Affix2?.SnoId} | {item.EnchantedAffix?.SnoId}
-            // Values: {item.Affix1Value.ToString(CultureInfo.InvariantCulture)} {item.Affix1FlatValue.ToString(CultureInfo.InvariantCulture)} {item.Affix2Value.ToString(CultureInfo.InvariantCulture)} {item.Affix2FlatValue.ToString(CultureInfo.InvariantCulture)}
-
-            Hint.SetHint(text);
-            return;
-        }
-
         var hasMatchingFilters = item.MatchingFilterNames.Length > 0;
         var isAspectHunted = item.IsAspectHunted();
         var isNearBreakpoint = item.IsNearBreakpoint();
