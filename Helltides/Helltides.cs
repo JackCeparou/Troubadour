@@ -1,6 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class Helltides : JackPlugin, IGameWorldPainter
+public sealed class Helltides : TroubadourPlugin, IGameWorldPainter
 {
     public IWorldFeature CinderCaches { get; }
     public IWorldFeature ZoneEvents { get; }

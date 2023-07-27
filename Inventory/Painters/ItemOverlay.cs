@@ -22,15 +22,16 @@ public sealed partial class ItemOverlay
 
         Style?.Invoke(item, features)?.DrawRectangle(x, y, w, h, strokeWidthCorrection: stroke);
         Fill?.Invoke(item, features)?.FillRectangle(x, y, w, h);
+
         var font = Font?.Invoke(item, features);
         if (font is null)
             return;
         // this will be limited to only one text overlay per item
-        var tl = font.GetTextLayout(item.MatchingFilterNames.Length.ToString());
-        y = rect.Top + rect.Height - tl.Height - (rect.Width * 0.06f);
+        var tl = font.GetTextLayout(item.FilterMatches.Length.ToString());
+        y = rect.Top + (rect.Height * 0.93f) - tl.Height;
         if (item.UpgradeCount > 0)
         {
-            y -= rect.Height * 0.85f;
+            y -= rect.Height * 0.15f;
         }
         x += rect.Width * 0.06f;
         tl.DrawText(x, y);

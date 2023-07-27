@@ -77,7 +77,7 @@ public static partial class DebugService
         tl.DrawText(x, y);
     }
 
-    public static void DrawDevActors(Func<ICommonActor, bool> predicate, bool onMonsters, bool onGizmos, bool onGenerics)
+    public static void DrawDevActors(Func<ICommonActor, bool> predicate, bool onMonsters, bool onGizmos, bool onGenerics, bool onItems)
     {
         if (!Host.DebugEnabled && !Debug.IsDeveloper)
             return;
@@ -88,6 +88,8 @@ public static partial class DebugService
             DrawDevActors(Game.GizmoActors.Where(predicate));
         if (onGenerics)
             DrawDevActors(Game.GenericActors.Where(predicate));
+        if (onItems)
+            DrawDevActors(Game.Items.Where(predicate));
     }
 
     private static void DrawDevActors(IEnumerable<ICommonActor> actors)

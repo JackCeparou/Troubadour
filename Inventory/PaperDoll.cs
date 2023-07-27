@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
+public sealed partial class PaperDoll : TroubadourPlugin, IGameUserInterfacePainter
 {
     public InventoryFeatures Equipped { get; }
     private readonly Throttler _throttler = Throttler.Create(100);
@@ -15,8 +15,8 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
             .TreasureHunterIcon(false)
             .NearBreakpointIcon()
             .ItemLevel()
-            .SeasonalAspectName()
-            .AspectName()
+            .TreasureHunterFilterNames(false).TreasureHunterFilterCount(false)
+            .SeasonalAspectName().AspectName()
             .PaperDoll();
     }
 
@@ -38,10 +38,10 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
                 continue;
 
             GetPlacementAndOrientation(uiControl, item, out var x, out var y, out var expandUpwards, out var alignRight);
-
             y = DrawIconsLine(item, x, y, expandUpwards, alignRight);
-
             DrawTextLines(item, uiControl, x, y, expandUpwards, alignRight);
+            DrawOverlays(item, uiControl);
+
             if (uiControl.CoordinateInside(Game.CursorX, Game.CursorY))
             {
                 item.SetHint(this);
@@ -81,6 +81,17 @@ public sealed partial class PaperDoll : JackPlugin, IGameUserInterfacePainter
 
             line.Draw(item, Equipped, uiControl, xPos, yPos, expandUpwards, alignRight, out var height);
             yPos += height;
+        }
+    }
+
+    private void DrawOverlays(IItem item, IScreenRectangle uiControl)
+    {
+        foreach (var overlay in Equipped.ItemOverlays)
+        {
+            if (!overlay.Show.Invoke(item, Equipped))
+                continue;
+
+            overlay.Draw(item, Equipped, uiControl);
         }
     }
 

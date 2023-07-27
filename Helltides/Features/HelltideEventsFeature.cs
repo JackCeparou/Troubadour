@@ -4,10 +4,12 @@ namespace T4.Plugins.Troubadour;
 
 public sealed class HelltideEventsFeature : WorldFeature<ICommonActor>
 {
+    private readonly ITexture _bountyEventActive = Render.GetTexture(SupportedTextureId.UIMinimapIcons_503808014);
+
     private HelltideEventsFeature()
     {
         OnGroundEnabled = false;
-        MapIconTexture = Textures.BountyEventActive;
+        MapIconTexture = _bountyEventActive;
     }
 
     public override IEnumerable<ICommonActor> GetWorldActors()

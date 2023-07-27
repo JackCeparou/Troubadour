@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed partial class PlayerStash : JackPlugin, IGameUserInterfacePainter
+public sealed partial class PlayerStash : TroubadourPlugin, IGameUserInterfacePainter
 {
     public InventoryFeatures Stash { get; }
 

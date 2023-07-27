@@ -26,7 +26,7 @@ public class InventoryPage
         if (!Visible || !features.Enabled)
             return;
 
-        var items = Game.Items.Where(ItemPredicate).ToList();
+        var items = Game.Items.Where(ItemPredicate);
         foreach (var item in items)
         {
             var control = GetItemControl.Invoke(item);

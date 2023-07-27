@@ -1,12 +1,11 @@
-using static T4.Plugins.Troubadour.TreasureHunterStore;
-
 namespace T4.Plugins.Troubadour;
 
-public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IItemDetector
+public sealed partial class Vendors : TroubadourPlugin, IGameUserInterfacePainter, IItemDetector
 {
     public InventoryFeatures OnShopList { get; }
+    public bool ShopNotificationEnabled { get; set; }
 
-    public InventoryPage ShopList { get; } = new(8, 1) // TODO: fix it for scroll
+    private readonly InventoryPage _shopList = new(8, 1) // TODO: fix it for scroll
     {
         ItemPredicate = x => x.Location == ItemLocation.Merchant,
         GetUiContainer = () => UserInterface.GetShopListControl(),
@@ -39,14 +38,14 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
 
         var items = Game.Items.Where(x => x.Location == ItemLocation.Merchant).ToArray();
 
-        if (items.Any(x => x.MatchingFilterNames.Length > 0))
+        if (items.Any(x => x.FilterMatches.Length > 0))
         {
             var x = shopList.Left + (shopList.Width * 0.005f);
             var y = shopList.Top + (shopList.Height * 0.005f);
             var w = shopList.Width * 0.925f;
             var h = shopList.Height / 8 * Math.Min(items.Length, 8);
-            LineStyle.DrawRectangle(x, y, w, h, strokeWidthCorrection: 1.5f);
-            var lines = items.SelectMany(item => item.MatchingFilterNames).Distinct().OrderBy(item => item);
+            TreasureHunter.LineStyle.DrawRectangle(x, y, w, h, strokeWidthCorrection: 1.5f);
+            var lines = items.SelectMany(item => item.FilterMatches.Select(match => match.AsString())).OrderBy(item => item);
             var tl = OnShopList.NormalFont.GetTextLayout(string.Join(Environment.NewLine, lines), shopList.Width);
             tl.DrawText(x - (tl.Width * 1.2f), y);
         }
@@ -54,7 +53,7 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
         if (!Host.DebugEnabled)
             return;
 
-        ShopList.Draw(OnShopList);
+        _shopList.Draw(OnShopList);
 
         var vendorItems = Game.Items.Where(x => x.Location == ItemLocation.Merchant).OrderBy(x => x.InventoryX);
         var text = string.Join("\n", vendorItems.Select(x => $"{x.NameLocalized} {x.InventoryX} {x.InventoryY} {x.ItemPower} {x.Quality}"));
@@ -72,7 +71,7 @@ public sealed partial class Vendors : JackPlugin, IGameUserInterfacePainter, IIt
             return;
         if (item.Location != ItemLocation.Merchant)
             return;
-        if (item.MatchingFilterNames.Length == 0)
+        if (item.FilterMatches.Length == 0)
             return;
 
         item.NotifyMatchedFilters(this);

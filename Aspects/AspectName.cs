@@ -2,7 +2,7 @@
 
 namespace T4.Plugins.Troubadour;
 
-public class AspectName : JackPlugin, IGameUserInterfacePainter
+public class AspectName : TroubadourPlugin, IGameUserInterfacePainter
 {
     public IFont FontOnCraftingPanel =
         Render.GetFont(255, 180, 180, 180, bold: true, wordWrap: true, shadowMode: FontShadowMode.Heavy, alignment: TextAlignment.Centered)

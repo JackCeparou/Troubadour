@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed class Cursed : JackPlugin, IGameWorldPainter
+public sealed class Cursed : TroubadourPlugin, IGameWorldPainter
 {
     public Feature OnMap { get; }
     public Feature OnGround { get; }
@@ -10,7 +10,8 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
     public IFillStyle MapFillStyle { get; } = Render.GetFillStyle(128, 255, 0, 0);
 
     public float GroundIconSize { get; set; } = 100f;
-    public ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_3845477221);
+    private ITexture GroundIcon { get; } = Render.GetTexture(SupportedTextureId.UIBuffDebuff_3845477221);
+    private ITexture ShrineIcon { get; } = Render.GetTexture(SupportedTextureId.UIMinimapIcons_66845578);
 
     public Cursed() : base(PluginCategory.Fight, "Displays cursed chests and shrines on the map and ground.")
     {
@@ -28,7 +29,7 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
         switch (layer)
         {
             case GameWorldLayer.Ground when OnGround.Enabled:
-                foreach (var actor in CursedStore.GetCursedActors())
+                foreach (var actor in GetCursedActors())
                 {
                     var offset = GroundIconSize / 2f;
                     GroundIcon.Draw(actor.Coordinate.ScreenX - offset, actor.Coordinate.ScreenY - offset, GroundIconSize, GroundIconSize);
@@ -36,7 +37,7 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
 
                 break;
             case GameWorldLayer.Map when OnMap.Enabled:
-                foreach (var actor in CursedStore.GetCursedActors())
+                foreach (var actor in GetCursedActors())
                 {
                     if (!actor.Coordinate.IsOnMap)
                         continue;
@@ -47,7 +48,7 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
                     var mapY = actor.Coordinate.MapY;
                     if (actor.ActorSno.SnoId == ActorSnoId.DE_CursedShrine_Debuff_Trigger)
                     {
-                        Textures.ShrineIcon.Draw(mapX - offset, mapY - offset, size, size);
+                        ShrineIcon.Draw(mapX - offset, mapY - offset, size, size);
                     }
 
                     MapFillStyle.FillEllipse(mapX, mapY, offset, offset, false);
@@ -55,6 +56,48 @@ public sealed class Cursed : JackPlugin, IGameWorldPainter
                 }
 
                 break;
+        }
+    }
+
+    private static HashSet<ActorSnoId> CursedActorIdsSet { get; } = new()
+    {
+        // ActorSnoId.CursedEventChest,
+        // ActorSnoId.CursedEventChestRare,
+        // ActorSnoId.DE_Spawner_Cursed_Event_Reward_Chest,
+        ActorSnoId.DE_CursedChest_Standard_AffixCasterMonster,
+        // ActorSnoId.DE_CursedShrine_AffixUser,
+        ActorSnoId.DE_CursedShrine_Debuff_Trigger,
+        ActorSnoId.Healing_Well_Cursed_MapIcon,
+        // ActorSnoId.pvp_OpenWorld_Cursed_Chest,
+        ActorSnoId.Shrine_DRLG_Cursed_MapIcon,
+
+        // ActorSnoId.DE_Universal_Rare_Chest,
+        ActorSnoId.DGN_Standard_NoBoss_ChestBlocker,
+        ActorSnoId.DGN_Standard_NoBoss_ChestGuardian,
+        ActorSnoId.DGN_Standard_NoBoss_LootChest,
+    };
+
+    public static IEnumerable<ICommonActor> GetCursedActors()
+    {
+        var actors = Game.GenericActors
+            .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId));
+        foreach (var actor in actors)
+        {
+            yield return actor;
+        }
+
+        var gizmos = Game.GizmoActors
+            .Where(x => (x.GizmoType == GizmoType.Chest && x.IsDisabledByScript) || CursedActorIdsSet.Contains(x.ActorSno.SnoId));
+        foreach (var actor in gizmos)
+        {
+            yield return actor;
+        }
+
+        var monsters = Game.Monsters
+            .Where(x => CursedActorIdsSet.Contains(x.ActorSno.SnoId));
+        foreach (var monster in monsters)
+        {
+            yield return monster;
         }
     }
 }

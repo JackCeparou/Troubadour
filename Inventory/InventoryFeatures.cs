@@ -15,6 +15,7 @@ public sealed partial class InventoryFeatures : Feature
     public bool AspectHunterHighlightEnabled { get; set; }
     public bool TreasureHunterHighlightEnabled { get; set; }
     public bool TreasureHunterMatchedFilterCountEnabled { get; set; }
+    public bool TreasureHunterMatchedFilterNamesEnabled { get; set; }
 
     public bool ElixirHunterHighlightEnabled { get; set; } = true;
 
@@ -131,13 +132,15 @@ public sealed partial class InventoryFeatures : Feature
 
     #region Aspects
 
+    private static ITexture AspectHunterTexture { get; } = Render.GetTexture(SupportedTextureId.UITest_3915375899);
+
     public InventoryFeatures AspectHunterIcon(bool enabled = true)
     {
         AddIcon(new()
         {
             Scale = 0.8f,
-            Show = (_, features) => features.AspectHunterIconEnabled,
-            Texture = (item, _) => item.IsAspectHunted() ? Textures.AspectHunterIcon : null
+            Show = (item, features) => features.AspectHunterIconEnabled && AspectHunter.IsHunted(item),
+            Texture = (_, _) => AspectHunterTexture
         });
 
         AspectHunterIconEnabled = enabled;
@@ -153,8 +156,8 @@ public sealed partial class InventoryFeatures : Feature
         AddOverlay(new()
         {
             StrokeWidthCorrection = (_, _) => 1f,
-            Show = (_, features) => features.AspectHunterHighlightEnabled,
-            Style = (item, _) => item.IsAspectHunted() || Host.DebugEnabled ? AspectHunter.LineStyle : null,
+            Show = (item, features) => features.AspectHunterHighlightEnabled && AspectHunter.IsHunted(item),
+            Style = (_, _) => AspectHunter.LineStyle,
         });
 
         AspectHunterHighlightEnabled = enabled;
@@ -165,7 +168,7 @@ public sealed partial class InventoryFeatures : Feature
         return this;
     }
 
-    public InventoryFeatures AspectName(bool enabled = true, bool enabledSeasonal = true)
+    public InventoryFeatures AspectName(bool enabled = true)
     {
         AddTextLine(new()
         {
@@ -248,11 +251,7 @@ public sealed partial class InventoryFeatures : Feature
 
     public InventoryFeatures ElixirHunterHighlight(bool enabled = true)
     {
-        AddOverlay(new()
-        {
-            Show = (_, features) => features.ElixirHunterHighlightEnabled,
-            Style = (item, _) => item.IsElixirHunted() || Host.DebugEnabled ? Elixirs.LineStyle : null,
-        });
+        AddOverlay(new() { Show = (item, features) => features.ElixirHunterHighlightEnabled && Elixirs.IsHunted(item), Style = (_, _) => Elixirs.LineStyle, });
 
         ElixirHunterHighlightEnabled = enabled;
 
@@ -274,8 +273,20 @@ public sealed partial class InventoryFeatures : Feature
             OffsetTop = 0f,
             OffsetWidth = 0f,
             OffsetHeight = 0f,
-            Show = ShouldGreyOut,
-            Fill = (item, _) => item.MatchingFilterNames.Length == 0 ? TreasureHunterStore.GreyOutFillStyle : null,
+            Show = (item, features) =>
+            {
+                if (!features.GreyOutEnabled)
+                    return false;
+                if (features.GreyOutUpgradedItemsEnabled && item.UpgradeCount > 0)
+                    return false;
+                if (features.GreyOutGemItemsEnabled && (item.ItemSno.GemType != GemType.None || item.ItemSno.SnoId == ItemSnoId.GamblingCurrency_Key))
+                    return false;
+                if (features.GreyOutSigilItemsEnabled && item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
+                    return false;
+
+                return InventoryGreyOut.Evaluate(item);
+            },
+            Fill = (_, _) => InventoryGreyOut.FillStyle,
         });
 
         GreyOutEnabled = enabled;
@@ -283,40 +294,6 @@ public sealed partial class InventoryFeatures : Feature
         AddBooleanResource(nameof(GreyOutEnabled), "grey out not hunted", () => GreyOutEnabled, v => GreyOutEnabled = v);
 
         return this;
-    }
-
-    public static bool ShouldGreyOut(IItem item, InventoryFeatures features)
-    {
-        if (!features.GreyOutEnabled)
-            return false;
-        if (features.GreyOutUpgradedItemsEnabled && item.UpgradeCount > 0)
-            return false;
-        if (features.GreyOutGemItemsEnabled && (item.ItemSno.GemType != GemType.None || item.ItemSno.SnoId == ItemSnoId.GamblingCurrency_Key))
-            return false;
-        if (features.GreyOutSigilItemsEnabled && item.ItemSno.ItemUseType == ItemUseType.DungeonKey)
-            return false;
-        if (item.IsMountCosmeticItem())
-            return false;
-        if (item.IsElixirItem())
-            return !item.IsElixirHunted();
-
-        if (Customization.InterestingAffixes.Any())
-        {
-            if (item.IsAspectItem())
-                return !item.IsAspectHunted();
-
-            //* S01
-            if (item.IsMalignantInvoker())
-                return false;
-            if (item.IsMalignantHeart())
-                return !item.IsMalignantHeartHunted();
-            var heart = item.EquippedLegendaryAffixes.FirstOrDefault(x => x.IsSeasonal);
-            if (heart is not null)
-                return !heart.SnoId.IsMalignantHeartHunted();
-            // S01 */
-        }
-
-        return item.MatchingFilterNames.Length == 0 && !item.IsAspectHunted();
     }
 
     #endregion
@@ -382,13 +359,15 @@ public sealed partial class InventoryFeatures : Feature
         return this;
     }
 
+    private static ITexture NearBreakpointTexture { get; } = Render.GetTexture(SupportedTextureId.UISkills_4275309202);
+
     public InventoryFeatures NearBreakpointIcon(bool enabled = true)
     {
         AddIcon(new()
         {
             Scale = 0.8f,
             Show = (item, features) => features.NearBreakpointIconEnabled && item.IsNearBreakpoint(),
-            Texture = (_, _) => Textures.NearBreakpointIcon,
+            Texture = (_, _) => NearBreakpointTexture,
         });
 
         NearBreakpointIconEnabled = enabled;
@@ -398,6 +377,9 @@ public sealed partial class InventoryFeatures : Feature
 
         return this;
     }
+
+    private static ITexture LegendaryIcon { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_2706340597);
+    private static ITexture UniqueIcon { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_3759295089);
 
     public InventoryFeatures QualityIcon(bool legendary = true, bool unique = true)
     {
@@ -410,8 +392,8 @@ public sealed partial class InventoryFeatures : Feature
             {
                 return item.Quality switch
                 {
-                    ItemQuality.Legendary => features.QualityLegendaryIconEnabled ? Textures.LegendaryIcon : null,
-                    ItemQuality.Set or ItemQuality.Unique => features.QualityUniqueIconEnabled ? Textures.UniqueIcon : null,
+                    ItemQuality.Legendary => features.QualityLegendaryIconEnabled ? LegendaryIcon : null,
+                    ItemQuality.Set or ItemQuality.Unique => features.QualityUniqueIconEnabled ? UniqueIcon : null,
                     _ => null
                 };
             }
@@ -432,6 +414,10 @@ public sealed partial class InventoryFeatures : Feature
 
     #region TreasureHunter
 
+    // public static ITexture TreasureHunterIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_003);
+    // public static ITexture TreasureHunterGoldenIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_001);
+    private static ITexture TreasureHunterGoldenOpenIcon { get; } = Render.GetTexture(SupportedTextureId.UIStash_339055441);
+
     public InventoryFeatures TreasureHunterIcon(bool enabled = true)
     {
         AddIcon(new()
@@ -439,8 +425,8 @@ public sealed partial class InventoryFeatures : Feature
             Scale = 1.2f,
             OffsetX = 6f,
             OffsetY = 3f,
-            Show = (_, features) => features.TreasureHunterIconEnabled,
-            Texture = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? Textures.TreasureHunterGoldenOpenIcon : null,
+            Show = (item, features) => features.TreasureHunterIconEnabled && item.FilterMatches.Length > 0,
+            Texture = (_, _) => TreasureHunterGoldenOpenIcon,
         });
 
         TreasureHunterIconEnabled = enabled;
@@ -456,8 +442,8 @@ public sealed partial class InventoryFeatures : Feature
         AddOverlay(new()
         {
             StrokeWidthCorrection = (_, _) => 2f,
-            Show = (item, features) => features.TreasureHunterHighlightEnabled && item.MatchingFilterNames.Length > 0,
-            Style = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? TreasureHunterStore.LineStyle : null,
+            Show = (item, features) => features.TreasureHunterHighlightEnabled && item.FilterMatches.Length > 0,
+            Style = (_, _) => TreasureHunter.LineStyle,
         });
 
         TreasureHunterHighlightEnabled = enabled;
@@ -468,12 +454,28 @@ public sealed partial class InventoryFeatures : Feature
         return this;
     }
 
+    public InventoryFeatures TreasureHunterFilterNames(bool enabled = true)
+    {
+        AddTextLine(new()
+        {
+            Show = (item, features) => features.TreasureHunterMatchedFilterNamesEnabled && item.FilterMatches.Length > 0,
+            Text = (item, _) => string.Join(Environment.NewLine, item.FilterMatches.Take(3).Select(x => x.AsString())),
+        });
+
+        TreasureHunterMatchedFilterNamesEnabled = enabled;
+
+        AddBooleanResource(nameof(TreasureHunterMatchedFilterNamesEnabled), "treasure hunter matched filter names",
+            () => TreasureHunterMatchedFilterNamesEnabled, v => TreasureHunterMatchedFilterNamesEnabled = v);
+
+        return this;
+    }
+
     public InventoryFeatures TreasureHunterFilterCount(bool enabled = true)
     {
         AddOverlay(new()
         {
-            Show = (item, features) => features.TreasureHunterMatchedFilterCountEnabled && item.MatchingFilterNames.Length > 0,
-            Font = (item, _) => item.MatchingFilterNames.Length > 0 || Host.DebugEnabled ? TreasureHunterStore.MatchedFilterCounterFont : null,
+            Show = (item, features) => features.TreasureHunterMatchedFilterCountEnabled && item.FilterMatches.Length > 0,
+            Font = (_, _) => TreasureHunter.MatchedFilterCounterFont,
         });
 
         TreasureHunterMatchedFilterCountEnabled = enabled;

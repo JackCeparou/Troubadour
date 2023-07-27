@@ -1,6 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed partial class PlayerBackpack : JackPlugin, IGameUserInterfacePainter
+public sealed partial class PlayerBackpack : TroubadourPlugin, IGameUserInterfacePainter
 {
     public InventoryFeatures Equipment { get; }
     public InventoryFeatures Consumables { get; }

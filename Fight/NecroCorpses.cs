@@ -1,6 +1,6 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed class NecroCorpses : JackPlugin, IGameWorldPainter
+public sealed class NecroCorpses : TroubadourPlugin, IGameWorldPainter
 {
     public Feature Config { get; }
 

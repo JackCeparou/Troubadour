@@ -1,11 +1,12 @@
 ﻿namespace T4.Plugins.Troubadour;
 
-public sealed class CellarsOnMap : JackPlugin, IGameWorldPainter
+public sealed class CellarsOnMap : TroubadourPlugin, IGameWorldPainter
 {
-    public static Feature OnMap { get; private set; }
+    public Feature OnMap { get; }
 
-    public static float IconSize { get; set; } = 24f;
-    public static float MaxMapZoomLevel { get; set; } = 10;
+    public float IconSize { get; set; } = 24f;
+    public float MaxMapZoomLevel { get; set; } = 10;
+    private readonly ITexture _caveEntranceTexture = Render.GetTexture(SupportedTextureId.UIMinimapIcons_3564463460);
 
     public CellarsOnMap() : base(PluginCategory.Marker, "displays cellars on map.")
     {
@@ -35,7 +36,7 @@ public sealed class CellarsOnMap : JackPlugin, IGameWorldPainter
             if (!Map.WorldToMapCoordinate(marker.WorldCoordinate, out var mapX, out var mapY))
                 continue;
 
-            Textures.CaveEntrance?.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
+            _caveEntranceTexture.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
         }
     }
 }

@@ -3,12 +3,13 @@
 public sealed class MysteriousChestsFeature : WorldFeature<ICommonActor>
 {
     private TimeZoneInfo _pstTimeZoneInfo;
+    private readonly ITexture _helltideChest = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
 
     private MysteriousChestsFeature()
     {
         LineStyle = Render.GetLineStyle(200, 255, 255, 0);
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
-        MapIconTexture = Textures.HelltideChest;
+        MapIconTexture = _helltideChest;
         MapIconSize = 32f;
         MapCircleSize = 10f;
         Try(() => _pstTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));

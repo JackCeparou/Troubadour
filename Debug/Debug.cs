@@ -1,6 +1,6 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
+public sealed class Debug : TroubadourPlugin, IGameWorldPainter, IGameUserInterfacePainter, IRenderEnabler, IMenuUserInterfacePainter, IKeyReleaseHandler
 {
     public Feature World { get; }
     public Feature OnMap { get; }
@@ -20,6 +20,7 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
     public bool ShowGenericActors { get; private set; } = true;
     public bool ShowGizmoActors { get; private set; } = true;
     public bool ShowMonsterActors { get; private set; } = true;
+    public bool ShowMonsterAmbientActors { get; private set; }
     public bool ShowNpcActors { get; private set; }
     public bool ShowItems { get; private set; } = true;
     public bool ShowItemsLine { get; private set; }
@@ -45,6 +46,8 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
                 () => ShowGizmoActors, v => ShowGizmoActors = v)
             .AddBooleanResource(nameof(ShowMonsterActors), "`monster actors",
                 () => ShowMonsterActors, v => ShowMonsterActors = v)
+            .AddBooleanResource(nameof(ShowMonsterAmbientActors), "`monster ambient actors",
+                () => ShowMonsterAmbientActors, v => ShowMonsterAmbientActors = v)
             .AddBooleanResource(nameof(ShowNpcActors), "`NPC actors",
                 () => ShowNpcActors, v => ShowNpcActors = v)
             .AddBooleanResource(nameof(ShowItems), "`items",
@@ -188,6 +191,18 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
 
     public void PaintMenuUserInterface()
     {
+        /*
+        var t2 = GameData.AllActorSno
+            .Where(x =>
+            {
+                var sno = x.SnoId.ToString();
+                return sno.StartsWith("Carryable_") || sno.StartsWith("Global_Flippy_Items_");
+            })
+            .Select(x => $"{x.SnoId,-40}{x.ItemUseType,-10}{x.NameLocalized}")
+            .ToArray();
+        DrawDebugFrame(t2.Length + Environment.NewLine + string.Join(Environment.NewLine, t2), 0, 0);
+        //*/
+
         if (!Host.DebugEnabled)
             return;
 
@@ -250,6 +265,11 @@ public sealed class Debug : JackPlugin, IGameWorldPainter, IGameUserInterfacePai
             else
             {
                 name = ShowName ? actor.ActorSno.NameEnglish : actor.ActorSno.SnoId.ToString();
+                if (actor is IMonsterActor monster)
+                {
+                    name = $"{name} {monster.MonsterData.ArcheType.MonsterFamilySnoId}";
+                }
+
                 if (!string.IsNullOrEmpty(name))
                 {
                     var tl = DebugFont.GetTextLayout(name);
@@ -313,6 +333,17 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 CircleStyle = Render.GetLineStyle(255, 255, 64, 64),
                 Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen
                                                         && !x.IsNPC
+                                                        && x.MonsterData.ArcheType.MonsterFamilySnoId != MonsterFamilySnoId.ambient
+                )
+            },
+            new()
+            {
+                Name = "Ambient",
+                Enabled = () => ShowMonsterAmbientActors,
+                Toggle = () => ShowMonsterAmbientActors = !ShowMonsterAmbientActors,
+                CircleStyle = Render.GetLineStyle(255, 255, 64, 64),
+                Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen
+                                                        && x.MonsterData.ArcheType.MonsterFamilySnoId == MonsterFamilySnoId.ambient
                 )
             },
             new()
@@ -323,6 +354,7 @@ Charges: {x.SkillCharges} {x.NextChargeTick} {x.RechargeStartTick}
                 CircleStyle = Render.GetLineStyle(255, 255, 64, 64),
                 Actors = () => Game.Monsters.Where(x => x.Coordinate.IsOnScreen
                                                         && x.IsNPC
+                                                        && x.MonsterData.ArcheType.MonsterFamilySnoId != MonsterFamilySnoId.ambient
                 )
             },
             new()

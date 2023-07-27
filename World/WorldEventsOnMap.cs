@@ -1,11 +1,13 @@
 namespace T4.Plugins.Troubadour;
 
-public sealed class WorldEventsOnMap : JackPlugin, IGameWorldPainter
+public sealed class WorldEventsOnMap : TroubadourPlugin, IGameWorldPainter
 {
     public static Feature OnMap { get; private set; }
 
     public static float IconSize { get; set; } = 24f;
     public static float MaxMapZoomLevel { get; set; } = 10;
+
+    private readonly ITexture _bountyEventActive = Render.GetTexture(SupportedTextureId.UIMinimapIcons_503808014);
 
     public WorldEventsOnMap() : base(PluginCategory.Marker, "displays world events on map.")
     {
@@ -34,7 +36,7 @@ public sealed class WorldEventsOnMap : JackPlugin, IGameWorldPainter
             if (!Map.WorldToMapCoordinate(quest.WorldCoordinate, out var mapX, out var mapY))
                 continue;
 
-            Textures.BountyEventActive?.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
+            _bountyEventActive.Draw(mapX - (IconSize / 2), mapY - (IconSize / 2), IconSize, IconSize);
         }
     }
 }

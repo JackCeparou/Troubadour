@@ -2,8 +2,9 @@
 
 public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
 {
+    private readonly ITexture _backgroundTexture = Render.GetTexture(SupportedTextureId.UIInventoryIcons_1144197672);
+    private readonly ITexture _helltideChest = Render.GetTexture(SupportedTextureId.UIMinimapIcons_43109186);
 
-    public ITexture BackgroundTexture { get; }
     private HelltideChestIconsFeature()
     {
         Enabled = false;
@@ -11,10 +12,9 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         LineStyle = Render.GetLineStyle(200, 255, 255, 0);
         MapLineStyle = Render.GetLineStyle(200, 255, 255, 0);
         MapIconSize = 32f;
-        WorldIconTexture = Textures.HelltideChest;
+        WorldIconTexture = _helltideChest;
         WorldIconSize = 64f;
-        MapIconTexture = Textures.HelltideChest;
-        BackgroundTexture = Textures.CircleBackground;
+        MapIconTexture = _helltideChest;
 
         _uberChests = _uberChestsTextures.Keys.ToHashSet();
     }
@@ -54,7 +54,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
             var size = WorldIconSize;
             var x = item.Coordinate.ScreenX - (size / 2);
             var y = item.Coordinate.ScreenY - (size / 2);
-            BackgroundTexture.Draw(x, y, size, size);
+            _backgroundTexture.Draw(x, y, size, size);
             texture.Draw(x, y, size, size);
         }
     }
@@ -76,7 +76,7 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
             var size = MapIconSize;
             var x = item.Coordinate.MapX - (size / 2);
             var y = item.Coordinate.MapY - (size / 2);
-            BackgroundTexture.Draw(x, y, size, size);
+            _backgroundTexture.Draw(x, y, size, size);
             texture.Draw(x, y, size, size);
         }
     }
@@ -97,3 +97,17 @@ public sealed class HelltideChestIconsFeature : WorldFeature<ICommonActor>
         // [ActorSnoId.usz_rewardGizmo_Uber] = Textures.TreasureBag,
     };
 }
+// public static ITexture CrossedSwordsOnShield { get; } = Render.GetTexture(2089728434u);
+// public static ITexture TreasureBag { get; } = Render.GetTexture(2044228644u);
+// public static ITexture Amulet { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_050);
+// public static ITexture Boots { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_051);
+// public static ITexture Chest { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_052);
+// public static ITexture Gloves { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_053);
+// public static ITexture Helm { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_054);
+// public static ITexture Pants { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_055);
+// public static ITexture Offhand { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_056);
+// public static ITexture Ring { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_057);
+//
+// public static ITexture Sword_TBN { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_093);
+// public static ITexture Bow { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_095);
+// public static ITexture Offhand2 { get; } = Render.GetTexture(SupportedTextureId.UIFontIcon_097);

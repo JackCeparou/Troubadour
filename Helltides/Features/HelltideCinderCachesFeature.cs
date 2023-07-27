@@ -29,7 +29,7 @@ public sealed class HelltideCinderCachesFeature : WorldFeature<ICommonActor>
         return feature;
     }
 
-    private readonly IEnumerable<ActorSnoId> _cinderCachesSnoIds = new List<ActorSnoId>()
+    private readonly IEnumerable<ActorSnoId> _cinderCachesSnoIds = new List<ActorSnoId>
     {
         ActorSnoId.HelltideBonus_BreakableContainer_Any_1x1_01_Arrangement,
         ActorSnoId.HelltideBonus_BreakableContainer_Any_1x1_02_Arrangement,
